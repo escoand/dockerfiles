@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ "$DEBUG" ] && set -x
+
 SCAN_TIME=${SCAN_TIME:-10}
 MQTT_HOST=${MQTT_HOST:-localhost}
 MQTT_PORT=${MQTT_PORT:-1883}
@@ -25,7 +27,7 @@ while true; do
 	' |
 
 	# publish
-	xargs -i \
+	xargs -ti \
 		mosquitto_pub \
 			-h "$MQTT_HOST" \
 			-p "$MQTT_PORT" \
