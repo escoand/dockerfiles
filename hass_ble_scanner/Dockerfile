@@ -1,4 +1,6 @@
-FROM multiarch/alpine:amd64-latest-stable
+ARG  TAG=amd64-latest-stable
+
+FROM multiarch/alpine:$TAG
 
 RUN  apk --no-cache add mosquitto-clients bluez-deprecated
 
