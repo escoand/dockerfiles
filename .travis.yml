@@ -14,8 +14,8 @@ env:
     - PROJECT=hass_ble_scanner GOARCH=arm
 
 script:
-  - docker build -t $DOCKER_USER/$REPO:$GOARCH $GITHUB_BASEURL:$REPO
+  - docker build -t $DOCKER_USER/$PROJECT:$GOARCH $GITHUB_BASEURL:$PROJECT
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker push $DOCKER_USER/$REPO:$GOARCH
+  - docker push $DOCKER_USER/$PROJECT:$GOARCH
