@@ -11,6 +11,7 @@ env:
     - PROJECT=hass_ble_scanner ARCH=armhf
 
 script:
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT:$ARCH https://github.com/$GITHUB_USER/dockerfiles.git#master:$PROJECT
 
 after_success:
