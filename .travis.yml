@@ -1,0 +1,21 @@
+env:
+  global:
+    - GITHUB_BASEURL=https://github.com/escoand/dockerfiles.git#master
+    - CGO_ENABLED=0
+    - GOOS=linux
+
+    - secure: afBJZxxJKPpDjsGu93cM+Zrnt1/lmi6V4L4dDvn91IgaHjyNSYg5Q7aEN44/+ahGXNzyJBY4pXwPQJ7oPb6/UGBaZuhD+2c3SKJEM/HRjSmrqtaNprkDY/SfV537a0+6M5Vva+XZ4snGpZGRgFqxAdF+HijEias1+e7IbJISJ/IT+6ErnsFcOYAmO44JRJE4fqToNt0zcBJ4vTcz0WGyL8132lBJvhgj2GaCetvwBH5pljWJgzvNDZef7xNDOoXpjZc74rnaAtPB8Q6aZr8Ltbmew4zttbrbeBMBtkPszvAHXjslwbiySigDOfPEJayPCorVnHc+Pf57MjauV9xGkYtUgpzM/Da/p5/KBy1Pw559/NiuHBZ7IGl3vsp+orPkUq+F1XYDP9djS3ERJ174JKt/G+oXZoqHWZfLQPHd4wAQHDGJZ4eDSRRzpmv4+ZfrYuHGXVKyfT0p6emossqCPHidnCPyQOWyN7uunkzK5xXlJUxcgKoukPY6Jimk9hz/zW4xyVtUrbuSbFIZebKl4W+jpzeMd5WTppnUNC8Yc83eY3gNmsZGfnogn68PpO3Hp7Jest0cOy+wjfZDpJJTUz5OAtj8BNmwO3iNXOtN8BmQxP+oogp8QAOKttK6pdoacrztrqbDUF+euTHWgfGSLauu4WcNWBrXJan0Bwkee00=
+    - secure: ifM/UrTwzdD97Ef1Sq0puqlOuVgKgHU+BtBC27agBW60h6frH7kXuKwL8LoqvE+BALmJgIF8zMdFX+HL1+bAolr7WSEbOighHSbZe0j43hvx23CCzFOTGmkqoqurDHc0sWnScaER0Tw/wfrUZRumkAQRQ1jrVkHdvBqgXi3IvMFrh2plh9aCf0NghOl8PazHHLBWFhGUpgQiHq+EdyaETJtB2AJj0Mu8LIMDQEs5AYyVyQhB0rFfOTCBQi2lZ0pYu2DKBdsHBbIBkCVYJUXOGK9NWjlbC0qz/Pu03wU9zG1i6XD1uRh4qgwb4gEdcikmrmy3qXCqFjFD19D7ecP5slWAOwTKnumERfOdUtVCDF8rqaD+xj2CZrkwNhdkDpDbW1+fJGdrwg7z7Xt/pMebMEcrWGb+cCCh5YvKzF+jbFSbyqm3wLIKyCl4TTKm10p8xvctE+SoK574w2uONb8n8WFY97ArmvOUK/61+l4veacdOC1tm9gMeGj5/1URapM8koX7HYKZxAJ/Z8cYgUsC9xbAxFj43hgHgtk4PccyVGtnRm7lPyvDmq2GAFiuC5ti+h2txDOyCWzrgHCe+zj8aQBx+vLIuRKctJDKoOkjt9e7JzceeVb1g68+bAvFvEy7SMe5wcV2Uo2dh32gtdDji+jjSPuB0yXP125az4HziZE=
+
+  matrix:
+    - PROJECT=nextcloud GOARCH=amd64
+    - PROJECT=nextcloud GOARCH=arm
+    - PROJECT=hass_ble_scanner GOARCH=amd64
+    - PROJECT=hass_ble_scanner GOARCH=arm
+
+script:
+  - docker build -t $DOCKER_USER/$REPO:$GOARCH $GITHUB_BASEURL:$REPO
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker push $DOCKER_USER/$REPO:$GOARCH
