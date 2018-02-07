@@ -6,12 +6,12 @@ import time
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
-channel   = os.environ['GPIO']      if os.environ.has_key('GPIO')      else 21
-host      = os.environ['MQTT_HOST'] if os.environ.has_key('MQTT_HOST') else 'localhost'
-port      = os.environ['MQTT_PORT'] if os.environ.has_key('MQTT_PORT') else 1883
-protocol  = mqtt.MQTTv31            if os.environ.has_key('MQTT_V31')  else mqtt.MQTTv311
-topic     = os.environ['TOPIC']     if os.environ.has_key('TOPIC')     else 'switch/counter'
-send_time = os.environ['SEND_TIME'] if os.environ.has_key('SEND_TIME') else 30
+channel   = os.environ['GPIO']           if os.environ.has_key('GPIO')      else 21
+host      = os.environ['MQTT_HOST']      if os.environ.has_key('MQTT_HOST') else 'localhost'
+port      = int(os.environ['MQTT_PORT']) if os.environ.has_key('MQTT_PORT') else 1883
+protocol  = mqtt.MQTTv31                 if os.environ.has_key('MQTT_V31')  else mqtt.MQTTv311
+topic     = os.environ['TOPIC']          if os.environ.has_key('TOPIC')     else 'switch/counter'
+send_time = int(os.environ['SEND_TIME']) if os.environ.has_key('SEND_TIME') else 30
 debounce  = 100
 
 count = 0
@@ -19,7 +19,7 @@ lastsend = 0
 
 # logging
 def log(message):
-	print(time.strftime('%Y-%m-%d %H:%M:%S'), message)
+	print time.strftime('%Y-%m-%d %H:%M:%S'), message
 	sys.stdout.flush()
 
 # increment counter
