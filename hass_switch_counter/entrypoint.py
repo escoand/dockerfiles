@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import time
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
@@ -18,7 +19,8 @@ lastsend = 0
 
 # logging
 def log(message):
-	print time.strftime('%Y-%m-%d %H:%M:%S'), message
+	print(time.strftime('%Y-%m-%d %H:%M:%S'), message)
+	sys.stdout.flush()
 
 # increment counter
 def on_switch(channel):
