@@ -5,10 +5,11 @@ env:
     - secure: R+dqySCp7xxJ6sD1xbz7lf3bBFXI9nagdp1RSHEIny1bKzdie/2twgn+dtfKog+/MTdEaly29aKKPsJMCHbTqNNRdSrKEtGPP67CKapaYMooZs2wPaxa/J0FtrPftts5PBB3kvsTOxsMFMzBQ3klrVG9wsPp4WDC5r0MlQhpV5zZsArFZUCHH+oZb7MUo3D9Mmk6aVA7S1F490wrcO3VMtYI5/YVKRdcXMBHajcXfK46M4uRteN7tsnBH82ZdLLyhg0K5mU+sTDqxTDgoHGJNvbHf4zhSp2T+KOVwk9K2pFP3mNxRmYST7acMwe14lRL36tzru1ieywoNTL+6Fb/nFAyaBDIBu6xthVDGa31HDJ51GLS1bMDdPmDuaXIR4DRK85ZHTrbMnqzT0xxVny9bjBOr79y+u/P8qa/f26EBDTteNKI26RqPMEsNDJ1x2V7YtMPgmSrrWlql6WGzyxOXpOLleG+wwNFMNjlLwAWXoO88ozln58Z/ij4ZMB9aJ1GadofSzPgVlKWASYscS0PKuj057DWla7kuapXMeXC2TstSoi4/Wco09vBeSx798XUZ/lSkQXwKAtS60NUwgaltJ9P/e27EFYJFxtLrjtAb8MFlpWSwV3d1VbB6//y0j0FmanbjL/rPKYYLds/Ht/1WhfqWcRU1gN2CMBE4d7wsow=
 
   matrix:
-    - PROJECT=nextcloud        ARCH=amd64
-    - PROJECT=nextcloud        ARCH=armhf
-    - PROJECT=hass_ble_scanner ARCH=amd64
-    - PROJECT=hass_ble_scanner ARCH=armhf
+    #- PROJECT=nextcloud           ARCH=amd64
+    #- PROJECT=nextcloud           ARCH=armhf
+    - PROJECT=hass_ble_scanner    ARCH=amd64
+    - PROJECT=hass_ble_scanner    ARCH=armhf
+    - PROJECT=hass_switch_counter ARCH=armhf
 
 script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
