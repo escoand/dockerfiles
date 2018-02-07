@@ -26,7 +26,7 @@ def on_switch(channel):
 	count += 1
 
 # init gpio
-log('init gpio')
+log('init gpio %d' % channel)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(channel, GPIO.BOTH, callback=on_switch, bouncetime=debounce)
@@ -42,7 +42,7 @@ log('enter main loop')
 while True:
 	log('sleep %d seconds' % send_time)
 	time.sleep(send_time)
-	log('send count %d' % count)
+	log('send count %d to %s:%d' % (count, host, port))
 	client.publish(topic, count)
 	count = 0
 
