@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+
+  ble_scanner:
+    image: escoand/hass_ble_scanner:armhf
+    container_name: ble_scanner
+    environment:
+      - MQTT_HOST=192.168.1.25
+      - PAYLOAD=
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    network_mode: host
+    restart: always
+
+  switch_counter:
+    image: escoand/hass_switch_counter:armhf
+    container_name: switch_counter
+    environment:
+      - MQTT_HOST=192.168.1.25
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - /dev/gpiomem
+    privileged: true
+    restart: always
+
