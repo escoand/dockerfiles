@@ -16,7 +16,7 @@ lastsend = 0
 
 # increment counter
 def on_switch(channel):
-	count++
+	count += 1
 
 # init gpio
 GPIO.setmode(GPIO.BCM)
