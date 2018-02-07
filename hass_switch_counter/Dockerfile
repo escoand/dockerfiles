@@ -6,4 +6,4 @@ RUN apk --no-cache add py-rpigpio py-paho-mqtt
 
 COPY entrypoint.py /root/entrypoint.py
 
-COMMAND /root/entrypoint.py
+CMD ["python", "/root/entrypoint.py"]
