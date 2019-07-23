@@ -19,7 +19,6 @@
     "environment": {},
     "map": ["share:rw"],
     "options": {"env_var": [
-        {"name": "NEXTCLOUD_DATA_DIR", "value": "/share/nextcloud/"},
         {"name": "REDIS_HOST",         "value": null},
         {"name": "REDIS_HOST_PORT",    "value": null},
         {"name": "MYSQL_HOST",         "value": "core-mariadb"},
