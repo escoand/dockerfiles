@@ -28,5 +28,6 @@
     ]},
     "schema": {"env_var":[
         {"name": "str", "value": "str?"}
-    ]}
+    ]},
+    "image": "escoand/hassio-nextcloud-{arch}"
 }
