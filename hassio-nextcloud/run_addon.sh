@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
 
 for DIR in /data/nextcloud /share/nextcloud; do
     if [ ! -d "${DIR}" ]; then
@@ -11,4 +10,4 @@ done
 
 eval $(jq --raw-output '.env_var | .[] | "export " + .name + "=\"" + .value + "\""' /data/options.json)
 
-/entrypoint.sh
+/entrypoint.sh "$@"
