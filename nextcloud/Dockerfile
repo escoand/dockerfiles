@@ -30,8 +30,8 @@ RUN git clone https://github.com/goodspb/pdlib.git && \
     make && \
     make install && \
     find /etc/php/ && \
-    ls /etc/php/${PHPVER}/*/php.ini | while read F; do echo '\n[pdlib]\nextension="pdlib.so"\n' >> $F; done && \
     rm -rf ../pdlib
+    #ls /usr/local/etc/php/*/php.ini | while read F; do echo '\n[pdlib]\nextension="pdlib.so"\n' >> $F; done && \
 
 RUN apt-get purge -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
     apt-get autoremove && \
