@@ -27,9 +27,9 @@ RUN \
     make install && \
     find /etc/php/ && \
     echo '\n[pdlib]\nextension="pdlib.so"\n' >>/etc/php/7.3/cli/php.ini && \
-    echo '\n[pdlib]\nextension="pdlib.so"\n' >>/etc/php/7.3/fpm/php.ini && \
     cd && \
-  apt-get autoremove -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php7.3-dev pkg-config && \
+  apt-get purge -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php7.3-dev pkg-config && \
+    apt-get autoclean && \
     apt-get clean && \
     rm -rf dlib pdlib && \
     rm -rf /usr/share/man/* && \
