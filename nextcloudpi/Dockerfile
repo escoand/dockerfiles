@@ -1,3 +1,5 @@
+ARG ARCH
+
 FROM ownyourbits/nextcloud-${ARCH}
 
 # installation of dlib and pdlib
