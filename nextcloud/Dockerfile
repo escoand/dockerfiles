@@ -1,3 +1,5 @@
+ARG ARCH
+
 FROM nextcloud:fpm
 
 RUN apt-get update && \

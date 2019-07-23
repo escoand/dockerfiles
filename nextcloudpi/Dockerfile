@@ -1,4 +1,5 @@
 ARG ARCH
+ARG PHPVER=7.3
 
 FROM ownyourbits/nextcloud-${ARCH}
 
@@ -10,7 +11,7 @@ RUN \
     echo 'Acquire::https::packages.sury.org::Verify-Peer "false";' >/etc/apt/apt.conf.d/ssl.conf && \
     echo 'Acquire::https::packages.sury.org::Verify-Host "false";' >>/etc/apt/apt.conf.d/ssl.conf && \
     apt-get update && \
-    apt-get install --no-install-recommends -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php7.3-dev pkg-config && \
+    apt-get install --no-install-recommends -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php${PHPVER}-dev pkg-config && \
   git -c http.sslVerify=false clone https://github.com/davisking/dlib.git && \
     cd dlib/dlib && \
     mkdir build && \
@@ -26,9 +27,9 @@ RUN \
     make && \
     make install && \
     find /etc/php/ && \
-    echo '\n[pdlib]\nextension="pdlib.so"\n' >>/etc/php/7.3/cli/php.ini && \
+    echo '\n[pdlib]\nextension="pdlib.so"\n' >>/etc/php/${PHPVER}/cli/php.ini && \
     cd && \
-  apt-get purge -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php7.3-dev pkg-config && \
+  apt-get purge -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php${PHPVER}-dev pkg-config && \
     apt-get autoclean && \
     apt-get clean && \
     rm -rf dlib pdlib && \
