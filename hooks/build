@@ -1,2 +1,0 @@
-#!/bin/sh
-docker build --pull --build-arg ARCH=$ARCH -f $DOCKERFILE_PATH -t $IMAGE_NAME .
