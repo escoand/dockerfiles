@@ -4,15 +4,18 @@ services:
 language: minimal
 
 env:
-  - PROJECT=nextcloud    TAG=latest
-  - PROJECT=nextcloudpi  TAG=x86
-  - PROJECT=nextcloudpi  TAG=armhf
+  - PROJECT=nextcloud    TAG=x86     ARCH=i386
+  - PROJECT=nextcloud    TAG=amd64   ARCH=amd64
+  - PROJECT=nextcloud    TAG=armhf   ARCH=arm32v7
+  - PROJECT=nextcloud    TAG=arm64   ARCH=arm64v8
+  #- PROJECT=nextcloudpi  TAG=x86     ARCH=x86
+  #- PROJECT=nextcloudpi  TAG=armhf   ARCH=armhf
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 script:
-  - docker build --pull --build-arg ARCH=$TAG -t $DOCKER_USER/$PROJECT:$TAG $PROJECT
+  - docker build --pull --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT:$TAG $PROJECT
 
 after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
