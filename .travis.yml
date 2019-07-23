@@ -15,5 +15,5 @@ script:
   - docker build --pull --build-arg ARCH=$TAG -t $DOCKER_USER/$PROJECT:$TAG $PROJECT
 
 after_success:
-  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
   - docker push $DOCKER_USER/$PROJECT:$TAG
