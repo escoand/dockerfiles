@@ -13,7 +13,8 @@ before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 script:
-  - docker build --pull --build-arg ARCH=$ARCH                             -t $DOCKER_USER/$PROJECT1:$TAG $PROJECT1 && \
+  - |
+    docker build --pull --build-arg ARCH=$ARCH                             -t $DOCKER_USER/$PROJECT1:$TAG $PROJECT1 &&
     docker build --pull --build-arg BUILD_FROM=$DOCKER_USER/$PROJECT1:$TAG -t $DOCKER_USER/$PROJECT2:$TAG $PROJECT2
 
 after_success:
