@@ -23,18 +23,13 @@ RUN git clone https://github.com/davisking/dlib.git && \
     make install && \
     rm -rf ../../../dlib
 
-RUN git clone https://github.com/goodspb/pdlib.git && \
-    cd pdlib && \
-    phpize && \
-    ./configure && \
-    make && \
-    make install && \
+RUN git clone https://github.com/goodspb/pdlib.git /usr/src/php/ext/pdlib && \
     docker-php-ext-install pdlib && \
-    rm -rf ../pdlib
+    rm -rf /usr/src/php/ext/pdlib
 
 RUN apt-get purge -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
-    apt-get autoremove && \
-    apt-get clean
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 ENV NEXTCLOUD_UPDATE=1
 
