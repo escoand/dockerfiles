@@ -1,0 +1,8 @@
+{
+  "build_from": {
+    "i386":    "escoand/hassio-nextcloud:i386",
+    "amd64":   "escoand/hassio-nextcloud:amd64",
+    "armhf":   "escoand/hassio-nextcloud:armhf",
+    "aarch64": "escoand/hassio-nextcloud:aarch64"
+  }
+}

@@ -4,10 +4,14 @@ services:
 language: minimal
 
 env:
-  - PROJECT=nextcloud  TAG=i386     ARCH=i386
-  - PROJECT=nextcloud  TAG=amd64    ARCH=amd64
-  - PROJECT=nextcloud  TAG=armhf    ARCH=arm32v7
-  - PROJECT=nextcloud  TAG=aarch64  ARCH=arm64v8
+  - PROJECT=nextcloud         TAG=i386     ARCH=i386
+  - PROJECT=nextcloud         TAG=amd64    ARCH=amd64
+  - PROJECT=nextcloud         TAG=armhf    ARCH=arm32v7
+  - PROJECT=nextcloud         TAG=aarch64  ARCH=arm64v8
+  - PROJECT=hassio-nextcloud  TAG=i386     ARCH=i386
+  - PROJECT=hassio-nextcloud  TAG=amd64    ARCH=amd64
+  - PROJECT=hassio-nextcloud  TAG=armhf    ARCH=arm32v7
+  - PROJECT=hassio-nextcloud  TAG=aarch64  ARCH=arm64v8
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
