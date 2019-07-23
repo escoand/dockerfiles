@@ -4,21 +4,17 @@ services:
 language: minimal
 
 env:
-  - PROJECT=nextcloud         TAG=i386     ARCH=i386
-  - PROJECT=nextcloud         TAG=amd64    ARCH=amd64
-  - PROJECT=nextcloud         TAG=armhf    ARCH=arm32v7
-  - PROJECT=nextcloud         TAG=aarch64  ARCH=arm64v8
-  - PROJECT=hassio-nextcloud  TAG=i386     ARCH=i386
-  - PROJECT=hassio-nextcloud  TAG=amd64    ARCH=amd64
-  - PROJECT=hassio-nextcloud  TAG=armhf    ARCH=arm32v7
-  - PROJECT=hassio-nextcloud  TAG=aarch64  ARCH=arm64v8
+  - PROJECT1=nextcloud  PROJECT2=hassio-nextcloud  TAG=i386     ARCH=i386
+  - PROJECT1=nextcloud  PROJECT2=hassio-nextcloud  TAG=amd64    ARCH=amd64
+  - PROJECT1=nextcloud  PROJECT2=hassio-nextcloud  TAG=armhf    ARCH=arm32v7
+  - PROJECT1=nextcloud  PROJECT2=hassio-nextcloud  TAG=aarch64  ARCH=arm64v8
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
 script:
-  - docker build --pull --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT:$TAG $PROJECT
-
-after_success:
-  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-  - docker push $DOCKER_USER/$PROJECT:$TAG
+  - docker build --pull --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT1:$TAG $PROJECT1
+  - docker build --pull --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT2:$TAG $PROJECT2
+  - docker push $DOCKER_USER/$PROJECT1:$TAG
+  - docker push $DOCKER_USER/$PROJECT2:$TAG
