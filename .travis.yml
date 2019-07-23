@@ -1,3 +1,8 @@
+sudo: required
+services:
+  - docker
+language: minimal
+
 env:
   global:
     - secure: NeGqAJYmojDU34bSUOCjIruEqQ+cEbMhPe3Ed2lUclpjDfRCs693f7QqU9uW/OX13SqEU0ODmNOo8DMEw+HwvT6olslx3OtDUVIBuEFnGaJcrb2SRfSu5+FRytEB/9HuZWx4nsByJBl27+YeQQtiq1Qaw4uA42I6nG93GwOMAZmL1PJcCPXdm8K+tIhbfj+zxH/gRte503QY47gMP2tMPEy2X3TfTe0Dr5BntIXk8GerJiXeQWhy6YacKhUn5BUpSxm+R2bpPnsV1SN2d2iKnHe3hLNbu4HIXtAK6oB6n78HzzLESsDnehk0PT+kdqC7DTNYO6zCukEjSjmp4ZiJH5G9VhLGksYdnEUEZ/ovUanY/PRIpxyCIWyIevF49921pM4b9u3h2S5Wb9y3OYfDXo1AKbjPfp3RK5IfsTfrogMmTjIP4Y3BMLmeCt+9B078jNcyASki69qTacUBrjBvc7tyWYqsD2b9qWzn0zi3icybAfoYB36MwnDQLvjSXLF/HKmkqf4y7jcPUfUisAePoMAtItdWT1udy3COpqh78m60CQMzUHtAj6X6npwnyVjhnPNXx4KQAbm2Wblauw+ZKriN5hpJDM41g+xdMe/+CzvBhJhOEBSDGDgX6A4zsijct97HTA9jt+hZhLkqJWoPz77qRRCwHaGaqA8V/9ITbBk=
@@ -10,7 +15,7 @@ env:
     #- PROJECT=hass_ble_scanner    ARCH=amd64
     #- PROJECT=hass_ble_scanner    ARCH=armhf
     #- PROJECT=hass_switch_counter ARCH=armhf
-    - PROJECT=nextcloudpi         ARCH=amd64
+    - PROJECT=nextcloudpi         ARCH=x86
     - PROJECT=nextcloudpi         ARCH=armhf
 
 before_script:
