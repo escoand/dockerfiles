@@ -14,10 +14,10 @@ before_script:
 
 script:
   - |
-    docker build --pull --build-arg ARCH=$ARCH                             -t $DOCKER_USER/$PROJECT1:$TAG $PROJECT1 &&
-    docker build --pull --build-arg BUILD_FROM=$DOCKER_USER/$PROJECT1:$TAG -t $DOCKER_USER/$PROJECT2:$TAG $PROJECT2
+    docker build --pull --build-arg ARCH=$ARCH                             -t $DOCKER_USER/$PROJECT1-$TAG $PROJECT1 &&
+    docker build --pull --build-arg BUILD_FROM=$DOCKER_USER/$PROJECT1-$TAG -t $DOCKER_USER/$PROJECT2-$TAG $PROJECT2
 
 after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-  - docker push $DOCKER_USER/$PROJECT1:$TAG
-  - docker push $DOCKER_USER/$PROJECT2:$TAG
+  - docker push $DOCKER_USER/$PROJECT1-$TAG
+  - docker push $DOCKER_USER/$PROJECT2-$TAG
