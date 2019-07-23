@@ -19,7 +19,7 @@ RUN \
     cmake -DBUILD_SHARED_LIBS=ON .. && \
     make && \
     make install && \
-    cd && \
+    cd ../../.. && \
   git -c http.sslVerify=false clone https://github.com/goodspb/pdlib.git && \
     cd pdlib && \
     phpize && \
@@ -28,7 +28,7 @@ RUN \
     make install && \
     find /etc/php/ && \
     ls /etc/php/${PHPVER}/*/php.ini | while read F; do echo '\n[pdlib]\nextension="pdlib.so"\n' >> $F; done && \
-    cd && \
+    cd .. && \
   apt-get purge -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php${PHPVER}-dev pkg-config && \
     apt-get autoclean && \
     apt-get clean && \
