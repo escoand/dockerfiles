@@ -1,4 +1,6 @@
-FROM nextcloud:apache
+ARG ARCH
+
+FROM ${ARCH}/nextcloud:apache
 
 RUN apt-get update && apt-get install -y supervisor && \
     rm -rf /var/lib/apt/lists/* && \
