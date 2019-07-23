@@ -13,7 +13,7 @@ COPY cronjobs         /var/spool/cron/crontabs/www-data
 # https://github.com/matiasdelellis/facerecognition/wiki/Installation
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
+    apt-get install --no-install-recommends -y cmake git liblapack3 liblapack-dev libopenblas-base libopenblas-dev libx11-dev && \
     git clone https://github.com/davisking/dlib.git /tmp/dlib && \
     mkdir /tmp/dlib/dlib/build && \
     cd /tmp/dlib/dlib/build && \
