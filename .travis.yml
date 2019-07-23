@@ -7,14 +7,18 @@ env:
   matrix:
     #- PROJECT=nextcloud           ARCH=amd64
     #- PROJECT=nextcloud           ARCH=armhf
-    - PROJECT=hass_ble_scanner    ARCH=amd64
-    - PROJECT=hass_ble_scanner    ARCH=armhf
-    - PROJECT=hass_switch_counter ARCH=armhf
+    #- PROJECT=hass_ble_scanner    ARCH=amd64
+    #- PROJECT=hass_ble_scanner    ARCH=armhf
+    #- PROJECT=hass_switch_counter ARCH=armhf
+    - PROJECT=nextcloudpi         ARCH=amd64
+    - PROJECT=nextcloudpi         ARCH=armhf
+
+before_script:
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 script:
-  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT:$ARCH https://github.com/$GITHUB_USER/dockerfiles.git#master:$PROJECT
+  - docker build --pull --build-arg ARCH=$ARCH -t $DOCKER_USER/$PROJECT:$ARCH $PROJECT
 
-after_success:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+deploy:
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push $DOCKER_USER/$PROJECT:$ARCH
