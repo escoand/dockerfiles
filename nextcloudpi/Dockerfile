@@ -27,7 +27,7 @@ RUN \
     make && \
     make install && \
     find /etc/php/ && \
-    echo '\n[pdlib]\nextension="pdlib.so"\n' >>/etc/php/${PHPVER}/cli/php.ini && \
+    ls /etc/php/${PHPVER}/*/php.ini | while read F; do echo '\n[pdlib]\nextension="pdlib.so"\n' >> $F; done && \
     cd && \
   apt-get purge -y build-essential cmake git liblapack-dev libopenblas-dev libx11-dev php${PHPVER}-dev pkg-config && \
     apt-get autoclean && \
