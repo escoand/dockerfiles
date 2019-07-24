@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/sh -e
 
 for DIR in /data/nextcloud /share/nextcloud; do
     if [ ! -d "${DIR}" ]; then
