@@ -2,6 +2,9 @@ ARG ARCH
 
 FROM ${ARCH}/nextcloud:apache
 
+FROM multiarch/qemu-user-static:register AS qemu
+COPY --from=qemu /usr/bin/qemu-${ARCH}-static /usr/bin
+
 RUN apt-get update && apt-get install -y supervisor && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /var/log/supervisord /var/run/supervisord
