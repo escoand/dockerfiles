@@ -1,9 +1,10 @@
 ARG ARCH
+ARG ARCHALIAS
 
+FROM multiarch/debian-debootstrap:${ARCHALIAS}-stretch AS qemu
 FROM ${ARCH}/nextcloud:apache
 
-FROM multiarch/qemu-user-static:register AS qemu
-COPY --from=qemu /usr/bin/qemu-${ARCH}-static /usr/bin
+COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 
 RUN apt-get update && apt-get install -y supervisor && \
     rm -rf /var/lib/apt/lists/* && \
@@ -28,7 +29,8 @@ RUN apt-get update && \
     apt-get purge -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
     apt-get autoremove -y && \
     apt-get clean -y && \
-    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/*
+    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* && \
+    rm -rf /usr/bin/qemu-*-static
 
 ENV NEXTCLOUD_UPDATE=1
 
