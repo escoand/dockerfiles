@@ -15,3 +15,4 @@ RUN apt-get update && \
     rm -rf /usr/bin/qemu-*-static
 
 ENTRYPOINT ["/run_addon.sh"]
+CMD ["/usr/bin/supervisord"]
