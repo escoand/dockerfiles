@@ -32,7 +32,7 @@ script: |
   fi
   if [ -n "$HAPROJECT" ]; then
     HABASE=$(jq -r ".build_from.$TAG" $HAPROJECT/build.json)
-    HARESULT=$(jq -r ".image" $HAPROJECT/config.json | sed "s|{arch}|$TAG|g")
+    HARESULT=$(jq -r '.image+":"+.version' $HAPROJECT/config.json | sed "s|{arch}|$TAG|g")
     docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg QEMUTAG=$QEMUTAG -t $HARESULT $HAPROJECT &&
     docker push $HARESULT ||
     exit 2
