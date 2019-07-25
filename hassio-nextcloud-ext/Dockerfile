@@ -5,7 +5,7 @@ FROM multiarch/debian-debootstrap:${QEMUTAG}-stretch AS qemu
 FROM $BUILD_FROM
 
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
-COPY ../hassio-nextcloud/run_addon.sh /
+COPY run_addon.sh /
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y jq && \
@@ -15,3 +15,4 @@ RUN apt-get update && \
     rm -rf /usr/bin/qemu-*-static
 
 ENTRYPOINT ["/run_addon.sh"]
+CMD ["/usr/bin/supervisord"]
