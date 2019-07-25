@@ -1,8 +1,8 @@
 {
   "build_from": {
-    "i386":    "escoand/nextcloud:i386",
-    "amd64":   "escoand/nextcloud:amd64",
-    "armhf":   "escoand/nextcloud:armhf",
-    "aarch64": "escoand/nextcloud:aarch64"
+    "i386":    "escoand/nextcloud-ext:i386",
+    "amd64":   "escoand/nextcloud-ext:amd64",
+    "armhf":   "escoand/nextcloud-ext:armhf",
+    "aarch64": "escoand/nextcloud-ext:aarch64"
   }
 }
