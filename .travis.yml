@@ -4,16 +4,14 @@ services:
 language: minimal
 
 env:
-    # direct hassio builds
-    # two step builds
-  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
-  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
-  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
-  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
-  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
-  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
-  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
-  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
+  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud
+  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud
+  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud
+  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud
+  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
+  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
+  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
+  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
 
 before_install:
   - sudo apt update
@@ -24,13 +22,14 @@ before_script:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
 script: |
-  if [ -n "$PROJECT" ]; then
+  if [ -d "$PROJECT" ]; then
     RESULT=$DOCKER_USER/$PROJECT:$TAG
     docker build --pull --build-arg ARCH=$ARCH --build-arg QEMUTAG=$QEMUTAG -t $RESULT $PROJECT &&
     docker push $RESULT ||
     exit 1
   fi
-  if [ -n "$HAPROJECT" ]; then
+  if [ -d "hassio-$PROJECT" ]; then
+    HAPROJECT=hassio-$PROJECT
     HADOCKER=${HADOCKER:-$HAPROJECT}
     HABASE=$(jq -r ".build_from.$TAG" $HAPROJECT/build.json)
     HARESULT=$(jq -r '.image+":"+.version' $HAPROJECT/config.json | sed "s|{arch}|$TAG|g")
