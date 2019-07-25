@@ -7,8 +7,8 @@ FROM $BUILD_FROM
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 COPY run_addon.sh /
 
-RUN rm -rf /var/www/html && \
-    ln -s /data/nextcloud /var/www/html && \
+RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
+        /entrypoint.sh /var/spool/cron/crontabs/www-data /etc/apache2/sites-available/*.conf && \
     apt-get update && \
     apt-get install --no-install-recommends -y jq && \
     rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
