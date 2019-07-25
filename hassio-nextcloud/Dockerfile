@@ -1,3 +1,4 @@
+ARG ARCHALIAS
 ARG BUILD_FROM
 
 FROM multiarch/debian-debootstrap:${ARCHALIAS}-stretch AS qemu
