@@ -9,6 +9,8 @@ COPY run_addon.sh /
 
 RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
         /entrypoint.sh /var/spool/cron/crontabs/www-data /etc/apache2/sites-available/*.conf && \
+    sed -i 's|<Directory /var/www/>|<Directory /data/nextcloud/>|g' \
+        /etc/apache2/apache2.conf && \
     apt-get update && \
     apt-get install --no-install-recommends -y jq && \
     rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
