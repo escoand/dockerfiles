@@ -48,7 +48,7 @@ script: |
   fi
   if [ -n "$HABASE" ]; then
     HARESULT=${HARESULT:-$DOCKER_USER/$HAPROJECT-$TAG}
-    docker build --pull --build-arg BUILD_FROM=$HABASE -t $HARESULT ${HAPROJECT:-hassio-$PROJECT} &&
+    docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg ARCHALIAS=$TAG -t $HARESULT ${HAPROJECT:-hassio-$PROJECT} &&
     docker push $HARESULT ||
     exit 2
   fi
