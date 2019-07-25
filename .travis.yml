@@ -4,18 +4,49 @@ services:
 language: minimal
 
 env:
-  - PROJECT1=nextcloud  PROJECT2=hassio-$PROJECT1  TAG=i386   ARCH=$TAG
-  - PROJECT1=nextcloud  PROJECT2=hassio-$PROJECT1  TAG=amd64  ARCH=$TAG
-  - PROJECT1=nextcloud  PROJECT2=hassio-$PROJECT1  TAG=armhf  ARCH=arm32v7
-  - PROJECT1=nextcloud  PROJECT2=hassio-$PROJECT1  TAG=arm64  ARCH=arm64v8
+    # direct hassio builds
+  - TAG=i386 ARCH=$TAG \
+    HAPROJECT=hassio-nextcloud \
+    HABASE=$ARCH/$HAPROJECT:apache
+  - TAG=amd64 ARCH=$TAG \
+    HAPROJECT=hassio-nextcloud \
+    HABASE=$ARCH/$HAPROJECT:apache
+  - TAG=armhf ARCH=arm32v7 \
+    HAPROJECT=hassio-nextcloud \
+    HABASE=$ARCH/$HAPROJECT:apache
+  - TAG=arm64 ARCH=arm64v8 \
+    HAPROJECT=hassio-nextcloud \
+    HABASE=$ARCH/$HAPROJECT:apache
+    # two step builds
+  - TAG=i386 ARCH=$TAG \
+    PROJECT=nextcloud \
+    HAPROJECT=hassio-$PROJECT-ext \
+    HABASE=$RESULT
+  - TAG=amd64 ARCH=$TAG \
+    PROJECT=nextcloud \
+    HAPROJECT=hassio-$PROJECT-ext \
+    HABASE=$RESULT
+  - TAG=armhf ARCH=arm32v7 \
+    PROJECT=nextcloud \
+    HAPROJECT=hassio-$PROJECT-ext \
+    HABASE=$RESULT
+  - TAG=arm64 ARCH=arm64v8 \
+    PROJECT=nextcloud \
+    HAPROJECT=hassio-$PROJECT-ext \
+    HABASE=$RESULT
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-script:
-  - |
-    docker build --pull --build-arg ARCH=$ARCH --build-arg ARCHALIAS=$TAG  -t $DOCKER_USER/$PROJECT1:$TAG $PROJECT1 &&
-    docker push $DOCKER_USER/$PROJECT1:$TAG &&
-    docker build --pull --build-arg BUILD_FROM=$DOCKER_USER/$PROJECT1:$TAG -t $DOCKER_USER/$PROJECT2-$TAG $PROJECT2 &&
-    docker push $DOCKER_USER/$PROJECT2-$TAG
+script: |
+  if [ "$PROJECT" ]; then
+    RESULT=${RESULT:-$DOCKER_USER/$PROJECT-$TAG}
+    docker build --pull --build-arg ARCH=$ARCH --build-arg ARCHALIAS=$TAG -t $RESULT $PROJECT &&
+    docker push $RESULT
+  fi
+  if [ "$HABASE" ]; then
+    HARESULT=${HARESULT:-$DOCKER_USER/$HAPROJECT-$TAG}
+    docker build --pull --build-arg BUILD_FROM=$HABASE -t $HARESULT ${HAPROJECT:-hassio-$PROJECT} &&
+    docker push $HARESULT
+  fi
