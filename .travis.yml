@@ -7,16 +7,16 @@ env:
     # direct hassio builds
   - TAG=i386 ARCH=$TAG \
     HAPROJECT=hassio-nextcloud \
-    HABASE=$ARCH/$HAPROJECT:apache
+    HABASE=$ARCH/nextcloud:apache
   - TAG=amd64 ARCH=$TAG \
     HAPROJECT=hassio-nextcloud \
-    HABASE=$ARCH/$HAPROJECT:apache
+    HABASE=$ARCH/nextcloud:apache
   - TAG=armhf ARCH=arm32v7 \
     HAPROJECT=hassio-nextcloud \
-    HABASE=$ARCH/$HAPROJECT:apache
+    HABASE=$ARCH/nextcloud:apache
   - TAG=arm64 ARCH=arm64v8 \
     HAPROJECT=hassio-nextcloud \
-    HABASE=$ARCH/$HAPROJECT:apache
+    HABASE=$ARCH/nextcloud:apache
     # two step builds
   - TAG=i386 ARCH=$TAG \
     PROJECT=nextcloud \
@@ -40,12 +40,12 @@ before_script:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
 script: |
-  if [ "$PROJECT" ]; then
+  if [ -n "$PROJECT" ]; then
     RESULT=${RESULT:-$DOCKER_USER/$PROJECT-$TAG}
     docker build --pull --build-arg ARCH=$ARCH --build-arg ARCHALIAS=$TAG -t $RESULT $PROJECT &&
     docker push $RESULT
   fi
-  if [ "$HABASE" ]; then
+  if [ -n "$HABASE" ]; then
     HARESULT=${HARESULT:-$DOCKER_USER/$HAPROJECT-$TAG}
     docker build --pull --build-arg BUILD_FROM=$HABASE -t $HARESULT ${HAPROJECT:-hassio-$PROJECT} &&
     docker push $HARESULT
