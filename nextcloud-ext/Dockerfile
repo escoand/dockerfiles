@@ -8,7 +8,8 @@ COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 
 RUN apt-get update && apt-get install -y supervisor && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir /var/log/supervisord /var/run/supervisord
+    mkdir /var/log/supervisord /var/run/supervisord && \
+    rm -f /etc/apache2/conf-enabled/remoteip.conf
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY cronjobs         /var/spool/cron/crontabs/www-data
