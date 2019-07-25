@@ -1,7 +1,7 @@
 ARG ARCH
-ARG ARCHALIAS
+ARG QEMUTAG
 
-FROM multiarch/debian-debootstrap:${ARCHALIAS}-stretch AS qemu
+FROM multiarch/debian-debootstrap:${QEMUTAG}-stretch AS qemu
 FROM ${ARCH}/nextcloud:apache
 
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
