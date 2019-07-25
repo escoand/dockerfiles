@@ -1,6 +1,6 @@
 {
     "name": "Nextcloud Extented",
-    "version": "2",
+    "version": "3",
     "slug": "nextcloud-ext",
     "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
     "url": "https://github.com/escoand/dockerfiles",
@@ -16,11 +16,13 @@
         "80/tcp": null,
         "443/tcp": null
     },
-    "environment": {},
+    "environment": {
+        "NEXTCLOUD_DATA_DIR": "/share/nextcloud"
+    },
     "map": ["share:rw"],
     "options": {"env_var": [
-        {"name": "REDIS_HOST",         "value": null},
-        {"name": "REDIS_HOST_PORT",    "value": null},
+        {"name": "REDIS_HOST",         "value": ""},
+        {"name": "REDIS_HOST_PORT",    "value": ""},
         {"name": "MYSQL_HOST",         "value": "core-mariadb"},
         {"name": "MYSQL_USER",         "value": "nextcloud"},
         {"name": "MYSQL_PASSWORD",     "value": null},
