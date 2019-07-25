@@ -20,20 +20,20 @@ env:
     # two step builds
   - TAG=i386 ARCH=$TAG \
     PROJECT=nextcloud \
-    HAPROJECT=hassio-$PROJECT-ext \
-    HABASE=$RESULT
+    HAPROJECT=hassio-$PROJECT \
+    HARESULT=$DOCKER_USER/$HAPROJECT-ext-$TAG
   - TAG=amd64 ARCH=$TAG \
     PROJECT=nextcloud \
-    HAPROJECT=hassio-$PROJECT-ext \
-    HABASE=$RESULT
+    HAPROJECT=hassio-$PROJECT \
+    HARESULT=$DOCKER_USER/$HAPROJECT-ext-$TAG
   - TAG=armhf ARCH=arm32v7 \
     PROJECT=nextcloud \
-    HAPROJECT=hassio-$PROJECT-ext \
-    HABASE=$RESULT
+    HAPROJECT=hassio-$PROJECT \
+    HARESULT=$DOCKER_USER/$HAPROJECT-ext-$TAG
   - TAG=arm64 ARCH=arm64v8 \
     PROJECT=nextcloud \
-    HAPROJECT=hassio-$PROJECT-ext \
-    HABASE=$RESULT
+    HAPROJECT=hassio-$PROJECT \
+    HARESULT=$DOCKER_USER/$HAPROJECT-ext-$TAG
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
@@ -46,9 +46,10 @@ script: |
     docker push $RESULT ||
     exit 1
   fi
-  if [ -n "$HABASE" ]; then
+  if [ -n "$HAPROJECT" ]; then
+    HABASE=${HABASE:-$DOCKER_USER/$PROJECT-$TAG}
     HARESULT=${HARESULT:-$DOCKER_USER/$HAPROJECT-$TAG}
-    docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg ARCHALIAS=$TAG -t $HARESULT ${HAPROJECT:-hassio-$PROJECT} &&
+    docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg ARCHALIAS=$TAG -t $HARESULT $HAPROJECT &&
     docker push $HARESULT ||
     exit 2
   fi
