@@ -7,12 +7,11 @@ FROM $BUILD_FROM
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 COPY run_addon.sh /
 
-RUN apt-get update && \
+RUN rm -rf /var/www/html && \
+    ln -s /data/nextcloud /var/www/html && \
+    apt-get update && \
     apt-get install --no-install-recommends -y jq && \
-    sed -i 's|/var/www/html|/data/nextcloud|g' \
-        /entrypoint.sh /var/spool/cron/crontabs/www-data && \
-    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* && \
-    rm -rf /usr/bin/qemu-*-static
+    rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
 
 ENTRYPOINT ["/run_addon.sh"]
 CMD ["/usr/bin/supervisord"]

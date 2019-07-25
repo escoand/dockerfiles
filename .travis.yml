@@ -5,15 +5,15 @@ language: minimal
 
 env:
     # direct hassio builds
-  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-nextcloud
-  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-nextcloud
-  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud      HAPROJECT=hassio-nextcloud
-  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud      HAPROJECT=hassio-nextcloud
     # two step builds
-  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT-ext
-  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT-ext
-  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT-ext
-  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT-ext
+  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
+  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
+  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
+  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud      HAPROJECT=hassio-$PROJECT
+  - ARCH=i386     TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
+  - ARCH=amd64    TAG=$ARCH    QEMUTAG=$ARCH  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
+  - ARCH=arm32v7  TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
+  - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud-ext  HAPROJECT=hassio-$PROJECT  HADOCKER=hassio-nextcloud
 
 before_install:
   - sudo apt update
@@ -31,9 +31,10 @@ script: |
     exit 1
   fi
   if [ -n "$HAPROJECT" ]; then
+    HADOCKER=${HADOCKER:-$HAPROJECT}
     HABASE=$(jq -r ".build_from.$TAG" $HAPROJECT/build.json)
     HARESULT=$(jq -r '.image+":"+.version' $HAPROJECT/config.json | sed "s|{arch}|$TAG|g")
-    docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg QEMUTAG=$QEMUTAG -t $HARESULT $HAPROJECT &&
+    docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg QEMUTAG=$QEMUTAG -t $HARESULT $HADOCKER &&
     docker push $HARESULT ||
     exit 2
   fi
