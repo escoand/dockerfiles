@@ -16,8 +16,8 @@ env:
   - ARCH=arm64v8  TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud  HAPROJECT=hassio-$PROJECT-ext
 
 before_install:
-  - apt update
-  - apt install -y jq
+  - sudo apt update
+  - sudo apt install -y jq
 
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
