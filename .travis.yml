@@ -31,8 +31,8 @@ script: |
   if [ -d "hassio-$PROJECT" ]; then
     HAPROJECT=hassio-$PROJECT
     HADOCKER=${HADOCKER:-$HAPROJECT}
-    HABASE=$(jq -r ".build_from.$TAG" $HAPROJECT/build.json)
-    HARESULT=$(jq -r '.image+":"+.version' $HAPROJECT/config.json | sed "s|{arch}|$TAG|g")
+    HABASE=$(jq -r '.build_from[env.TAG]' $HAPROJECT/build.json)
+    HARESULT=$(jq -r '.image+":"+.version|sub("{arch}";env.TAG)' $HAPROJECT/config.json)
     docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg QEMUTAG=$QEMUTAG -t $HARESULT $HADOCKER &&
     docker push $HARESULT ||
     exit 2
