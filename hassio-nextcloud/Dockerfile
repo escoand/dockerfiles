@@ -11,8 +11,9 @@ RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
         /entrypoint.sh \
         /var/spool/cron/crontabs/www-data \
         /etc/apache2/sites-available/*.conf && \
-    sed -n '/<Directory \/var\/www\/>/,/<\/Directory>/{s|/var/www/|/share/nextcloud/|;H;s|/share/nextcloud/|/data/nextcloud/|}; p; ${x;p}' \
-        /etc/apache2/apache2.conf && \
+    sed -i -n '/<Directory \/var\/www\/>/,/<\/Directory>/{s|/var/www/|/share/nextcloud/|;H;s|/share/nextcloud/|/data/nextcloud/|}; p; ${x;p}' \
+        /etc/apache2/apache2.conf \
+        /etc/apache2/conf-enabled/docker-php.conf && \
     apt-get update && \
     apt-get install --no-install-recommends -y jq && \
     rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
