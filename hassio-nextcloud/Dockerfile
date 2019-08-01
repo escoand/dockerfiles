@@ -8,8 +8,10 @@ COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 COPY run_addon.sh /
 
 RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
-        /entrypoint.sh /var/spool/cron/crontabs/www-data /etc/apache2/sites-available/*.conf && \
-    sed -i 's|<Directory /var/www/>|<Directory /data/nextcloud/>|g' \
+        /entrypoint.sh \
+        /var/spool/cron/crontabs/www-data \
+        /etc/apache2/sites-available/*.conf && \
+    sed -n '/<Directory \/var\/www\/>/,/<\/Directory>/{s|/var/www/|/share/nextcloud/|;H;s|/share/nextcloud/|/data/nextcloud/|}; p; ${x;p}' \
         /etc/apache2/apache2.conf && \
     apt-get update && \
     apt-get install --no-install-recommends -y jq && \
