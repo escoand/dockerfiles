@@ -7,7 +7,6 @@ for DIR in /data/nextcloud /share/nextcloud; do
     chmod -R g=u "${DIR}"
 done
 
-export NEXTCLOUD_DATA_DIR=/share/nextcloud
 eval $(jq --raw-output '.env_var | .[] | "export " + .name + "=\"" + .value + "\""' /data/options.json)
 
 /entrypoint.sh "$@"
