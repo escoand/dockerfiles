@@ -13,6 +13,4 @@ RUN apt-get update && apt-get install -y supervisor && \
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY cronjobs         /var/spool/cron/crontabs/www-data
 
-ENV NEXTCLOUD_UPDATE=1
-
 CMD ["/usr/bin/supervisord"]
