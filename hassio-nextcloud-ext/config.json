@@ -20,16 +20,48 @@
         "NEXTCLOUD_DATA_DIR": "/share/nextcloud"
     },
     "map": ["share:rw"],
-    "options": {"env_var": [
-        {"name": "REDIS_HOST",         "value": ""},
-        {"name": "REDIS_HOST_PORT",    "value": ""},
-        {"name": "MYSQL_HOST",         "value": "core-mariadb"},
-        {"name": "MYSQL_USER",         "value": "nextcloud"},
-        {"name": "MYSQL_PASSWORD",     "value": null},
-        {"name": "MYSQL_DATABASE",     "value": "nextcloud"}
-    ]},
-    "schema": {"env_var":[
-        {"name": "str", "value": "str?"}
-    ]},
+    "options": {
+        "mysql": {
+            "database": "nextcloud",
+            "host": "core-mariadb",
+            "user": "nextcloud",
+            "password": null
+        }
+    },
+    "schema": {
+        "mysql": {
+            "database": "str",
+            "host": "str",
+            "user": "str",
+            "password": "str"
+        },
+        "postgres": {
+            "database": "str?",
+            "host": "str?",
+            "user": "str?",
+            "password": "str?"
+        },
+        "admin": {
+            "user": "str?",
+            "password": "str?"
+        },
+	"trusted_domains": "str?",
+        "redis": {
+            "host": "str?",
+            "port": "port?"
+        },
+        "smtp": {
+            "host": "str?",
+            "port": "port?",
+            "secure": "match(^ssl$)?",
+            "authtype": "str?",
+            "name": "str?",
+            "password": "str?"
+        },
+        "mail": {
+            "from_address": "email?",
+            "domain": "str?"
+        }
+    },
     "image": "escoand/hassio-nextcloud-ext-{arch}"
 }
