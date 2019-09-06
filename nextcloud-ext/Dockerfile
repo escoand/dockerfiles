@@ -32,6 +32,4 @@ RUN apt-get update && \
     rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* && \
     rm -rf /usr/bin/qemu-*-static
 
-ENV NEXTCLOUD_UPDATE=1
-
 CMD ["/usr/bin/supervisord"]
