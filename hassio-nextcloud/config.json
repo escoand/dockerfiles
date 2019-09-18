@@ -1,6 +1,6 @@
 {
     "name": "Nextcloud",
-    "version": "v2019.09.18.0",
+    "version": "v2019.09.18.1",
     "slug": "nextcloud",
     "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
     "url": "https://github.com/escoand/dockerfiles",
@@ -26,6 +26,25 @@
             "host": "core-mariadb",
             "user": "nextcloud",
             "password": null
+        },
+        "postgres": {},
+        "admin": {
+            "user": null,
+            "password": null
+        },
+       	"trusted_domains": null,
+        "redis": {},
+        "smtp": {
+            "host": null,
+            "port": null,
+            "secure": null,
+            "authtype": null,
+            "name": null,
+            "password": null
+        },
+        "mail": {
+            "from_address": null,
+            "domain": null
         }
     },
     "schema": {
@@ -45,7 +64,7 @@
             "user": "str?",
             "password": "str?"
         },
-	"trusted_domains": "str?",
+        "trusted_domains": "str?",
         "redis": {
             "host": "str?",
             "port": "port?"
