@@ -51,4 +51,4 @@ MAIL_DOMAIN="$(jq --raw-output .mail.domain /data/options.json)"
 [ -n "$MAIL_FROM_ADDRESS" ] && export MAIL_FROM_ADDRESS
 [ -n "$MAIL_DOMAIN" ] && export MAIL_DOMAIN
 
-/entrypoint.sh "$@"
+sh -x /entrypoint.sh "$@"
