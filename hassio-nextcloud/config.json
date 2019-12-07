@@ -1,6 +1,6 @@
 {
     "name": "Nextcloud",
-    "version": "v2019.12.07.1",
+    "version": "v2019.12.07.3",
     "slug": "nextcloud",
     "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
     "url": "https://github.com/escoand/dockerfiles",
@@ -17,7 +17,8 @@
         "443/tcp": null
     },
     "environment": {
-        "NEXTCLOUD_DATA_DIR": "/share/nextcloud"
+        "NEXTCLOUD_DATA_DIR": "/share/nextcloud",
+        "NEXTCLOUD_UPDATE": "1"
     },
     "map": ["share:rw"],
     "options": {
