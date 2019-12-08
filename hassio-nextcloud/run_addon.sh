@@ -9,7 +9,7 @@ for DIR in /data/nextcloud /share/nextcloud; do
     chmod -R g=u "${DIR}"
 done
 
-cat << 'EOF' |
+cat << EOF |
     .mysql.database    MYSQL_DATABASE
     .mysql.host        MYSQL_HOST
     .mysql.user        MYSQL_USER
@@ -33,7 +33,7 @@ cat << 'EOF' |
     .mail.domain       MAIL_DOMAIN
 EOF
 while read -r CONF ENVVAR; do
-    VALUE=$(jq -r "$CONF" /data/options.json | grep -vFx null)
+    VALUE=$(jq --raw-output "$CONF" /data/options.json | grep -Fxv null)
     [ -n "$VALUE" ] && printf 'export %s="%s"\n' "$ENVVAR" "$VALUE" >> "$TMP"
 done
 . "$TMP"
