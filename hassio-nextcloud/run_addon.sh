@@ -22,6 +22,7 @@ cat << EOF |
     .postgres.password                          POSTGRES_PASSWORD
     .redis.host                                 REDIS_HOST
     .redis.port                                 REDIS_HOST_PORT
+    .redis.password                             REDIS_HOST_PASSWORD
     .smtp.host                                  SMTP_HOST
     .smtp.secure                                SMTP_SECURE
     .smtp.port                                  SMTP_PORT
