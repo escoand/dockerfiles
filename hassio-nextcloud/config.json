@@ -1,9 +1,9 @@
 {
     "name": "Nextcloud",
-    "version": "v2019.12.08.3",
+    "version": "v2019.12.08.4",
     "slug": "nextcloud",
-    "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
-    "url": "https://github.com/escoand/dockerfiles",
+    "description": "Hass.io Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
+    "url": "https://github.com/escoand/dockerfiles/hassio-nextcloud",
     "startup": "application",
     "webui": "http://[HOST]:[PORT:80]/",
     "boot": "auto",
@@ -34,9 +34,7 @@
         "redis": {},
         "smtp": {
             "host": null,
-            "port": null,
-            "secure": null,
-            "authtype": null,
+            "secure": "ssl",
             "name": null,
             "password": null
         },
@@ -66,7 +64,7 @@
             "host": "str?",
             "port": "port?",
             "secure": "list(ssl)?",
-            "authtype": "str?",
+            "authtype": "list(LOGIN|PLAIN|NTLM)?",
             "name": "str?",
             "password": "str?"
         },
