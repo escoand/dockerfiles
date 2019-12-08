@@ -1,4 +1,6 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
+
+TMP=$(mktemp)
 
 for DIR in /data/nextcloud /share/nextcloud; do
     [ -d "${DIR}" ] && continue
@@ -33,9 +35,10 @@ cat << 'EOF'
 EOF
 ) | while read CONF ENVVAR; do
     VALUE=$(jq --raw-output "$CONF" /data/options.json)
-    unset $ENVVAR
-    [ -n "$VALUE" ] && eval "export $ENVVAR=\"$VALUE\""
-done
+    [ -n "$VALUE" ] && printf 'export %s="%s"\n' "$ENVVAR" "$VALUE"
+done > "$TMP"
+source "$TMP"
+rm -rf "$TMP"
 
 env
 sh -x /entrypoint.sh "$@"
