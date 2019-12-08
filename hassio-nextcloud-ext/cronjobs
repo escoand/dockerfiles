@@ -1,4 +1,4 @@
-*/15 6-23 * * * php -f /var/www/html/cron.php
-05      0 * * * php -f /var/www/html/occ files:scan --all
-35      0 * * * php -f /var/www/html/occ preview:pre-generate
-00      1 * * * php -f /var/www/html/occ face:background_job -t 7100
+*/15 6-23 * * * php -f /data/nextcloud/cron.php
+05      0 * * * php -f /data/nextcloud/occ files:scan --all
+35      0 * * * php -f /data/nextcloud/occ preview:pre-generate
+00      1 * * * php -f /data/nextcloud/occ face:background_job -t 7100
