@@ -33,8 +33,8 @@ cat << EOF |
     .mail.domain       MAIL_DOMAIN
 EOF
 while read -r CONF ENVVAR; do
-    VALUE=$(jq --raw-output "$CONF" /data/options.json | grep -Fxv null)
-    [ -n "$VALUE" ] && printf 'export %s="%s"\n' "$ENVVAR" "$VALUE" >> "$TMP"
+    CMD=$(printf '%s | select(.!=null) | tostring | "export %s=\""+.+"\""' "$CONF" "$ENVVAR")
+    jq -r "$CMD" /data/options.json >> "$TMP"
 done
 . "$TMP"
 rm -rf "$TMP"
