@@ -1,10 +1,11 @@
 {
     "name": "Nextcloud",
-    "version": "v2019.12.08.1",
+    "version": "v2019.12.08.2",
     "slug": "nextcloud",
     "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
     "url": "https://github.com/escoand/dockerfiles",
-    "startup": "system",
+    "startup": "application",
+    "webui": "http://[HOST]:[PORT:80]/",
     "boot": "auto",
     "arch": [
         "i386",
@@ -16,10 +17,11 @@
         "80/tcp": null,
         "443/tcp": null
     },
-    "environment": {
-        "NEXTCLOUD_DATA_DIR": "/share/nextcloud",
-        "NEXTCLOUD_UPDATE": "1"
+    "ports_description": {
+        "80/tcp": "HTTP",
+        "443/tcp": "HTTPS"
     },
+    "apparmor": true,
     "map": ["share:rw"],
     "options": {
         "mysql": {
@@ -29,11 +31,6 @@
             "password": null
         },
         "postgres": {},
-        "admin": {
-            "user": null,
-            "password": null
-        },
-       	"trusted_domains": null,
         "redis": {},
         "smtp": {
             "host": null,
@@ -50,10 +47,10 @@
     },
     "schema": {
         "mysql": {
-            "database": "str",
-            "host": "str",
-            "user": "str",
-            "password": "str"
+            "database": "str?",
+            "host": "str?",
+            "user": "str?",
+            "password": "str?"
         },
         "postgres": {
             "database": "str?",
@@ -61,11 +58,6 @@
             "user": "str?",
             "password": "str?"
         },
-        "admin": {
-            "user": "str?",
-            "password": "str?"
-        },
-        "trusted_domains": "str?",
         "redis": {
             "host": "str?",
             "port": "port?"
@@ -73,7 +65,7 @@
         "smtp": {
             "host": "str?",
             "port": "port?",
-            "secure": "match(^ssl$)?",
+            "secure": "list(ssl)?",
             "authtype": "str?",
             "name": "str?",
             "password": "str?"
@@ -83,5 +75,6 @@
             "domain": "str?"
         }
     },
-    "image": "escoand/hassio-nextcloud-{arch}"
+    "image": "escoand/hassio-nextcloud-{arch}",
+    "panel_icon": "mdi:cloud"
 }
