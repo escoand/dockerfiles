@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -eux
 
 for DIR in /data/nextcloud /share/nextcloud; do
     [ -d "${DIR}" ] && continue
@@ -34,7 +34,8 @@ EOF
 ) | while read CONF ENVVAR; do
     VALUE=$(jq --raw-output "$CONF" /data/options.json)
     unset $ENVVAR
-    [ -n "$VALUE" ] && export $ENVVAR="$VALUE"
+    [ -n "$VALUE" ] && eval "export $ENVVAR=\"$VALUE\""
 done
 
+env
 sh -x /entrypoint.sh "$@"
