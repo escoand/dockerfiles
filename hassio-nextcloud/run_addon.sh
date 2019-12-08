@@ -9,6 +9,8 @@ for DIR in /data/nextcloud /share/nextcloud; do
     chmod -R g=u "${DIR}"
 done
 
+export NEXTCLOUD_DATA_DIR=/share/nextcloud
+export NEXTCLOUD_UPDATE=1
 cat << EOF |
     .mysql.database    MYSQL_DATABASE
     .mysql.host        MYSQL_HOST
@@ -18,9 +20,6 @@ cat << EOF |
     .postgres.host     POSTGRES_HOST
     .postgres.user     POSTGRES_USER
     .postgres.password POSTGRES_PASSWORD
-    .admin.user        NEXTCLOUD_ADMIN_USER
-    .admin.password    NEXTCLOUD_ADMIN_PASSWORD
-    .trusted_domain    NEXTCLOUD_TRUSTED_DOMAINS
     .redis.host        REDIS_HOST
     .redis.port        REDIS_HOST_PORT
     .smtp.host         SMTP_HOST
