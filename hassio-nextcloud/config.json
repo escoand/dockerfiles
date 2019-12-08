@@ -55,7 +55,8 @@
         },
         "redis": {
             "host": "str?",
-            "port": "port?"
+            "port": "port?",
+            "password": "str?"
         },
         "smtp": {
             "host": "str?",
