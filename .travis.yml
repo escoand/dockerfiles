@@ -7,12 +7,13 @@ env:
   - ADDON=hassio-nextcloud      ARCH=i386     QEMUARCH=$ARCH
   - ADDON=hassio-nextcloud      ARCH=amd64    QEMUARCH=$ARCH
   - ADDON=hassio-nextcloud      ARCH=armhf    QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=armhf
   - ADDON=hassio-nextcloud      ARCH=aarch64  QEMUARCH=arm64
   - ADDON=hassio-nextcloud-ext  ARCH=i386     QEMUARCH=$ARCH
   - ADDON=hassio-nextcloud-ext  ARCH=amd64    QEMUARCH=$ARCH
-  #- ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
-  #- ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
+  - ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud-ext  ARCH=armv7    QEMUARCH=armhf
+  - ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
 
 install:
   - sudo apt update
