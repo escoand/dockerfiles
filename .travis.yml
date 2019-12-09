@@ -4,26 +4,30 @@ services:
 language: minimal
 
 env:
-  - TAG=i386     QEMUTAG=$TAG   PROJECT=hassio-nextcloud
-  - TAG=amd64    QEMUTAG=$TAG   PROJECT=hassio-nextcloud
-  - TAG=armhf    QEMUTAG=$TAG   PROJECT=hassio-nextcloud
-  - TAG=aarch64  QEMUTAG=arm64  PROJECT=hassio-nextcloud
-  #- TAG=i386     QEMUTAG=$TAG   PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
-  #- TAG=amd64    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
-  #- TAG=armhf    QEMUTAG=$TAG   PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
-  #- TAG=aarch64  QEMUTAG=arm64  PROJECT=nextcloud-ext  HADOCKER=hassio-nextcloud
+  - ADDON=hassio-nextcloud      ARCH=i386     QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud      ARCH=amd64    QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud      ARCH=armhf    QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud      ARCH=aarch64  QEMUARCH=arm64
+  - ADDON=hassio-nextcloud-ext  ARCH=i386     QEMUARCH=$ARCH
+  - ADDON=hassio-nextcloud-ext  ARCH=amd64    QEMUARCH=$ARCH
+  #- ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
+  #- ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
 
-before_install:
+install:
   - sudo apt update
   - sudo apt install -y jq
 
 before_script:
+  - BUILD_FROM=$(jq -r '.build_from[env.ARCH]' $ADDON/build.json)
+  - BUILD_VERSION=$(jq -r '.version' $ADDON/config.json)
+  - FINAL_IMAGE=$(jq -r '.image+":"+.version|sub("{arch}";env.ARCH)' $ADDON/config.json)
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
 script: |
-  HADOCKER=${HADOCKER:-$PROJECT}
-  HABASE=$(jq -r '.build_from[env.TAG]' $PROJECT/build.json)
-  HARESULT=$(jq -r '.image+":"+.version|sub("{arch}";env.TAG)' $PROJECT/config.json)
-  docker build --pull --build-arg BUILD_FROM=$HABASE --build-arg QEMUTAG=$QEMUTAG -t $HARESULT $HADOCKER &&
-  docker push $HARESULT
+  docker build --pull \
+    --build-arg BUILD_FROM=$BUILD_FROM --build-arg QEMUARCH=$QEMUARCH \
+    --label io.hass.version="$BUILD_VERSION" --label io.hass.type="addon" --label io.hass.arch="$ARCH" \
+    -t $FINAL_IMAGE $ADDON &&
+  docker push $FINAL_IMAGE

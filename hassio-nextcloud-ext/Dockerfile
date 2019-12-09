@@ -1,7 +1,7 @@
-ARG QEMUTAG
+ARG QEMUARCH
 ARG BUILD_FROM
 
-FROM multiarch/debian-debootstrap:${QEMUTAG}-stretch AS qemu
+FROM multiarch/debian-debootstrap:${QEMUARCH}-stretch AS qemu
 FROM $BUILD_FROM
 
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
@@ -9,7 +9,14 @@ COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 # installation of dlib and pdlib
 # https://github.com/matiasdelellis/facerecognition/wiki/Installation
 
-RUN apt-get update && \
+RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
+        /entrypoint.sh \
+        /var/spool/cron/crontabs/www-data \
+        /etc/apache2/sites-available/*.conf && \
+    sed -i -n '/<Directory \/var\/www\/>/,/<\/Directory>/{s|/var/www/|/share/nextcloud/|;H;s|/share/nextcloud/|/data/nextcloud/|}; p; ${x;p}' \
+        /etc/apache2/apache2.conf \
+        /etc/apache2/conf-enabled/docker-php.conf && \
+    apt-get update && \
     apt-get install --no-install-recommends -y cmake git liblapack3 liblapack-dev libopenblas-base libopenblas-dev libx11-dev supervisor && \
     git clone https://github.com/davisking/dlib.git /tmp/dlib && \
     mkdir /tmp/dlib/dlib/build && \
@@ -22,8 +29,7 @@ RUN apt-get update && \
     apt-get purge -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
     apt-get autoremove -y && \
     apt-get clean -y && \
-    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* && \
-    rm -rf /usr/bin/qemu-*-static && \
+    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* /usr/bin/qemu-*-static && \
     mkdir /var/log/supervisord /var/run/supervisord
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf

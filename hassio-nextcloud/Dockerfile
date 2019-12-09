@@ -1,7 +1,7 @@
-ARG QEMUTAG
+ARG QEMUARCH
 ARG BUILD_FROM
 
-FROM multiarch/debian-debootstrap:${QEMUTAG}-stretch AS qemu
+FROM multiarch/debian-debootstrap:${QEMUARCH}-stretch AS qemu
 FROM $BUILD_FROM
 
 COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
