@@ -32,7 +32,9 @@ RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
     rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* /usr/bin/qemu-*-static && \
     mkdir /var/log/supervisord /var/run/supervisord
 
+COPY run_addon.sh     /
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY cronjobs         /var/spool/cron/crontabs/www-data
 
+ENTRYPOINT ["/run_addon.sh"]
 CMD ["/usr/bin/supervisord"]
