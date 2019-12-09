@@ -1,24 +1,28 @@
 {
     "name": "Nextcloud Extented",
-    "version": "v2019.12.08.1",
+    "version": "v2019.12.10",
     "slug": "nextcloud-ext",
     "description": "Nextcloud addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
-    "url": "https://github.com/escoand/dockerfiles",
-    "startup": "system",
+    "url": "https://github.com/escoand/dockerfiles/hassio-nextcloud-ext",
+    "startup": "application",
+    "webui": "http://[HOST]:[PORT:80]/",
     "boot": "auto",
     "arch": [
         "i386",
         "amd64",
         "armhf",
+        "armv7",
         "aarch64"
     ],
     "ports": {
         "80/tcp": null,
         "443/tcp": null
     },
-    "environment": {
-        "NEXTCLOUD_DATA_DIR": "/share/nextcloud"
+    "ports_description": {
+        "80/tcp": "HTTP",
+        "443/tcp": "HTTPS"
     },
+    "apparmor": true,
     "map": ["share:rw"],
     "options": {
         "mysql": {
@@ -26,14 +30,23 @@
             "host": "core-mariadb",
             "user": "nextcloud",
             "password": null
-        }
+        },
+        "postgres": {},
+        "redis": {},
+        "smtp": {
+            "host": null,
+            "secure": "ssl",
+            "name": null,
+            "password": null
+        },
+        "mail_sender": null
     },
     "schema": {
         "mysql": {
-            "database": "str",
-            "host": "str",
-            "user": "str",
-            "password": "str"
+            "database": "str?",
+            "host": "str?",
+            "user": "str?",
+            "password": "str?"
         },
         "postgres": {
             "database": "str?",
@@ -41,27 +54,22 @@
             "user": "str?",
             "password": "str?"
         },
-        "admin": {
-            "user": "str?",
-            "password": "str?"
-        },
-	"trusted_domains": "str?",
         "redis": {
             "host": "str?",
-            "port": "port?"
+            "port": "port?",
+            "password": "str?"
         },
         "smtp": {
             "host": "str?",
             "port": "port?",
-            "secure": "match(^ssl$)?",
-            "authtype": "str?",
+            "secure": "list(ssl)?",
+            "authtype": "list(LOGIN|PLAIN|NTLM)?",
             "name": "str?",
             "password": "str?"
         },
-        "mail": {
-            "from_address": "email?",
-            "domain": "str?"
-        }
+        "mail_sender": "str?"
     },
-    "image": "escoand/hassio-nextcloud-ext-{arch}"
+    "image": "escoand/hassio-nextcloud-ext-{arch}",
+    "panel_icon": "mdi:cloud",
+    "panel_admin": false
 }
