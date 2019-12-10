@@ -1,10 +1,5 @@
-ARG QEMUARCH
 ARG BUILD_FROM
-
-FROM multiarch/debian-debootstrap:${QEMUARCH}-stretch AS qemu
 FROM $BUILD_FROM
-
-COPY --from=qemu /usr/bin/qemu-*-static /usr/bin
 
 # installation of dlib and pdlib
 # https://github.com/matiasdelellis/facerecognition/wiki/Installation
@@ -17,7 +12,7 @@ RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
         /etc/apache2/apache2.conf \
         /etc/apache2/conf-enabled/docker-php.conf && \
     apt-get update && \
-    apt-get install --no-install-recommends -y cmake git liblapack3 liblapack-dev libopenblas-base libopenblas-dev libx11-dev supervisor && \
+    apt-get install --no-install-recommends -y cmake git jq liblapack3 liblapack-dev libopenblas-base libopenblas-dev libx11-dev supervisor && \
     git clone https://github.com/davisking/dlib.git /tmp/dlib && \
     mkdir /tmp/dlib/dlib/build && \
     cd /tmp/dlib/dlib/build && \
