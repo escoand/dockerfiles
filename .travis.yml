@@ -5,13 +5,21 @@ language: minimal
 
 jobs:
   include:
-    - env:  ADDON=hassio-nextcloud  ARCH=i386     QEMUARCH=$ARCH
-    - env:  ADDON=hassio-nextcloud  ARCH=amd64    QEMUARCH=$ARCH
-    - env:  ADDON=hassio-nextcloud  ARCH=armhf    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud      ARCH=i386     QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud      ARCH=amd64    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud      ARCH=armhf    QEMUARCH=$ARCH
       arch: arm64
-    - env:  ADDON=hassio-nextcloud  ARCH=armv7    QEMUARCH=armhf
+    - env:  ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=armhf
       arch: arm64
-    - env:  ADDON=hassio-nextcloud  ARCH=aarch64  QEMUARCH=arm64
+    - env:  ADDON=hassio-nextcloud      ARCH=aarch64  QEMUARCH=arm64
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=i386     QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=amd64    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=armv7    QEMUARCH=armhf
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
       arch: arm64
 
 install:
