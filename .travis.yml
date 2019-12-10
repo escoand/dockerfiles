@@ -3,17 +3,24 @@ services:
   - docker
 language: minimal
 
-env:
-  - ADDON=hassio-nextcloud      ARCH=i386     QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud      ARCH=amd64    QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud      ARCH=armhf    QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=armhf
-  - ADDON=hassio-nextcloud      ARCH=aarch64  QEMUARCH=arm64
-  - ADDON=hassio-nextcloud-ext  ARCH=i386     QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud-ext  ARCH=amd64    QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
-  - ADDON=hassio-nextcloud-ext  ARCH=armv7    QEMUARCH=armhf
-  - ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
+jobs:
+  include:
+    - env:  ADDON=hassio-nextcloud      ARCH=i386     QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud      ARCH=amd64    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud      ARCH=armhf    QEMUARCH=$ARCH
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud      ARCH=armv7    QEMUARCH=armhf
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud      ARCH=aarch64  QEMUARCH=arm64
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=i386     QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=amd64    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=armhf    QEMUARCH=$ARCH
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=armv7    QEMUARCH=armhf
+      arch: arm64
+    - env:  ADDON=hassio-nextcloud-ext  ARCH=aarch64  QEMUARCH=arm64
+      arch: arm64
 
 install:
   - sudo apt update
@@ -23,6 +30,7 @@ before_script:
   - BUILD_FROM=$(jq -r '.build_from[env.ARCH]' $ADDON/build.json)
   - BUILD_VERSION=$(jq -r '.version' $ADDON/config.json)
   - FINAL_IMAGE=$(jq -r '.image+":"+.version|sub("{arch}";env.ARCH)' $ADDON/config.json)
+  - [ "$TRAVIS_CPU_ARCH" = arm64 ] && sed -ie '/multiarch/d' $ADDON/Dockerfile
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
