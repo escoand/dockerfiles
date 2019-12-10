@@ -22,8 +22,7 @@ before_script:
   - BUILD_FROM=$(jq -r '.build_from[env.ARCH]' $ADDON/build.json)
   - BUILD_VERSION=$(jq -r '.version' $ADDON/config.json)
   - FINAL_IMAGE=$(jq -r '.image+":"+.version|sub("{arch}";env.ARCH)' $ADDON/config.json)
-  - test "$TRAVIS_CPU_ARCH" = arm64 && sed -ie '/multiarch/d' $ADDON/Dockerfile
-  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - test "$TRAVIS_CPU_ARCH" != arm64 && docker run --rm --privileged multiarch/qemu-user-static:register --reset || true
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
 script: |
