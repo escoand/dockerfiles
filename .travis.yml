@@ -4,7 +4,7 @@ services:
 language: minimal
 
 env:
-  global:
+  jobs:
     - ADDON=hassio-nextcloud
     - ADDON=hassio-nextcloud-ext
 jobs:
