@@ -7,17 +7,12 @@ env:
   global:
     - ADDON=hassio-nextcloud
     - ADDON=hassio-nextcloud-ext
-
-jobs:
-  include:
-    - env:  ARCH=i386     QEMUARCH=$ARCH
-    - env:  ARCH=amd64    QEMUARCH=$ARCH
-    - env:  ARCH=armhf    QEMUARCH=$ARCH
-      arch: arm64
-    - env:  ARCH=armv7    QEMUARCH=armhf
-      arch: arm64
-    - env:  ARCH=aarch64  QEMUARCH=arm64
-      arch: arm64
+  jobs:
+    - ARCH=i386     QEMUARCH=$ARCH
+    - ARCH=amd64    QEMUARCH=$ARCH
+    - ARCH=armhf    QEMUARCH=$ARCH
+    - ARCH=armv7    QEMUARCH=armhf
+    - ARCH=aarch64  QEMUARCH=arm64
 
 install:
   - sudo apt update
