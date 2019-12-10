@@ -3,19 +3,15 @@ services:
   - docker
 language: minimal
 
-env:
-  jobs:
-    - ADDON=hassio-nextcloud
-    - ADDON=hassio-nextcloud-ext
 jobs:
   include:
-    - env:  ARCH=i386     QEMUARCH=$ARCH
-    - env:  ARCH=amd64    QEMUARCH=$ARCH
-    - env:  ARCH=armhf    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud  ARCH=i386     QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud  ARCH=amd64    QEMUARCH=$ARCH
+    - env:  ADDON=hassio-nextcloud  ARCH=armhf    QEMUARCH=$ARCH
       arch: arm64
-    - env:  ARCH=armv7    QEMUARCH=armhf
+    - env:  ADDON=hassio-nextcloud  ARCH=armv7    QEMUARCH=armhf
       arch: arm64
-    - env:  ARCH=aarch64  QEMUARCH=arm64
+    - env:  ADDON=hassio-nextcloud  ARCH=aarch64  QEMUARCH=arm64
       arch: arm64
 
 install:
