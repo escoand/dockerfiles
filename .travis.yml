@@ -21,6 +21,14 @@ jobs:
       arch: arm64
     - env:  ADDON=hassio-nextcloud-ext  ARCH=aarch64
       arch: arm64
+    - env:  ADDON=hassio-redis          ARCH=i386
+    - env:  ADDON=hassio-redis          ARCH=amd64
+    - env:  ADDON=hassio-redis          ARCH=armhf
+      arch: arm64
+    - env:  ADDON=hassio-redis          ARCH=armv7
+      arch: arm64
+    - env:  ADDON=hassio-redis          ARCH=aarch64
+      arch: arm64
 
 install:
   - sudo apt update

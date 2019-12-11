@@ -1,0 +1,27 @@
+{
+    "name": "Redis",
+    "version": "v2019.12.11",
+    "slug": "redis",
+    "description": "Redis addon. Image based on upstream docker images. This is just a wrapper to pass environment variable to the container.",
+    "url": "https://github.com/escoand/dockerfiles/hassio-redis",
+    "startup": "system",
+    "boot": "auto",
+    "arch": [
+        "i386",
+        "amd64",
+        "armhf",
+        "armv7",
+        "aarch64"
+    ],
+    "ports": {
+        "6379/tcp": null
+    },
+    "ports_description": {
+        "6379/tcp": "Redis"
+    },
+    "apparmor": true,
+    "map": [],
+    "options": {},
+    "schema": {},
+    "image": "escoand/hassio-redis-{arch}"
+}
