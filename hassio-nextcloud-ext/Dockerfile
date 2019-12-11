@@ -24,7 +24,7 @@ RUN sed -i 's|/var/www/html|/data/nextcloud|g' \
     apt-get purge -y cmake git liblapack-dev libopenblas-dev libx11-dev && \
     apt-get autoremove -y && \
     apt-get clean -y && \
-    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* /usr/bin/qemu-*-static && \
+    rm -rf /tmp/dlib /usr/src/php/ext/pdlib /var/lib/apt/lists/* && \
     mkdir /var/log/supervisord /var/run/supervisord
 
 COPY run_addon.sh     /
