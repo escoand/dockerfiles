@@ -43,7 +43,9 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
 # build final image
 FROM nextcloud:apache
 
-RUN apt-get update \
+RUN mkdir -p /etc/ssl/certs/java \
+    && touch /etc/ssl/certs/java/cacerts \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         default-jre-headless \
         libbz2-dev \
