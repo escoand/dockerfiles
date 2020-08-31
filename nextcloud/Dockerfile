@@ -43,9 +43,10 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
 # build final image
 FROM nextcloud:apache
 
-RUN apt-get update \
+RUN mkdir -p /usr/share/man/man1 \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
-        openjdk-11-jre-zero \
+        default-jre-headless \
         libbz2-dev \
         libopenblas-base \
     && docker-php-ext-install bz2
