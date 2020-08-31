@@ -39,7 +39,6 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
     && cd pdlib-min-test-suite \
     && make
 
-
 # build final image
 FROM nextcloud:apache
 
@@ -57,6 +56,3 @@ COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-20190902/pdli
 
 RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
     && echo "memory_limit=-1" > /usr/local/etc/php/conf.d/memory-limit.ini
-
-# add cronjobs
-RUN printf "\n*/30 * * * * php /var/www/html/occ preview:pre-generate\n" >> /var/spool/cron/crontabs/www-data
