@@ -45,8 +45,7 @@ FROM nextcloud:apache
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        ca-certificates-java \
-        default-jre-headless \
+        openjdk-11-jre-zero \
         libbz2-dev \
         libopenblas-base \
     && docker-php-ext-install bz2
