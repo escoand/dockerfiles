@@ -43,10 +43,9 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
 # build final image
 FROM nextcloud:apache
 
-RUN mkdir -p /etc/ssl/certs/java \
-    && touch /etc/ssl/certs/java/cacerts \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        ca-certificates-java \
         default-jre-headless \
         libbz2-dev \
         libopenblas-base \
