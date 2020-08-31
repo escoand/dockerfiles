@@ -55,4 +55,4 @@ COPY --from=builder /usr/local/lib/libdlib.so* /usr/local/lib/
 COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-20190902/pdlib.so /usr/local/lib/php/extensions/no-debug-non-zts-20190902/
 
 RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
-    && echo "memory_limit=-1" > /usr/local/etc/php/conf.d/memory-limit.ini
+    && echo "memory_limit=1G" > /usr/local/etc/php/conf.d/memory-limit.ini
