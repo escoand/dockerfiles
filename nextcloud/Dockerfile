@@ -48,6 +48,7 @@ RUN mkdir -p /usr/share/man/man1 \
         default-jre-headless \
         libbz2-dev \
         libopenblas-base \
+        unzip \
     && docker-php-ext-install bz2
 
 #RUN php -i | grep extension_dir
