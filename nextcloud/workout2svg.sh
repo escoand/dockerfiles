@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XSL=/app/workout2svg.xslt
+XSL=/usr/local/bin/workout2svg.xslt
 FILE=$1
 DIR=$(dirname "$FILE")
 EXT=${FILE##*.}
@@ -28,6 +28,6 @@ fi
 # graph
 if [ -n "$FORCE" ] || [ ! -f "$SVG" ]; then
 	echo "$NEW -> $SVG"
-	java -cp /app/*.jar net.sf.saxon.Transform -xsl:"$XSL" -s:"$NEW" -o:"$SVG"
+	java -cp /usr/local/java/*.jar net.sf.saxon.Transform -xsl:"$XSL" -s:"$NEW" -o:"$SVG"
 	chmod 666 "$SVG"
 fi
