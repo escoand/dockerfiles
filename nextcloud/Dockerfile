@@ -63,3 +63,8 @@ RUN mkdir -p /usr/local/java \
     && wget -O /tmp/saxon.zip http://www.saxonica.com/download/SaxonEE10-1J.zip \
     && unzip /tmp/saxon.zip "saxon-ee-1*" -d /usr/local/java/ \
     && rm /tmp/saxon.zip
+
+# cronjobs
+COPY cron.www-data /tmp/
+RUN cat /tmp/cron.www-data >> /var/spool/cron/crontabs/www-data \
+    && rm /tmp/cron.www-data
