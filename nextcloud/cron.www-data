@@ -1,4 +1,5 @@
-*/30 * * * * /var/www/html/occ preview:pre-generate
-*/30 6-23 * * * nice /var/www/html/occ face:background_job -t 1200
-0 0 * * * nice /var/www/html/occ face:background_job -t 25200
-*/15 * * * * find /var/www/html/data/andreas/files/Dokumente/Training/ -type f \( -name '*.gpx' -o -name '*.tcx' \) | sort | xargs -r sh /usr/local/bin/workout2svg.sh; /var/www/html/occ files:scan -p andreas/files/Dokumente/Training/
+HOME=/var/www/html
+*/30 * * * * $HOME/occ preview:pre-generate
+*/30 6-23 * * * nice $HOME/occ face:background_job -t 1200
+0 0 * * * nice $HOME/occ face:background_job -t 25200
+*/15 * * * * find $HOME/data/andreas/files/Dokumente/Training/ -type f -name '*.tcx' | sort | tee /dev/stderr | xargs -r sh /usr/local/bin/workout2svg.sh && $HOME/occ files:scan -p andreas/files/Dokumente/Training/
