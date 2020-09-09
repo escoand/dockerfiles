@@ -61,7 +61,7 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
 # workout converter
 COPY workout2svg.* /usr/local/bin/
 RUN mkdir -p /usr/local/java \
-    && curl -o /tmp/saxon.zip http://www.saxonica.com/download/SaxonEE10-1J.zip \
+    && curl http://www.saxonica.com/download/SaxonEE10-1J.zip -o /tmp/saxon.zip \
     && unzip /tmp/saxon.zip "saxon-ee-1*" -d /usr/local/java/ \
     && rm /tmp/saxon.zip
 
