@@ -56,3 +56,10 @@ COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-20190902/pdli
 
 RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
     && echo "memory_limit=1G" > /usr/local/etc/php/conf.d/memory-limit.ini
+
+# workout converter
+COPY workout2svg.* /usr/local/bin/
+RUN mkdir -p /usr/local/java \
+    && wget -O /tmp/saxon.zip http://www.saxonica.com/download/SaxonEE10-1J.zip \
+    && unzip /tmp/saxon.zip "saxon-ee-1*" -d /usr/local/java/ \
+    && rm /tmp/saxon.zip
