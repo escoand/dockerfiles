@@ -1,3 +1,4 @@
 */30 * * * * /var/www/html/occ preview:pre-generate
 */30 6-23 * * * nice /var/www/html/occ face:background_job -t 1200
 0 0 * * * nice /var/www/html/occ face:background_job -t 25200
+*/15 * * * * find /var/www/html/data/andreas/files/Dokumente/Training/ -name '*.gpx' -name '*.tcx' | sort | xargs sh /usr/local/bin/workout.sh
