@@ -1,5 +1,8 @@
 #!/bin/sh
 
+[ ! "$1" ] && exit
+[ ! -f "$1" ] && exit
+
 XSL=/usr/local/bin/workout2svg.xslt
 FILE=$1
 DIR=$(dirname "$FILE")
