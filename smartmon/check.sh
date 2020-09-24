@@ -20,6 +20,7 @@ while read -r DEV; do
 		},
 		name: ("Errors " + .serial_number),
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
+		unique_id: ("smartctl. " + .serial_number + ".errors"),
 		value_template: "{{ value_json.ata_smart_error_log.summary.count }}"
 	},
 	{
@@ -27,6 +28,7 @@ while read -r DEV; do
 		name: ("Temperature " + .serial_number),
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		unit_of_measurement: "°C",
+		unique_id: ("smartctl. " + .serial_number + ".temperature"),
 		value_template: "{{ value_json.temperature.current }}"
 	}' |
 	while read -r LINE; do
