@@ -7,7 +7,8 @@ HOSTNAME=$(hostname)
 # device info
 ls /dev/sd[a-z] 2>/dev/null |
 while read -r DEV; do
-	NAME=$(basename "$DEV")
+	export DEV HOSTNAME
+	export NAME=$(basename "$DEV")
 	/usr/sbin/smartctl --info --json "$DEV" |
 	jq -c '{
 		device: {
