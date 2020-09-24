@@ -18,7 +18,7 @@ while read -r DEV; do
 			name: .serial_number,
 			sw_version: .firmware_version
 		},
-		name: (env.SENSOR + " " + env.DEV),
+		name: ("Errors " + env.DEV),
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		unit_of_measurement: env.UNIT,
 		value_template: "{{ value_json.ata_smart_error_log.summary.count }}"
