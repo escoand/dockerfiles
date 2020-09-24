@@ -33,7 +33,7 @@ while read -r DEV; do
 		value_template: "{{ value_json.temperature.current }}"
 	}' |
 	while read -r LINE; do
-		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/sensor/$RANDOM$RANDOM/config" -m "$LINE"
+		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/sensor/$RANDOM$RANDOM/config" -m "$LINE" -r
 	done
 done
 
