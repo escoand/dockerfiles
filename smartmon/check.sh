@@ -39,7 +39,7 @@ while read -r DEV; do
 		device: { identifiers: .serial_number },
 		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		json_attributes_topic: "~",
-		json_attributes_template: "{{ value_json.ata_smart_self_test_log }}",
+		json_attributes_template: "{{ value_json.ata_smart_self_test_log | tojson }}",
 		name: "Self test",
 		state_topic: "~",
 		unique_id: ("smartctl." + .serial_number + ".selftest"),
