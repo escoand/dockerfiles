@@ -21,7 +21,7 @@ while read -r DEV; do
 		name: ("Disk " + .serial_number),
 		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		state_topic: "~",
-		state_template: "{{ value_json.ata_smart_error_log.summary.count }}",
+		value_template: "{{ value_json.ata_smart_error_log.summary.count }}",
 		current_temperature_topic: "~",
 		current_temperature_template: "{{ value_json.temperature.current }}"
 	}' |
