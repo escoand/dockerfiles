@@ -2,6 +2,7 @@
 
 MQTT_HOST=${MQTT_HOST:-127.0.0.1}
 MQTT_PORT=${MQTT_PORT:-1883}
+HOSTNAME=$(hostname)
 
 while true; do
 	for DEV in /dev/sd[0-9]*; do
@@ -11,5 +12,9 @@ while true; do
 	done
 
 	# loop if LOOP_DELAY is a number: https://stackoverflow.com/a/808740
-	[ "$LOOP_DELAY" -a "$LOOP_DELAY" -eq "$LOOP_DELAY" ] && sleep "$LOOP_DELAY" || break
+	if [ "$LOOP_DELAY" ] && [ "$LOOP_DELAY" -eq "$LOOP_DELAY" ]; then
+		sleep "$LOOP_DELAY"
+	else
+		break
+	fi
 done
