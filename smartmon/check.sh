@@ -18,14 +18,15 @@ while read -r DEV; do
 			name: .model_name,
 			sw_version: .firmware_version
 		},
-		name: ("Errors " + .serial_number),
+		name: "Errors",
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		unique_id: ("smartctl. " + .serial_number + ".errors"),
 		value_template: "{{ value_json.ata_smart_error_log.summary.count }}"
 	},
 	{
 		device: { identifiers: .serial_number },
-		name: ("Temperature " + .serial_number),
+		device_class: "temperature",
+		name: "Temperature",
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		unit_of_measurement: "°C",
 		unique_id: ("smartctl. " + .serial_number + ".temperature"),
