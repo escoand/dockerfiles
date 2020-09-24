@@ -10,7 +10,7 @@ while read -r DEV; do
 	export DEV HOSTNAME
 	export NAME=$(basename "$DEV")
 	/usr/sbin/smartctl --info --json "$DEV" |
-	jq '{
+	jq -c '{
 		device: {
 			identifiers: .serial_number,
 			manufacturer: .model_family,
@@ -18,14 +18,20 @@ while read -r DEV; do
 			name: .model_name,
 			sw_version: .firmware_version
 		},
-		name: ("Disk " + .serial_number),
-		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
-		state_topic: "~",
-		value_template: "{{ value_json.ata_smart_error_log.summary.count }}",
-		current_temperature_topic: "~",
-		current_temperature_template: "{{ value_json.temperature.current }}"
+		name: ("Errors " + .serial_number),
+		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
+		value_template: "{{ value_json.ata_smart_error_log.summary.count }}"
+	},
+	{
+		device: { identifiers: .serial_number },
+		name: ("Temperature " + .serial_number),
+		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
+		unit_of_measurement: "°C",
+		value_template: "{{ value_json.temperature.current }}"
 	}' |
-	mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/sensor/$RANDOM$RANDOM/config" -s
+	while read -r LINE; do
+		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/sensor/$RANDOM$RANDOM/config" -m "$LINE"
+	done
 done
 
 # data
