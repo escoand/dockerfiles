@@ -5,7 +5,7 @@ MQTT_PORT=${MQTT_PORT:-1883}
 HOSTNAME=$(hostname)
 
 while true; do
-	ls /dev/sd[0-9]* 2>/dev/null |
+	ls /dev/sd[a-z] 2>/dev/null |
 	while read -r DEV; do
 		NAME=$(basename "$DEV")
 		/usr/sbin/smartctl --info --all --json --nocheck standby "$DEV" |
