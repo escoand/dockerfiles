@@ -43,7 +43,7 @@ while read -r DEV; do
 		name: "Self test",
 		state_topic: "~",
 		unique_id: ("smartctl." + .serial_number + ".selftest"),
-		value_template: "{# bool #}{{ value_json.ata_smart_data.self_test.passed }}"
+		value_template: "{# bool #}{{ if value_json.ata_smart_data.self_test.passed != true }}"
 	}' |
 	while read -r LINE; do
 		echo "$LINE" | grep -wq bool && TYPE=binary_sensor || TYPE=sensor
