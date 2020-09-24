@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache mosquitto-clients smartmontools
+RUN apk add --no-cache jq mosquitto-clients smartmontools
 
 ADD check.sh /
 
