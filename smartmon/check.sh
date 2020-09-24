@@ -5,7 +5,8 @@ MQTT_PORT=${MQTT_PORT:-1883}
 HOSTNAME=$(hostname)
 
 while true; do
-	for DEV in /dev/sd[0-9]*; do
+	ls /dev/sd[0-9]* 2>/dev/null |
+	while read -r DEV; do
 		NAME=$(basename "$DEV")
 		/usr/sbin/smartctl --info --all --json --nocheck standby "$DEV" |
 		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "smartctl/$HOSTNAME/$NAME" -s
