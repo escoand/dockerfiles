@@ -20,7 +20,7 @@ while read -r DEV; do
 		},
 		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		json_attributes_topic: "~",
-		json_attributes_template: "{ {% for _ in (test.ata_smart_attributes.table | selectattr(\"name\", \"in\", [\"ECC_Error_Rate\",\"CRC_Error_Count\",\"Uncorrectable_Error_Cnt\",\"Runtime_Bad_Block\",\"Erase_Fail_Count_Total\",\"Program_Fail_Cnt_Total\"]) | list) %}{% if not loop.first %},{% endif %}\"{{ _.name }}\":{{ _.raw.value }}{% endfor %} }",
+		json_attributes_template: "{ {% for _ in (value_json.ata_smart_attributes.table | selectattr(\"name\", \"in\", [\"ECC_Error_Rate\",\"CRC_Error_Count\",\"Uncorrectable_Error_Cnt\",\"Runtime_Bad_Block\",\"Erase_Fail_Count_Total\",\"Program_Fail_Cnt_Total\"]) | list) %}{% if not loop.first %},{% endif %}\"{{ _.name }}\":{{ _.raw.value }}{% endfor %} }",
 		name: "Errors",
 		state_topic: "~",
 		unique_id: ("smartctl." + .serial_number + ".errors"),
