@@ -34,9 +34,20 @@ while read -r DEV; do
 		unit_of_measurement: "°C",
 		unique_id: ("smartctl." + .serial_number + ".temperature"),
 		value_template: "{{ value_json.temperature.current }}"
+	},
+	{
+		device: { identifiers: .serial_number },
+		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
+		json_attributes_topic: "~",
+		json_attributes_template: "{{ value_json.ata_smart_self_test_log }}",
+		name: "Self test",
+		state_topic: "~",
+		unique_id: ("smartctl." + .serial_number + ".selftest"),
+		value_template: "{# bool #}{{ value_json.ata_smart_data.self_test.passed }}"
 	}' |
 	while read -r LINE; do
-		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/sensor/$RANDOM$RANDOM/config" -m "$LINE" -r
+		echo "$LINE" | grep -wq bool && TYPE=binary_sensor || TYPE=sensor
+		mosquitto_pub -h "$MQTT_HOST" -p "$MQTT_PORT" -t "homeassistant/$TYPE/$RANDOM$RANDOM/config" -m "$LINE" -r
 	done
 done
 
