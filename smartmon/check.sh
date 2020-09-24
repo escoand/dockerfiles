@@ -19,10 +19,6 @@ while read -r DEV; do
 			sw_version: .firmware_version
 		},
 		name: ("Disk " + .serial_number),
-		json_attributes: [
-			"logical_block_size",
-			"physical_block_size"
-		],
 		"~": ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
 		state_topic: "~",
 		state_value_template: "{{ value_json.ata_smart_error_log.summary.count }}",
