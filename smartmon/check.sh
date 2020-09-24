@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 MQTT_HOST=${MQTT_HOST:-127.0.0.1}
 MQTT_PORT=${MQTT_PORT:-1883}
