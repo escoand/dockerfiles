@@ -15,12 +15,11 @@ while read -r DEV; do
 			identifiers: .serial_number,
 			manufacturer: .model_family,
 			model: .model_name,
-			name: .serial_number,
+			name: .model_name,
 			sw_version: .firmware_version
 		},
 		name: ("Errors " + env.DEV),
 		state_topic: ("smartctl/" + env.HOSTNAME + "/" + env.NAME),
-		unit_of_measurement: env.UNIT,
 		value_template: "{{ value_json.ata_smart_error_log.summary.count }}"
 	},
 	{
