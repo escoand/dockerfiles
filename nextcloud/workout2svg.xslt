@@ -46,6 +46,9 @@
 		<param name="times" />
 
 		<element name="svg" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontStyle">
+			<attribute name="height">
+				<value-of select="$height" />
+			</attribute>
 			<attribute name="viewBox">
 				<text>0 0 </text>
 				<value-of select="$width" />
