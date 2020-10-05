@@ -19,7 +19,7 @@ RUN apt-get -y update \
 
 FROM debian:stable-slim
 
-COPY --from=builder /tmp/garlic-player/build/bin/* /usr/local/bin/
-COPY --from=builder /tmp/garlic-player/build/lib/* /usr/local/lib/
+COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
+COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
 
 CMD sh -c 'garlic-player $SMIL_URL'
