@@ -1,8 +1,8 @@
 FROM debian:stable-slim AS builder
 
-RUN apt update \
-    && apt upgrade \
-    && apt install \
+RUN apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install \
            libqtav-dev \
            git \
            qt5-default \
