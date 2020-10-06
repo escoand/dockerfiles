@@ -1,6 +1,6 @@
 FROM debian:stable-slim AS builder
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade && apt-get install -y --no-install-recommends \
         g++ \
         git \
         libqtav-dev \
@@ -18,9 +18,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        libqt5webengine5 \
+        libqt5webenginewidgets5 \
         libqtav1 \
         libqtavwidgets1 \
-        libqt5webenginewidgets5 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
