@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         qt5-default \
         qtwebengine5-dev \
     && cd /tmp \
-    && git clone https://github.com/sagiadinos/garlic-player.git \
+    && git clone https://github.com/sagiadinos/garlic-player \
     && cd garlic-player \
     && mkdir build \
     && cd build \
