@@ -20,7 +20,7 @@ RUN cd /tmp \
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libqt5sql5 \
+        libqt5sql5-sqlite \
         libqt5webengine5 \
         libqt5webenginewidgets5 \
         libqt5xml5 \
