@@ -1,6 +1,7 @@
-FROM debian:unstable-slim AS builder
+FROM debian:stable-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
         g++ \
         git \
         libqtav-dev \
@@ -15,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && qmake ../src/complete.pro \
     && make
 
-FROM debian:unstable-slim
+FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libqt5webengine5 \
