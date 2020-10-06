@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libqt5sql5 \
         libqt5webengine5 \
         libqt5webenginewidgets5 \
+        libqt5xml5 \
         libqtav1 \
         libqtavwidgets1 \
     && rm -rf /var/lib/apt/lists/*
