@@ -19,6 +19,11 @@ RUN apt-get -y update \
 
 FROM debian:stable-slim
 
+RUN apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install \
+           libqtav
+
 COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
 COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
 
