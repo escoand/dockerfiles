@@ -22,9 +22,10 @@ FROM debian:stable-slim
 RUN apt-get -y update \
     && apt-get -y upgrade \
     && apt-get -y --no-recommends install \
-           libqtav1
+           libqtav1 \
+           libqtavwidgets1
 
-COPY --from=builder /tmp/garlic-player/build/bin/* /usr/local/bin/
-COPY --from=builder /tmp/garlic-player/build/lib/* /usr/local/lib/
+COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
+COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
 
 CMD sh -c 'garlic-player $SMIL_URL'
