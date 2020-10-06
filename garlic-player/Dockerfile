@@ -29,4 +29,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
 COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
 
-CMD sh -c 'garlic-player $SMIL_URL'
+CMD garlic-player $SMIL_URL
