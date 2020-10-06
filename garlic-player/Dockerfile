@@ -24,7 +24,7 @@ RUN apt-get -y update \
     && apt-get -y install \
            libqtav
 
-COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
-COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
+COPY --from=builder /tmp/garlic-player/build/bin/* /usr/local/bin/
+COPY --from=builder /tmp/garlic-player/build/lib/* /usr/local/lib/
 
 CMD sh -c 'garlic-player $SMIL_URL'
