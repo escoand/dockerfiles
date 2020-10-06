@@ -1,14 +1,12 @@
 FROM debian:stable-slim AS builder
 
-RUN apt-get -y update \
-    && apt-get -y upgrade \
-    && apt-get -y install \
-           libqtav-dev \
-           git \
-           qt5-default \
-           qtwebengine5-dev \
-           g++ \
-           make \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        g++ \
+        git \
+        libqtav-dev \
+        make \
+        qt5-default \
+        qtwebengine5-dev \
     && cd /tmp \
     && git clone https://github.com/sagiadinos/garlic-player \
     && cd garlic-player \
@@ -19,11 +17,11 @@ RUN apt-get -y update \
 
 FROM debian:stable-slim
 
-RUN apt-get -y update \
-    && apt-get -y upgrade \
-    && apt-get -y --no-install-recommends install \
-           libqtav1 \
-           libqtavwidgets1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libqtav1 \
+        libqtavwidgets1 \
+        libqt5webenginewidgets5 \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/garlic-player/build/bin/* /usr/bin/
 COPY --from=builder /tmp/garlic-player/build/lib/* /usr/lib/
