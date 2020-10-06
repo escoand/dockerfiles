@@ -1,6 +1,6 @@
 FROM debian:stable-slim AS builder
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         g++ \
         git \
         libqtav-dev \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
         qt5-default \
         qtwebengine5-dev \
     && cd /tmp \
-    && git clone https://github.com/sagiadinos/garlic-player \
+    && git clone https://github.com/sagiadinos/garlic-player.git \
     && cd garlic-player \
     && mkdir build \
     && cd build \
