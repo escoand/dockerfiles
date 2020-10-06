@@ -1,4 +1,4 @@
-FROM debian:stable-slim AS builder
+FROM debian:unstable-slim AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         g++ \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && qmake ../src/complete.pro \
     && make
 
-FROM debian:stable-slim
+FROM debian:unstable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libqt5webengine5 \
