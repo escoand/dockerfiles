@@ -21,7 +21,7 @@ FROM debian:stable-slim
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get -y --no-recommends install \
+    && apt-get -y --no-install-recommends install \
            libqtav1 \
            libqtavwidgets1
 
