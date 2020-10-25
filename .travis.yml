@@ -29,7 +29,7 @@ jobs:
       arch: arm64
     - env:  ADDON=hassio-redis          ARCH=aarch64
       arch: arm64
-    - env:  ADDON=nextcloud ARCH=armv7 FINAL_IMAGE=nextcloud
+    - env:  ADDON=nextcloud ARCH=armv7 BUILD_FROM=arm32v7/nextcloud BUILD_VERSION=0 FINAL_IMAGE=$ADDON:$ARCH
       arch: arm64
 
 install:
@@ -37,8 +37,8 @@ install:
   - sudo apt install -y jq
 
 before_script:
-  - BUILD_FROM=$(jq -r '.build_from[env.ARCH]' $ADDON/build.json)
-  - BUILD_VERSION=$(jq -r '.version' $ADDON/config.json)
+  - BUILD_FROM=${BUILD_FROM:-$(jq -r '.build_from[env.ARCH]' $ADDON/build.json)}
+  - BUILD_VERSION=${BUILD_VERSION:-$(jq -r '.version' $ADDON/config.json)}
   - FINAL_IMAGE=${FINAL_IMAGE:-$(jq -r '.image+":"+.version|sub("{arch}";env.ARCH)' $ADDON/config.json)}
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
