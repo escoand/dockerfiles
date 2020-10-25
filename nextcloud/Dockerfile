@@ -1,4 +1,5 @@
-FROM nextcloud:apache as builder
+ARG BUILD_FROM=nextcloud:apache
+FROM $BUILD_FROM as builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -40,7 +41,7 @@ RUN echo "extension=pdlib.so" > /usr/local/etc/php/conf.d/pdlib.ini \
     && make
 
 # build final image
-FROM nextcloud:apache
+FROM $BUILD_FROM
 
 RUN mkdir -p /usr/share/man/man1 \
     && apt-get update \
