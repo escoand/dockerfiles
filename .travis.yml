@@ -29,15 +29,12 @@ jobs:
     #  arch: arm64
     #- env:  ADDON=hassio-redis          ARCH=aarch64
     #  arch: arm64
-    - env:  ADDON=nextcloud ARCH=arm32v7
-            BUILD_FROM=$ARCH/nextcloud
-            BUILD_VERSION=0
+    - env:  ADDON=nextcloud              ARCH=arm32v7
+            BUILD_FROM=$ARCH/nextcloud   BUILD_VERSION=0
             FINAL_IMAGE=escoand/$ADDON:$ARCH
       arch: arm64
-    - env:  ADDON=nextcloud
-            ARCH=amd64
-            BUILD_FROM=$ARCH/nextcloud
-            BUILD_VERSION=0
+    - env:  ADDON=nextcloud              ARCH=amd64
+            BUILD_FROM=$ARCH/nextcloud   BUILD_VERSION=0
             FINAL_IMAGE=escoand/$ADDON:$ARCH
 
 install:
