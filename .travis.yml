@@ -29,8 +29,10 @@ jobs:
       arch: arm64
     - env:  ADDON=hassio-redis          ARCH=aarch64
       arch: arm64
-    - env:  ADDON=nextcloud ARCH=armv7 BUILD_FROM=arm32v7/nextcloud BUILD_VERSION=0 FINAL_IMAGE=$ADDON:$ARCH
+    - env:  ADDON=nextcloud ARCH=arm32v7 BUILD_FROM=$ARCH/nextcloud BUILD_VERSION=0 FINAL_IMAGE=escoand/$ADDON:$ARCH
       arch: arm64
+    - env:  ADDON=nextcloud ARCH=arm64 BUILD_FROM=$ARCH/nextcloud BUILD_VERSION=0 FINAL_IMAGE=escoand/$ADDON:$ARCH
+      arch: amd64
 
 install:
   - sudo apt update
