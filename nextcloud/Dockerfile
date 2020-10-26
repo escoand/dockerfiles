@@ -1,4 +1,4 @@
-ARG BUILD_FROM=nextcloud:apache
+ARG BUILD_FROM=nextcloud
 FROM $BUILD_FROM as builder
 
 RUN apt-get update \
