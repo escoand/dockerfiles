@@ -5,34 +5,40 @@ language: minimal
 
 jobs:
   include:
-    - env:  ADDON=hassio-nextcloud      ARCH=i386
-    - env:  ADDON=hassio-nextcloud      ARCH=amd64
-    - env:  ADDON=hassio-nextcloud      ARCH=armhf
+    #- env:  ADDON=hassio-nextcloud      ARCH=i386
+    #- env:  ADDON=hassio-nextcloud      ARCH=amd64
+    #- env:  ADDON=hassio-nextcloud      ARCH=armhf
+    #  arch: arm64
+    #- env:  ADDON=hassio-nextcloud      ARCH=armv7
+    #  arch: arm64
+    #- env:  ADDON=hassio-nextcloud      ARCH=aarch64
+    #  arch: arm64
+    #- env:  ADDON=hassio-nextcloud-ext  ARCH=i386
+    #- env:  ADDON=hassio-nextcloud-ext  ARCH=amd64
+    #- env:  ADDON=hassio-nextcloud-ext  ARCH=armhf
+    #  arch: arm64
+    #- env:  ADDON=hassio-nextcloud-ext  ARCH=armv7
+    #  arch: arm64
+    #- env:  ADDON=hassio-nextcloud-ext  ARCH=aarch64
+    #  arch: arm64
+    #- env:  ADDON=hassio-redis          ARCH=i386
+    #- env:  ADDON=hassio-redis          ARCH=amd64
+    #- env:  ADDON=hassio-redis          ARCH=armhf
+    #  arch: arm64
+    #- env:  ADDON=hassio-redis          ARCH=armv7
+    #  arch: arm64
+    #- env:  ADDON=hassio-redis          ARCH=aarch64
+    #  arch: arm64
+    - env:  ADDON=nextcloud ARCH=arm32v7 \
+            BUILD_FROM=$ARCH/nextcloud \
+            BUILD_VERSION=0 \
+            FINAL_IMAGE=escoand/$ADDON:$ARCH
       arch: arm64
-    - env:  ADDON=hassio-nextcloud      ARCH=armv7
-      arch: arm64
-    - env:  ADDON=hassio-nextcloud      ARCH=aarch64
-      arch: arm64
-    - env:  ADDON=hassio-nextcloud-ext  ARCH=i386
-    - env:  ADDON=hassio-nextcloud-ext  ARCH=amd64
-    - env:  ADDON=hassio-nextcloud-ext  ARCH=armhf
-      arch: arm64
-    - env:  ADDON=hassio-nextcloud-ext  ARCH=armv7
-      arch: arm64
-    - env:  ADDON=hassio-nextcloud-ext  ARCH=aarch64
-      arch: arm64
-    - env:  ADDON=hassio-redis          ARCH=i386
-    - env:  ADDON=hassio-redis          ARCH=amd64
-    - env:  ADDON=hassio-redis          ARCH=armhf
-      arch: arm64
-    - env:  ADDON=hassio-redis          ARCH=armv7
-      arch: arm64
-    - env:  ADDON=hassio-redis          ARCH=aarch64
-      arch: arm64
-    - env:  ADDON=nextcloud ARCH=arm32v7 BUILD_FROM=$ARCH/nextcloud BUILD_VERSION=0 FINAL_IMAGE=escoand/$ADDON:$ARCH
-      arch: arm64
-    - env:  ADDON=nextcloud ARCH=arm64 BUILD_FROM=$ARCH/nextcloud BUILD_VERSION=0 FINAL_IMAGE=escoand/$ADDON:$ARCH
-      arch: amd64
+    - env:  ADDON=nextcloud \
+            ARCH=amd64 \
+            BUILD_FROM=$ARCH/nextcloud \
+            BUILD_VERSION=0 \
+            FINAL_IMAGE=escoand/$ADDON:$ARCH
 
 install:
   - sudo apt update
