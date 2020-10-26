@@ -31,11 +31,11 @@ jobs:
     #  arch: arm64
     - env:  ADDON=nextcloud              ARCH=arm32v7
             BUILD_FROM=$ARCH/nextcloud   BUILD_VERSION=0
-            FINAL_IMAGE=escoand/$ADDON:$ARCH
+            FINAL_IMAGE=$DOCKER_USER/$ADDON:$ARCH
       arch: arm64
     - env:  ADDON=nextcloud              ARCH=amd64
             BUILD_FROM=$ARCH/nextcloud   BUILD_VERSION=0
-            FINAL_IMAGE=escoand/$ADDON:$ARCH
+            FINAL_IMAGE=$DOCKER_USER/$ADDON:$ARCH
 
 install:
   - sudo apt update
