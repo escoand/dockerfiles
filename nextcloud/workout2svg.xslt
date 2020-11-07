@@ -47,13 +47,13 @@
 
 		<element name="svg" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontStyle">
 			<attribute name="height">
-				<value-of select="$height" />
+				<value-of select="$height * 2" />
 			</attribute>
 			<attribute name="viewBox">
 				<text>0 0 </text>
 				<value-of select="$width" />
 				<text> </text>
-				<value-of select="$height" />
+				<value-of select="$height * 2" />
 			</attribute>
 			<attribute name="width">
 				<value-of select="$width" />
@@ -185,6 +185,92 @@
 					</if>
 				</for-each>
 			</element>
+		</element>
+	</template>
+
+	<template name="map">
+		<param name="lats" />
+		<param name="lons" />
+		<variable name="minLat" select="min($lats)" />
+		<variable name="maxLat" select="max($lats)" />
+		<variable name="minLon" select="min($lons)" />
+		<variable name="maxLon" select="max($lons)" />
+		<variable name="centerLon" select="($minLon + $maxLon) div 2" />
+		<variable name="centerLat" select="($minLat + $maxLat) div 2" />
+		<variable name="scaleX" select="1000 div ($maxLon - $minLon)" />
+		<variable name="scaleY" select="500 div ($maxLat - $minLat)" />
+		<!--<variable name="scale" select="min(($scaleX, $scaleY))" />-->
+		<variable name="scale" select="9300" />
+
+		<element name="g" namespace="http://www.w3.org/2000/svg">
+			<attribute name="transform">translate(0,500)</attribute>
+			<comment>
+				<value-of select="$maxLat - $minLat" />
+				<text>lat=</text>
+				<value-of select="111.3 * ($maxLat - $minLat)" />
+				<text>km</text>
+			</comment>
+
+		<element name="image" namespace="http://www.w3.org/2000/svg">
+			<attribute name="href">
+				<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
+				<value-of select="$centerLon" />
+				<text>,</text>
+				<value-of select="$centerLat" />
+				<text>,</text>
+				<value-of select="12" />
+				<text>,0/</text>
+				<value-of select="$width" />
+				<text>x</text>
+				<value-of select="$height" />
+				<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
+			</attribute>
+			<attribute name="height">500</attribute>
+			<attribute name="width">1000</attribute>
+			<attribute name="x">0</attribute>
+			<attribute name="y">0</attribute>
+		</element>
+		<element name="polyline" namespace="http://www.w3.org/2000/svg">
+			<attribute name="fill">
+				<text>none</text>
+			</attribute>
+			<attribute name="stroke">
+				<text>#ff0000</text>
+			</attribute>
+			<attribute name="stroke-width">
+				<text>2</text>
+			</attribute>
+			<attribute name="points">
+				<for-each select="1 to count($lats)">
+					<variable name="pos" select="position()" />
+					<value-of select="$lons[position() = $pos]" />
+					<text>,</text>
+					<value-of select="$lats[position() = $pos]" />
+					<text> </text>
+				</for-each>
+			</attribute>
+			<attribute name="transform">
+				<text>translate(</text>
+				<value-of select="500" />
+				<text>,</text>
+				<value-of select="250" />
+				<text>) </text>
+				<text>scale(</text>
+				<value-of select="$scale div 1.61" />
+				<text>,</text>
+				<value-of select="-$scale" />
+				<text>) </text>
+				<text>translate(</text>
+				<value-of select="-$centerLon" />
+				<text>,</text>
+				<value-of select="-$centerLat" />
+				<text>)</text>
+			</attribute>
+			<attribute name="vector-effect">
+				<text>non-scaling-stroke</text>
+			</attribute>
+		</element>
+
 		</element>
 	</template>
 
@@ -445,6 +531,12 @@
 			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Extensions/ae:TPX/ae:RunCadence" />
 		</call-template>
 
+		<!-- map -->>
+		<call-template name="map">
+			<with-param name="lats" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LatitudeDegrees" />
+			<with-param name="lons" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LongitudeDegrees" />
+		</call-template>
+
 	</template>
 	<template match="/tcd:TrainingCenterDatabase/tcd:Author"/>
 
@@ -524,6 +616,12 @@
 			</with-param>
 			<with-param name="posLegend">45</with-param>
 			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:cad|trkseg/trkpt/extensions/TrackPointExtension/cad" />
+		</call-template>
+
+		<!-- map -->>
+		<call-template name="map">
+			<with-param name="lats" select="gpx:trkseg/gpx:trkpt/@lat|trkseg/trkpt/@lat" />
+			<with-param name="lons" select="gpx:trkseg/gpx:trkpt/@lon|trkseg/trkpt/@lon" />
 		</call-template>
 
 	</template>
