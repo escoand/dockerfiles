@@ -23,9 +23,10 @@
 	<!-- config -->
 	<variable name="offsetX" as="xs:integer">40</variable>
 	<variable name="offsetY" as="xs:integer">15</variable>
-	<variable name="height" as="xs:integer">500</variable>
-	<variable name="width" as="xs:integer">1000</variable>
-	<variable name="lineStep" as="xs:integer">75</variable>
+	<variable name="height" as="xs:integer">400</variable>
+	<variable name="width" as="xs:integer">800</variable>
+	<variable name="graphHeight" as="xs:integer">185</variable>
+	<variable name="lineStep" as="xs:integer">44</variable>
 	<variable name="colorLaps">#aaaaaa</variable>
 	<variable name="colorAltitude">#52be80</variable>
 	<variable name="colorHeart">#e74c3c</variable>
@@ -47,13 +48,13 @@
 
 		<element name="svg" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontStyle">
 			<attribute name="height">
-				<value-of select="$height * 2" />
+				<value-of select="$height + $offsetY + $graphHeight" />
 			</attribute>
 			<attribute name="viewBox">
 				<text>0 0 </text>
 				<value-of select="$width" />
 				<text> </text>
-				<value-of select="$height * 2" />
+				<value-of select="$height + $offsetY + $graphHeight" />
 			</attribute>
 			<attribute name="width">
 				<value-of select="$width" />
@@ -73,15 +74,16 @@
 						<text> </text>
 						<value-of select="$width - $offsetX" />
 						<text>,</text>
-						<value-of select="$height - $offsetY" />
+						<value-of select="$graphHeight - $offsetY" />
 						<text> </text>
 						<value-of select="$offsetX" />
 						<text>,</text>
-						<value-of select="$height - $offsetY" />
+						<value-of select="$graphHeight - $offsetY" />
 					</attribute>
 				</element>
 			</element>
 
+			<!-- background -->
 			<element name="polygon" namespace="http://www.w3.org/2000/svg">
 				<attribute name="fill">white</attribute>
 				<attribute name="points">
@@ -92,11 +94,11 @@
 					<text> </text>
 					<value-of select="$width" />
 					<text>,</text>
-					<value-of select="$height" />
+					<value-of select="$height + $graphHeight" />
 					<text> </text>
 					<value-of select="0" />
 					<text>,</text>
-					<value-of select="$height" />
+					<value-of select="$height + $graphHeight" />
 				</attribute>
 			</element>
 
@@ -107,8 +109,13 @@
 				<attribute name="stroke">
 					<value-of select="$colorTimes" />
 				</attribute>
+				<attribute name="transform">
+					<text>translate(0,</text>
+					<value-of select="$height + $offsetY" />
+					<text>)</text>
+				</attribute>
 
-				<for-each select="1 to xs:integer(($height - $offsetY) div $lineStep)">
+				<for-each select="1 to xs:integer(($graphHeight - $offsetY) div $lineStep)">
 					<element name="line" namespace="http://www.w3.org/2000/svg">
 						<attribute name="x1">
 							<value-of select="$offsetX" />
@@ -132,6 +139,11 @@
 					<value-of select="$colorTimes" />
 				</attribute>
 				<attribute name="text-anchor">middle</attribute>
+				<attribute name="transform">
+					<text>translate(0,</text>
+					<value-of select="$height + $offsetY" />
+					<text>)</text>
+				</attribute>
 
 				<for-each select="$times">
 					<if test="position() = 1">
@@ -145,7 +157,7 @@
 								<value-of select="$offsetX" />
 							</attribute>
 							<attribute name="y">
-								<value-of select="$height - $offsetY" />
+								<value-of select="$graphHeight - $offsetY" />
 							</attribute>
 							<value-of select="substring(., 12, 8)" />
 						</element>
@@ -159,7 +171,7 @@
 								<value-of select="$width div 2" />
 							</attribute>
 							<attribute name="y">
-								<value-of select="$height - $offsetY" />
+								<value-of select="$graphHeight - $offsetY" />
 							</attribute>
 							<value-of select="substring(., 0, 11)" />
 						</element>
@@ -177,7 +189,7 @@
 								<value-of select="$width - $offsetX" />
 							</attribute>
 							<attribute name="y">
-								<value-of select="$height - $offsetY" />
+								<value-of select="$graphHeight - $offsetY" />
 							</attribute>
 							<value-of select="substring(., 12, 8)" />
 						</element>
@@ -197,79 +209,77 @@
 		<variable name="maxLon" select="max($lons)" />
 		<variable name="centerLon" select="($minLon + $maxLon) div 2" />
 		<variable name="centerLat" select="($minLat + $maxLat) div 2" />
-		<variable name="scaleX" select="1000 div ($maxLon - $minLon)" />
-		<variable name="scaleY" select="500 div ($maxLat - $minLat)" />
-		<!--<variable name="scale" select="min(($scaleX, $scaleY))" />-->
+		<!--<variable name="scaleX" select="$height div ($maxLon - $minLon)" />
+		<variable name="scaleY" select="$width div ($maxLat - $minLat)" />
+		<variable name="scale" select="min(($scaleX, $scaleY))" />-->
 		<variable name="scale" select="9300" />
+		<!-- km = 111.3 * ($maxLat - $minLat) -->
 
 		<element name="g" namespace="http://www.w3.org/2000/svg">
-			<attribute name="transform">translate(0,500)</attribute>
-			<comment>
-				<value-of select="$maxLat - $minLat" />
-				<text>lat=</text>
-				<value-of select="111.3 * ($maxLat - $minLat)" />
-				<text>km</text>
-			</comment>
-
-		<element name="image" namespace="http://www.w3.org/2000/svg">
-			<attribute name="href">
-				<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
-				<value-of select="$centerLon" />
-				<text>,</text>
-				<value-of select="$centerLat" />
-				<text>,</text>
-				<value-of select="12" />
-				<text>,0/</text>
-				<value-of select="$width" />
-				<text>x</text>
-				<value-of select="$height" />
-				<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
-			</attribute>
-			<attribute name="height">500</attribute>
-			<attribute name="width">1000</attribute>
-			<attribute name="x">0</attribute>
-			<attribute name="y">0</attribute>
-		</element>
-		<element name="polyline" namespace="http://www.w3.org/2000/svg">
-			<attribute name="fill">
-				<text>none</text>
-			</attribute>
-			<attribute name="stroke">
-				<text>#ff0000</text>
-			</attribute>
-			<attribute name="stroke-width">
-				<text>2</text>
-			</attribute>
-			<attribute name="points">
-				<for-each select="1 to count($lats)">
-					<variable name="pos" select="position()" />
-					<value-of select="$lons[position() = $pos]" />
+			<element name="image" namespace="http://www.w3.org/2000/svg">
+				<attribute name="href">
+					<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
+					<value-of select="$centerLon" />
 					<text>,</text>
-					<value-of select="$lats[position() = $pos]" />
-					<text> </text>
-				</for-each>
-			</attribute>
-			<attribute name="transform">
-				<text>translate(</text>
-				<value-of select="500" />
-				<text>,</text>
-				<value-of select="250" />
-				<text>) </text>
-				<text>scale(</text>
-				<value-of select="$scale div 1.61" />
-				<text>,</text>
-				<value-of select="-$scale" />
-				<text>) </text>
-				<text>translate(</text>
-				<value-of select="-$centerLon" />
-				<text>,</text>
-				<value-of select="-$centerLat" />
-				<text>)</text>
-			</attribute>
-			<attribute name="vector-effect">
-				<text>non-scaling-stroke</text>
-			</attribute>
-		</element>
+					<value-of select="$centerLat" />
+					<text>,</text>
+					<value-of select="12" />
+					<text>,0/</text>
+					<value-of select="$width" />
+					<text>x</text>
+					<value-of select="$height" />
+					<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
+				</attribute>
+				<attribute name="height">
+					<value-of select="$height" />
+				</attribute>
+				<attribute name="width">
+					<value-of select="$width" />
+				</attribute>
+				<attribute name="x">0</attribute>
+				<attribute name="y">0</attribute>
+			</element>
+
+			<element name="polyline" namespace="http://www.w3.org/2000/svg">
+				<attribute name="fill">
+					<text>none</text>
+				</attribute>
+				<attribute name="stroke">
+					<text>#ff0000</text>
+				</attribute>
+				<attribute name="stroke-width">
+					<text>2</text>
+				</attribute>
+				<attribute name="points">
+					<for-each select="1 to count($lats)">
+						<variable name="pos" select="position()" />
+						<value-of select="$lons[position() = $pos]" />
+						<text>,</text>
+						<value-of select="$lats[position() = $pos]" />
+						<text> </text>
+					</for-each>
+				</attribute>
+				<attribute name="transform">
+					<text>translate(</text>
+					<value-of select="$width div 2" />
+					<text>,</text>
+					<value-of select="$height div 2" />
+					<text>) </text>
+					<text>scale(</text>
+					<value-of select="$scale div 1.61" />
+					<text>,</text>
+					<value-of select="-$scale" />
+					<text>) </text>
+					<text>translate(</text>
+					<value-of select="-$centerLon" />
+					<text>,</text>
+					<value-of select="-$centerLat" />
+					<text>)</text>
+				</attribute>
+				<attribute name="vector-effect">
+					<text>non-scaling-stroke</text>
+				</attribute>
+			</element>
 
 		</element>
 	</template>
@@ -287,6 +297,11 @@
 				<attribute name="fill">
 					<value-of select="$color" />
 				</attribute>
+				<attribute name="transform">
+					<text>translate(0,</text>
+					<value-of select="$height + $offsetY" />
+					<text>)</text>
+				</attribute>
 				<choose>
 					<when test="$posLegend &lt; $width div 2">
 						<attribute name="text-anchor">start</attribute>
@@ -300,7 +315,7 @@
 				<variable name="scaleX" select="($width - $offsetX * 2) div count($values)" />
 				<variable name="minValue" select="min($values)" />
 				<variable name="maxValue" select="max($values)" />
-				<variable name="scaleY" select="($height - $offsetY) div ($maxValue - $minValue)" />
+				<variable name="scaleY" select="($graphHeight - $offsetY) div ($maxValue - $minValue)" />
 
 				<!-- graph -->
 				<element name="{$type}" namespace="http://www.w3.org/2000/svg">
@@ -323,26 +338,33 @@
 						<if test="$type = 'polygon'">
 							<value-of select="$width - $offsetX" />
 							<text>,</text>
-							<value-of select="$height - $offsetY" />
+							<value-of select="$graphHeight - $offsetY" />
 							<text> </text>
 							<value-of select="$offsetX" />
 							<text>,</text>
-							<value-of select="$height - $offsetY" />
+							<value-of select="$graphHeight - $offsetY" />
 							<text> </text>
 						</if>
 						<for-each select="$values">
 							<value-of select="format-number($offsetX + position() * $scaleX, '0.0')" />
 							<text>,</text>
-							<value-of select="format-number((. - $minValue) * $scaleY * -1 + $height - $offsetY, '0.0')" />
+							<value-of select="format-number((. - $minValue) * $scaleY * -1 + $graphHeight - $offsetY, '0.0')" />
 							<text> </text>
 						</for-each>
+					</attribute>
+					<attribute name="transform">
+						<text>scale(</text>
+						<value-of select="1" />
+						<text>,</text>
+						<value-of select="1" />
+						<text>)</text>
 					</attribute>
 				</element>
 
 				<!-- legend -->
-				<for-each select="0 to xs:integer(($height - $offsetY) div $lineStep)">
+				<for-each select="0 to xs:integer(($graphHeight - $offsetY) div $lineStep)">
 					<element name="text" namespace="http://www.w3.org/2000/svg">
-						<variable name="value" select="((. * $lineStep - $height + $offsetY) div $scaleY div -1 + $minValue) * $factor" />
+						<variable name="value" select="((. * $lineStep - $graphHeight + $offsetY) div $scaleY div -1 + $minValue) * $factor" />
 						<attribute name="dy">
 							<value-of select="$fontOffsetY" />
 						</attribute>
@@ -382,6 +404,11 @@
 				<value-of select="$colorLaps" />
 			</attribute>
 			<attribute name="text-anchor">middle</attribute>
+			<attribute name="transform">
+				<text>translate(0,</text>
+				<value-of select="$height + $offsetY" />
+				<text>)</text>
+			</attribute>
 
 			<for-each select="1 to xs:integer(ceiling($meters div 1000))">
 				<if test="position() mod 2 = 0">
@@ -398,11 +425,11 @@
 							<text> </text>
 							<value-of select="format-number(position() div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
 							<text>,</text>
-							<value-of select="$height - $offsetY" />
+							<value-of select="$graphHeight - $offsetY" />
 							<text> </text>
 							<value-of select="format-number((position() - 1) div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
 							<text>,</text>
-							<value-of select="$height - $offsetY" />
+							<value-of select="$graphHeight - $offsetY" />
 						</attribute>
 					</element>
 				</if>
@@ -414,7 +441,7 @@
 						<value-of select="format-number((position() - .5) div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
 					</attribute>
 					<attribute name="y">
-						<value-of select="$height - $offsetY * 2" />
+						<value-of select="$graphHeight - $offsetY * 2" />
 					</attribute>
 					<value-of select="position()" />
 				</element>
