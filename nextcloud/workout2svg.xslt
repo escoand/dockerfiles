@@ -23,460 +23,120 @@
 	<!-- config -->
 	<variable name="offsetX" as="xs:integer">40</variable>
 	<variable name="offsetY" as="xs:integer">15</variable>
-	<variable name="height" as="xs:integer">400</variable>
-	<variable name="width" as="xs:integer">800</variable>
-	<variable name="graphHeight" as="xs:integer">185</variable>
-	<variable name="lineStep" as="xs:integer">44</variable>
-	<variable name="colorLaps">#aaaaaa</variable>
-	<variable name="colorAltitude">#52be80</variable>
+	<variable name="mapHeight" as="xs:integer">490</variable>
+	<variable name="graphHeight" as="xs:integer">100</variable>
+	<variable name="height" as="xs:integer" select="$mapHeight + $graphHeight + 10" />
+	<variable name="width" as="xs:integer">600</variable>
+	<variable name="lineStep" as="xs:integer"><value-of select="round($graphHeight div 4)" /></variable>
+	<variable name="colorAltitude">grey</variable>
 	<variable name="colorHeart">#e74c3c</variable>
+	<variable name="colorMeta">white</variable>
 	<variable name="colorSpeed">#3498db</variable>
-	<variable name="colorTimes">grey</variable>
 	<!-- <variable name="colorCadence">#8e44ad</variable> -->
 	<variable name="colorCadence">none</variable>
+	<variable name="fontSizeChart">7pt</variable>
+	<variable name="fontSizeMeta">11pt</variable>
 	<variable name="fontOffsetY">9pt</variable>
 	<attribute-set name="fontStyle">
 		<attribute name="dy">9pt</attribute>
 		<attribute name="font-family">sans-serif</attribute>
 		<attribute name="font-size">9pt</attribute>
 		<attribute name="font-stretch">condensed</attribute>
-		<attribute name="font-weight">bold</attribute>
 	</attribute-set>
 
-	<template name="document">
-		<param name="times" />
+	<template match="/tcd:TrainingCenterDatabase/tcd:Activities/tcd:Activity|/gpx:gpx/gpx:trk|/gpx/trk">
+		<variable name="times" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Time|gpx:trkseg/gpx:trkpt/gpx:time|trkseg/trkpt/time" as="xs:dateTime*" />
+		<variable name="meters">
+			<choose>
+				<when test="tcd:Lap/tcd:DistanceMeters">
+					<value-of select="sum(tcd:Lap/tcd:DistanceMeters)" />
+				</when>
+				<when test="gpx:trkseg/gpx:trkpt|trkseg/trkpt">
+					<variable name="distance">
+						<variable name="pi180" select="math:pi() div 180" />
+						<variable name="r" select="6372.797 * 1000" />
+						<for-each select="gpx:trkseg/gpx:trkpt|trkseg/trkpt">
+							<if test="position() > 1" xmlns:dummy="#">
+								<variable name="lat1" select="(preceding-sibling::gpx:trkpt[1]/@lat | preceding-sibling::trkpt[1]/@lat) * $pi180" />
+								<variable name="lon1" select="(preceding-sibling::gpx:trkpt[1]/@lon | preceding-sibling::trkpt[1]/@lon) * $pi180" />
+								<variable name="lat2" select="@lat * $pi180" />
+								<variable name="lon2" select="@lon * $pi180" />
+								<variable name="dlat" select="($lat2 - $lat1)" />
+								<variable name="dlon" select="($lon2 - $lon1)" />
+								<variable name="a" select="math:pow(math:sin($dlat div 2), 2) + math:cos($lat1) * math:cos($lat2) * math:pow(math:sin($dlon div 2), 2)" />
+								<variable name="c" select="2 * math:atan2(math:sqrt($a), math:sqrt(1 - $a))" />
+								<dummy:dummy>
+									<value-of select="$r * $c" />
+								</dummy:dummy>
+							</if>
+						</for-each>
+					</variable>
+					<value-of select="sum(exslt:node-set($distance)/*)" />
+				</when>
+			</choose>
+		</variable>
 
-		<element name="svg" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontStyle">
+		<element name="svg" namespace="http://www.w3.org/2000/svg">
 			<attribute name="height">
-				<value-of select="$height + $offsetY + $graphHeight" />
+				<value-of select="$height" />
 			</attribute>
 			<attribute name="viewBox">
 				<text>0 0 </text>
 				<value-of select="$width" />
 				<text> </text>
-				<value-of select="$height + $offsetY + $graphHeight" />
+				<value-of select="$height" />
 			</attribute>
-			<attribute name="width">
-				<value-of select="$width" />
-			</attribute>
+			<attribute name="width" select="$width" />
 
-			<element name="clipPath" namespace="http://www.w3.org/2000/svg">
-				<attribute name="id">clipGraph</attribute>
-				<element name="polygon" namespace="http://www.w3.org/2000/svg">
-					<attribute name="points">
-						<value-of select="$offsetX" />
-						<text>,</text>
-						<value-of select="0" />
-						<text> </text>
-						<value-of select="$width - $offsetX" />
-						<text>,</text>
-						<value-of select="0" />
-						<text> </text>
-						<value-of select="$width - $offsetX" />
-						<text>,</text>
-						<value-of select="$graphHeight - $offsetY" />
-						<text> </text>
-						<value-of select="$offsetX" />
-						<text>,</text>
-						<value-of select="$graphHeight - $offsetY" />
-					</attribute>
-				</element>
-			</element>
-
-			<!-- background -->
-			<element name="polygon" namespace="http://www.w3.org/2000/svg">
-				<attribute name="fill">white</attribute>
-				<attribute name="points">
-					<text>0,0 </text>
-					<value-of select="$width" />
-					<text>,</text>
-					<value-of select="0" />
-					<text> </text>
-					<value-of select="$width" />
-					<text>,</text>
-					<value-of select="$height + $graphHeight" />
-					<text> </text>
-					<value-of select="0" />
-					<text>,</text>
-					<value-of select="$height + $graphHeight" />
-				</attribute>
-			</element>
-
-			<apply-templates />
-
-			<!-- lines -->
-			<element name="g" namespace="http://www.w3.org/2000/svg">
-				<attribute name="stroke">
-					<value-of select="$colorTimes" />
-				</attribute>
-				<attribute name="transform">
-					<text>translate(0,</text>
-					<value-of select="$height + $offsetY" />
-					<text>)</text>
-				</attribute>
-
-				<for-each select="1 to xs:integer(($graphHeight - $offsetY) div $lineStep)">
-					<element name="line" namespace="http://www.w3.org/2000/svg">
-						<attribute name="x1">
-							<value-of select="$offsetX" />
-						</attribute>
-						<attribute name="x2">
-							<value-of select="$width - $offsetX" />
-						</attribute>
-						<attribute name="y1">
-							<value-of select=". * $lineStep" />
-						</attribute>
-						<attribute name="y2">
-							<value-of select=". * $lineStep" />
-						</attribute>
-					</element>
-				</for-each>
-			</element>
-
-			<!-- times -->
-			<element name="g" namespace="http://www.w3.org/2000/svg">
-				<attribute name="fill">
-					<value-of select="$colorTimes" />
-				</attribute>
-				<attribute name="text-anchor">middle</attribute>
-				<attribute name="transform">
-					<text>translate(0,</text>
-					<value-of select="$height + $offsetY" />
-					<text>)</text>
-				</attribute>
-
-				<for-each select="$times">
-					<if test="position() = 1">
-
-						<!-- date -->
-						<element name="text" namespace="http://www.w3.org/2000/svg">
-							<attribute name="dy">
-								<value-of select="$fontOffsetY" />
-							</attribute>
-							<attribute name="x">
-								<value-of select="$offsetX" />
-							</attribute>
-							<attribute name="y">
-								<value-of select="$graphHeight - $offsetY" />
-							</attribute>
-							<value-of select="substring(., 12, 8)" />
-						</element>
-
-						<!-- start time -->
-						<element name="text" namespace="http://www.w3.org/2000/svg">
-							<attribute name="dy">
-								<value-of select="$fontOffsetY" />
-							</attribute>
-							<attribute name="x">
-								<value-of select="$width div 2" />
-							</attribute>
-							<attribute name="y">
-								<value-of select="$graphHeight - $offsetY" />
-							</attribute>
-							<value-of select="substring(., 0, 11)" />
-						</element>
-
-					</if>
-
-					<if test="position() = last()">
-
-						<!-- end time -->
-						<element name="text" namespace="http://www.w3.org/2000/svg">
-							<attribute name="dy">
-								<value-of select="$fontOffsetY" />
-							</attribute>
-							<attribute name="x">
-								<value-of select="$width - $offsetX" />
-							</attribute>
-							<attribute name="y">
-								<value-of select="$graphHeight - $offsetY" />
-							</attribute>
-							<value-of select="substring(., 12, 8)" />
-						</element>
-
-					</if>
-				</for-each>
-			</element>
-		</element>
-	</template>
-
-	<template name="map">
-		<param name="lats" />
-		<param name="lons" />
-		<variable name="minLat" select="min($lats)" />
-		<variable name="maxLat" select="max($lats)" />
-		<variable name="minLon" select="min($lons)" />
-		<variable name="maxLon" select="max($lons)" />
-		<variable name="centerLon" select="($minLon + $maxLon) div 2" />
-		<variable name="centerLat" select="($minLat + $maxLat) div 2" />
-		<!--<variable name="scaleX" select="$height div ($maxLon - $minLon)" />
-		<variable name="scaleY" select="$width div ($maxLat - $minLat)" />
-		<variable name="scale" select="min(($scaleX, $scaleY))" />-->
-		<variable name="scale" select="9300" />
-		<!-- km = 111.3 * ($maxLat - $minLat) -->
-
-		<element name="g" namespace="http://www.w3.org/2000/svg">
-			<element name="image" namespace="http://www.w3.org/2000/svg">
-				<attribute name="href">
-					<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
-					<value-of select="$centerLon" />
-					<text>,</text>
-					<value-of select="$centerLat" />
-					<text>,</text>
-					<value-of select="12" />
-					<text>,0/</text>
-					<value-of select="$width" />
-					<text>x</text>
-					<value-of select="$height" />
-					<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
-				</attribute>
-				<attribute name="height">
-					<value-of select="$height" />
-				</attribute>
-				<attribute name="width">
-					<value-of select="$width" />
-				</attribute>
-				<attribute name="x">0</attribute>
-				<attribute name="y">0</attribute>
-			</element>
-
-			<element name="polyline" namespace="http://www.w3.org/2000/svg">
-				<attribute name="fill">
-					<text>none</text>
-				</attribute>
-				<attribute name="stroke">
-					<text>#ff0000</text>
-				</attribute>
-				<attribute name="stroke-width">
-					<text>2</text>
-				</attribute>
-				<attribute name="points">
-					<for-each select="1 to count($lats)">
-						<variable name="pos" select="position()" />
-						<value-of select="$lons[position() = $pos]" />
-						<text>,</text>
-						<value-of select="$lats[position() = $pos]" />
-						<text> </text>
-					</for-each>
-				</attribute>
-				<attribute name="transform">
-					<text>translate(</text>
-					<value-of select="$width div 2" />
-					<text>,</text>
-					<value-of select="$height div 2" />
-					<text>) </text>
-					<text>scale(</text>
-					<value-of select="$scale div 1.61" />
-					<text>,</text>
-					<value-of select="-$scale" />
-					<text>) </text>
-					<text>translate(</text>
-					<value-of select="-$centerLon" />
-					<text>,</text>
-					<value-of select="-$centerLat" />
-					<text>)</text>
-				</attribute>
-				<attribute name="vector-effect">
-					<text>non-scaling-stroke</text>
-				</attribute>
-			</element>
-
-		</element>
-	</template>
-
-	<template name="graph">
-		<param name="color" />
-		<param name="factor" select="1" />
-		<param name="posLegend" select="0" />
-		<param name="type" select="'polyline'" />
-		<param name="unit" />
-		<param name="values" />
-
-		<if test="$values">
-			<element name="g" namespace="http://www.w3.org/2000/svg">
-				<attribute name="fill">
-					<value-of select="$color" />
-				</attribute>
-				<attribute name="transform">
-					<text>translate(0,</text>
-					<value-of select="$height + $offsetY" />
-					<text>)</text>
-				</attribute>
-				<choose>
-					<when test="$posLegend &lt; $width div 2">
-						<attribute name="text-anchor">start</attribute>
-					</when>
-					<otherwise>
-						<attribute name="text-anchor">end</attribute>
-					</otherwise>
-				</choose>
-
-				<!-- helpers -->
-				<variable name="scaleX" select="($width - $offsetX * 2) div count($values)" />
-				<variable name="minValue" select="min($values)" />
-				<variable name="maxValue" select="max($values)" />
-				<variable name="scaleY" select="($graphHeight - $offsetY) div ($maxValue - $minValue)" />
-
-				<!-- graph -->
-				<element name="{$type}" namespace="http://www.w3.org/2000/svg">
-					<choose>
-						<when test="$type = 'polygon'">
-							<attribute name="opacity">.25</attribute>
-						</when>
-						<otherwise>
-							<attribute name="fill">none</attribute>
-							<attribute name="opacity">.6</attribute>
-							<attribute name="stroke">
-								<value-of select="$color" />
-							</attribute>
-							<attribute name="stroke-width">
-								<value-of select="2" />
-							</attribute>
-						</otherwise>
-					</choose>
-					<attribute name="points">
-						<if test="$type = 'polygon'">
-							<value-of select="$width - $offsetX" />
-							<text>,</text>
-							<value-of select="$graphHeight - $offsetY" />
-							<text> </text>
-							<value-of select="$offsetX" />
-							<text>,</text>
-							<value-of select="$graphHeight - $offsetY" />
-							<text> </text>
-						</if>
-						<for-each select="$values">
-							<value-of select="format-number($offsetX + position() * $scaleX, '0.0')" />
-							<text>,</text>
-							<value-of select="format-number((. - $minValue) * $scaleY * -1 + $graphHeight - $offsetY, '0.0')" />
-							<text> </text>
-						</for-each>
-					</attribute>
-					<attribute name="transform">
-						<text>scale(</text>
-						<value-of select="1" />
-						<text>,</text>
-						<value-of select="1" />
-						<text>)</text>
-					</attribute>
-				</element>
-
-				<!-- legend -->
-				<for-each select="0 to xs:integer(($graphHeight - $offsetY) div $lineStep)">
-					<element name="text" namespace="http://www.w3.org/2000/svg">
-						<variable name="value" select="((. * $lineStep - $graphHeight + $offsetY) div $scaleY div -1 + $minValue) * $factor" />
-						<attribute name="dy">
-							<value-of select="$fontOffsetY" />
-						</attribute>
-						<attribute name="x">
-							<value-of select="$posLegend" />
-						</attribute>
-						<attribute name="y">
-							<value-of select=". * $lineStep" />
-						</attribute>
-						<choose>
-							<when test="$maxValue &gt; 50">
-								<value-of select="round($value)" />
-							</when>
-							<otherwise>
-								<value-of select="format-number($value, '0.#')" />
-							</otherwise>
-						</choose>
-						<if test="$unit">
-							<text> </text>
-							<value-of select="$unit" />
-						</if>
-					</element>
-				</for-each>
-
-			</element>
-		</if>
-	</template>
-
-	<!-- laps -->
-	<template name="laps">
-		<param name="meters" />
-		<variable name="countLaps" select="$meters div 1000" />
-
-		<element name="g" namespace="http://www.w3.org/2000/svg">
-			<attribute name="clip-path">url(#clipGraph)</attribute>
-			<attribute name="fill">
-				<value-of select="$colorLaps" />
-			</attribute>
-			<attribute name="text-anchor">middle</attribute>
-			<attribute name="transform">
-				<text>translate(0,</text>
-				<value-of select="$height + $offsetY" />
-				<text>)</text>
-			</attribute>
-
-			<for-each select="1 to xs:integer(ceiling($meters div 1000))">
-				<if test="position() mod 2 = 0">
-					<element name="polygon" namespace="http://www.w3.org/2000/svg">
-						<attribute name="opacity">.2</attribute>
-						<attribute name="points">
-							<value-of select="format-number((position() - 1) div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
-							<text>,</text>
-							<value-of select="0" />
-							<text> </text>
-							<value-of select="format-number(position() div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
-							<text>,</text>
-							<value-of select="0" />
-							<text> </text>
-							<value-of select="format-number(position() div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
-							<text>,</text>
-							<value-of select="$graphHeight - $offsetY" />
-							<text> </text>
-							<value-of select="format-number((position() - 1) div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
-							<text>,</text>
-							<value-of select="$graphHeight - $offsetY" />
-						</attribute>
-					</element>
-				</if>
-				<element name="text" namespace="http://www.w3.org/2000/svg">
-					<attribute name="dy">
-						<value-of select="$fontOffsetY" />
-					</attribute>
-					<attribute name="x">
-						<value-of select="format-number((position() - .5) div $countLaps * ($width - $offsetX * 2) + $offsetX, '0.0')" />
-					</attribute>
-					<attribute name="y">
-						<value-of select="$graphHeight - $offsetY * 2" />
-					</attribute>
-					<value-of select="position()" />
-				</element>
-			</for-each>
-		</element>
-	</template>
-
-	<!-- heart rate color -->
-	<template name="heartColor">
-		<param name="values" />
-
-		<if test="$values">
-			<variable name="minValue">
-				<for-each select="$values">
-					<sort select="." data-type="number" order="ascending" />
-					<if test="position() = 1">
-						<value-of select="." />
-					</if>
-				</for-each>
-			</variable>
-			<variable name="maxValue" select="max($values)" />
-			<variable name="scaleY" select="($height - $offsetY) div ($maxValue - $minValue)" />
-
+			<!-- gradients -->
 			<element name="defs" namespace="http://www.w3.org/2000/svg">
+
+				<!-- gray out -->
+				<element name="linearGradient" namespace="http://www.w3.org/2000/svg">
+					<attribute name="id">grayOut</attribute>
+					<attribute name="x1">0</attribute>
+					<attribute name="x2">0</attribute>
+					<attribute name="y1">0</attribute>
+					<attribute name="y2">1</attribute>
+					<element name="stop" namespace="http://www.w3.org/2000/svg">
+						<attribute name="offset">0%</attribute>
+						<attribute name="stop-color">black</attribute>
+						<attribute name="stop-opacity">0.5</attribute>
+					</element>
+					<element name="stop" namespace="http://www.w3.org/2000/svg">
+						<attribute name="offset">100%</attribute>
+						<attribute name="stop-color">black</attribute>
+						<attribute name="stop-opacity">0</attribute>
+					</element>
+				</element>
+
+				<!-- white out -->
+				<element name="linearGradient" namespace="http://www.w3.org/2000/svg">
+					<attribute name="id">whiteOut</attribute>
+					<attribute name="x1">0</attribute>
+					<attribute name="x2">0</attribute>
+					<attribute name="y1">0</attribute>
+					<attribute name="y2">1</attribute>
+					<element name="stop" namespace="http://www.w3.org/2000/svg">
+						<attribute name="offset">0%</attribute>
+						<attribute name="stop-color">white</attribute>
+						<attribute name="stop-opacity">1</attribute>
+					</element>
+					<element name="stop" namespace="http://www.w3.org/2000/svg">
+						<attribute name="offset">100%</attribute>
+						<attribute name="stop-color">white</attribute>
+						<attribute name="stop-opacity">0</attribute>
+					</element>
+				</element>
+
+				<!-- heart gradient -->
 				<element name="linearGradient" namespace="http://www.w3.org/2000/svg">
 					<attribute name="id">heartGradient</attribute>
 					<attribute name="gradientUnits">userSpaceOnUse</attribute>
 					<attribute name="x1">0</attribute>
 					<attribute name="x2">0</attribute>
-					<attribute name="y1">
-						<value-of select="(0 - $minValue) * $scaleY * -1 + $height - $offsetY" />
-					</attribute>
-					<attribute name="y2">
-						<value-of select="(185 - $minValue) * $scaleY * -1 + $height - $offsetY" />
-					</attribute>
+					<attribute name="y1" select="0" />
+					<attribute name="y2" select="185" />
 					<element name="stop" namespace="http://www.w3.org/2000/svg">
 						<attribute name="offset">80%</attribute>
 						<attribute name="stop-color">#27ae60</attribute>
@@ -494,163 +154,350 @@
 						<attribute name="stop-color">#e74c3c</attribute>
 					</element>
 				</element>
+
+			</element>
+
+			<!-- background -->
+			<element name="rect" namespace="http://www.w3.org/2000/svg">
+				<attribute name="fill">white</attribute>
+				<attribute name="height" select="$height + $offsetY + $graphHeight" />
+				<attribute name="width" select="$width" />
+				<attribute name="x">0</attribute>
+				<attribute name="y">0</attribute>
+			</element>
+
+			<!-- map -->
+			<element name="g" namespace="http://www.w3.org/2000/svg">
+				<variable name="lats" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LatitudeDegrees|gpx:trkseg/gpx:trkpt/@lat|trkseg/trkpt/@lat" />
+				<variable name="lons" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LongitudeDegrees|gpx:trkseg/gpx:trkpt/@lon|trkseg/trkpt/@lon" />
+				<variable name="minLat" select="min($lats)" />
+				<variable name="maxLat" select="max($lats)" />
+				<variable name="minLon" select="min($lons)" />
+				<variable name="maxLon" select="max($lons)" />
+				<variable name="centerLon" select="($minLon + $maxLon) div 2" />
+				<variable name="centerLat" select="($minLat + $maxLat) div 2" />
+				<!--<variable name="scaleX" select="$height div ($maxLon - $minLon)" />
+				<variable name="scaleY" select="$width div ($maxLat - $minLat)" />
+				<variable name="scale" select="min(($scaleX, $scaleY))" />-->
+				<variable name="scale" select="9300" />
+				<!-- km = 111.3 * ($maxLat - $minLat) -->
+
+				<element name="image" namespace="http://www.w3.org/2000/svg">
+					<attribute name="href">
+						<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
+						<value-of select="$centerLon" />
+						<text>,</text>
+						<value-of select="$centerLat" />
+						<text>,</text>
+						<value-of select="12" />
+						<text>,0/</text>
+						<value-of select="$width" />
+						<text>x</text>
+						<value-of select="$mapHeight" />
+						<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
+					</attribute>
+					<attribute name="height" select="$mapHeight" />
+					<attribute name="width" select="$width" />
+					<attribute name="x">0</attribute>
+					<attribute name="y">0</attribute>
+				</element>
+
+				<element name="g" namespace="http://www.w3.org/2000/svg">
+					<variable name="start" select="min($times)" />
+					<variable name="end" select="max($times)" />
+					<variable name="diff" select="$end - $start" />
+					<variable name="seconds" select="$diff div xs:dayTimeDuration('PT1S')" />
+
+					<attribute name="fill" select="$colorMeta" />
+					<attribute name="font-family">sans-serif</attribute>
+					<attribute name="font-size" select="$fontSizeMeta" />
+
+					<!-- background -->
+					<element name="rect" namespace="http://www.w3.org/2000/svg">
+						<attribute name="height">80</attribute>
+						<attribute name="width" select="$width" />
+						<attribute name="x">0</attribute>
+						<attribute name="y">0</attribute>
+						<attribute name="fill">url(#grayOut)</attribute>
+					</element>
+					<element name="rect" namespace="http://www.w3.org/2000/svg">
+						<attribute name="height">80</attribute>
+						<attribute name="fill">url(#whiteOut)</attribute>
+						<attribute name="transform">scale(1,-1)</attribute>
+						<attribute name="width" select="$width" />
+						<attribute name="x">0</attribute>
+						<attribute name="y" select="-$mapHeight" />
+					</element>
+
+					<!-- distance -->
+					<element name="text" namespace="http://www.w3.org/2000/svg">
+						<attribute name="dy" select="$fontSizeMeta" />
+						<attribute name="x" select="$offsetX" />
+						<attribute name="y" select="20" />
+						<text disable-output-escaping="yes"><![CDATA[&#x1F3C3;&#xFE0E; ]]></text>
+						<value-of select="format-number($meters div 1000, '0.0')" />
+						<text> km</text>
+					</element>
+
+					<!-- pace -->
+					<element name="text" namespace="http://www.w3.org/2000/svg">
+						<variable name="pace" select="($seconds div 60) div ($meters div 1000)" />
+						<attribute name="dy" select="$fontSizeMeta" />
+						<attribute name="text-anchor">middle</attribute>
+						<attribute name="x" select="$width div 2" />
+						<attribute name="y" select="20" />
+						<text disable-output-escaping="yes"><![CDATA[&#x23F1;&#xFE0E; ]]></text>
+						<value-of select="floor($pace)" />
+						<text>:</text>
+						<value-of select="format-number(($pace * 60) mod 60, '00')" />
+						<text> min/km</text>
+						<text> = </text>
+						<value-of select="format-number(60 div $pace, '0.0')" />
+						<text> km/h</text>
+					</element>
+
+					<!-- time -->
+					<element name="text" namespace="http://www.w3.org/2000/svg">
+						<attribute name="dy" select="$fontSizeMeta" />
+						<attribute name="text-anchor">end</attribute>
+						<attribute name="x" select="$width - $offsetX" />
+						<attribute name="y" select="20" />
+						<text disable-output-escaping="yes"><![CDATA[&#x1F3C1;&#xFE0E; ]]></text>
+						<value-of select="hours-from-duration($diff)" />
+						<text>:</text>
+						<value-of select="format-number(minutes-from-duration($diff), '00')" />
+						<text>:</text>
+						<value-of select="format-number(seconds-from-duration($diff), '00')" />
+					</element>
+
+				</element>
+
+				<!-- track -->
+				<element name="polyline" namespace="http://www.w3.org/2000/svg">
+					<attribute name="fill">none</attribute>
+					<attribute name="stroke">red</attribute>
+					<attribute name="stroke-width">2</attribute>
+					<attribute name="points">
+						<for-each select="1 to count($lats)">
+							<variable name="pos" select="position()" />
+							<value-of select="$lons[position() = $pos]" />
+							<text>,</text>
+							<value-of select="$lats[position() = $pos]" />
+							<text> </text>
+						</for-each>
+					</attribute>
+					<attribute name="transform">
+						<text>translate(</text>
+						<value-of select="$width div 2" />
+						<text>,</text>
+						<value-of select="$mapHeight div 2" />
+						<text>) </text>
+						<text>scale(</text>
+						<value-of select="$scale div 1.61" />
+						<text>,</text>
+						<value-of select="-$scale" />
+						<text>) </text>
+						<text>translate(</text>
+						<value-of select="-$centerLon" />
+						<text>,</text>
+						<value-of select="-$centerLat" />
+						<text>)</text>
+					</attribute>
+					<attribute name="vector-effect">non-scaling-stroke</attribute>
+				</element>
+
+			</element>
+
+			<!-- graphs -->
+			<element name="g" namespace="http://www.w3.org/2000/svg">
+				<attribute name="transform">
+					<text>translate(0,</text>
+					<value-of select="$height - $graphHeight - 10" />
+					<text>)</text>
+				</attribute>
+
+				<!-- lines -->
+				<element name="g" namespace="http://www.w3.org/2000/svg">
+					<variable name="countLaps" select="$meters div 1000" />
+
+					<attribute name="font-family">sans-serif</attribute>
+					<attribute name="font-size" select="$fontSizeChart" />
+					<attribute name="stroke">lightgrey</attribute>
+						<attribute name="transform">
+							<text>scale(</text>
+							<value-of select="($width - 80) div $width" />
+							<text>,1)</text>
+						</attribute>
+
+					<!-- x axis -->
+					<for-each select="1 to xs:integer($countLaps)">
+						<element name="line" namespace="http://www.w3.org/2000/svg">
+							<attribute name="x1" select="$width div $countLaps * ." />
+							<attribute name="x2" select="$width div $countLaps * ." />
+							<attribute name="y1" select="$graphHeight - 5" />
+							<attribute name="y2" select="$graphHeight" />
+						</element>
+						<element name="text" namespace="http://www.w3.org/2000/svg">
+							<attribute name="dy" select="$fontSizeChart" />
+							<attribute name="fill">lightgrey</attribute>
+							<attribute name="stroke">none</attribute>
+							<attribute name="text-anchor">middle</attribute>
+							<attribute name="x" select="$width div $countLaps * (. - 0.5)" />
+							<attribute name="y" select="$graphHeight" />
+							<value-of select="." />
+						</element>
+					</for-each>
+
+					<!-- y axis -->
+					<for-each select="0 to 4">
+						<element name="line" namespace="http://www.w3.org/2000/svg">
+							<attribute name="x1">0</attribute>
+							<attribute name="x2" select="$width" />
+							<attribute name="y1" select="min(($graphHeight div 4 * ., $graphHeight - 0.5))" />
+							<attribute name="y2" select="min(($graphHeight div 4 * ., $graphHeight - 0.5))" />
+						</element>
+					</for-each>
+
+					<!-- altitude -->
+					<call-template name="graph">
+						<with-param name="color" select="$colorAltitude" />
+						<with-param name="posLegend" select="$width + 30" />
+						<with-param name="type">polygon</with-param>
+						<with-param name="unit">m</with-param>
+						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:AltitudeMeters|gpx:trkseg/gpx:trkpt/gpx:ele|trkseg/trkpt/ele" />
+					</call-template>
+
+					<!-- speed -->
+					<call-template name="graph">
+						<with-param name="factor">3.6</with-param>
+						<with-param name="color" select="$colorSpeed" />
+						<with-param name="posLegend" select="$width + 60" />
+						<with-param name="unit">km/h</with-param>
+						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Extensions/ae:TPX/ae:Speed|gpx:trkseg/gpx:trkpt/gpx:extensions/gpx:speed|trkseg/trkpt/extensions/speed" />
+					</call-template>
+
+					<!-- heart rate -->
+					<call-template name="graph">
+						<with-param name="color">url(#heartGradient)</with-param>
+						<with-param name="posLegend" select="$width + 90" />
+						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value|gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
+					</call-template>
+
+					<!-- cadence -->
+					<call-template name="graph">
+						<with-param name="color" select="$colorCadence" />
+						<with-param name="posLegend">45</with-param>
+						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Extensions/ae:TPX/ae:RunCadence|gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:cad|trkseg/trkpt/extensions/TrackPointExtension/cad" />
+					</call-template>
+
+				</element>
+
+			</element>
+		</element>
+	</template>
+
+	<template name="graph">
+		<param name="color" />
+		<param name="factor" select="1" />
+		<param name="posLegend" select="$width" />
+		<param name="type" select="'polyline'" />
+		<param name="unit" />
+		<param name="values" />
+
+		<if test="$values">
+			<element name="g" namespace="http://www.w3.org/2000/svg">
+				<attribute name="fill" select="$color" />
+				<choose>
+					<when test="$posLegend &lt; $width div 2">
+						<attribute name="text-anchor">start</attribute>
+					</when>
+					<otherwise>
+						<attribute name="text-anchor">end</attribute>
+					</otherwise>
+				</choose>
+
+				<!-- helpers -->
+				<variable name="scaleX" select="$width div count($values)" />
+				<variable name="minValue" select="min($values)" />
+				<variable name="maxValue" select="max($values)" />
+				<variable name="scaleY" select="$graphHeight div ($maxValue - $minValue)" />
+
+				<!-- graph -->
+				<element name="g" namespace="http://www.w3.org/2000/svg">
+					<element name="{$type}" namespace="http://www.w3.org/2000/svg">
+						<choose>
+							<when test="$type = 'polygon'">
+								<attribute name="opacity">.25</attribute>
+								<attribute name="stroke">none</attribute>
+							</when>
+							<otherwise>
+								<attribute name="fill">none</attribute>
+								<attribute name="opacity">.6</attribute>
+								<attribute name="stroke" select="$color" />
+								<attribute name="stroke-width">1.5</attribute>
+							</otherwise>
+						</choose>
+						<attribute name="points">
+							<if test="$type = 'polygon'">
+								<value-of select="count($values)" />
+								<text>,</text>
+								<value-of select="$minValue" />
+								<text> </text>
+								<value-of select="1" />
+								<text>,</text>
+								<value-of select="$minValue" />
+								<text> </text>
+							</if>
+							<for-each select="$values">
+								<value-of select="position()" />
+								<text>,</text>
+								<value-of select="." />
+								<text> </text>
+							</for-each>
+						</attribute>
+						<attribute name="transform">
+							<text>scale(</text>
+							<value-of select="$scaleX" />
+							<text>,</text>
+							<value-of select="-$scaleY" />
+							<text>) </text>
+							<text>translate(0,</text>
+							<value-of select="-$maxValue" />
+							<text>) </text>
+						</attribute>
+						<attribute name="vector-effect">non-scaling-stroke</attribute>
+					</element>
+				</element>
+
+				<!-- legend -->
+				<element name="text" namespace="http://www.w3.org/2000/svg">
+					<attribute name="dy" select="$fontSizeChart" />
+					<attribute name="stroke">none</attribute>
+					<attribute name="text-anchor">end</attribute>
+					<attribute name="x" select="$posLegend" />
+					<attribute name="y" select="$graphHeight" />
+					<value-of select="$unit" />
+				</element>
+				<for-each select="0 to 4">
+					<element name="text" namespace="http://www.w3.org/2000/svg">
+						<variable name="value" select="(($maxValue - $minValue) div 4 * (4 - .) + $minValue) * $factor" />
+						<attribute name="stroke">none</attribute>
+						<attribute name="text-anchor">end</attribute>
+						<attribute name="x" select="$posLegend" />
+						<attribute name="y" select=". * $lineStep" />
+						<choose>
+							<when test="$maxValue &gt; 50">
+								<value-of select="round($value)" />
+							</when>
+							<otherwise>
+								<value-of select="format-number($value, '0.#')" />
+							</otherwise>
+						</choose>
+					</element>
+				</for-each>
+
 			</element>
 		</if>
-	</template>
-
-
-	<!-- tcx document -->
-	<template match="/tcd:TrainingCenterDatabase">
-		<call-template name="document">
-			<with-param name="times" select="tcd:Activities/tcd:Activity/tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Time" />
-		</call-template>
-	</template>
-	<template match="/tcd:TrainingCenterDatabase/tcd:Activities/tcd:Activity">
-
-		<!-- heart gradient -->
-		<call-template name="heartColor">
-			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value" />
-		</call-template>
-
-		<!-- laps -->
-		<call-template name="laps">
-			<with-param name="meters" select="sum(tcd:Lap/tcd:DistanceMeters)" />
-		</call-template>
-
-		<!-- altitude -->
-		<call-template name="graph">
-			<with-param name="color">
-				<value-of select="$colorAltitude" />
-			</with-param>
-			<with-param name="type">polygon</with-param>
-			<with-param name="unit">m</with-param>
-			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:AltitudeMeters" />
-		</call-template>
-
-		<!-- speed -->
-		<call-template name="graph">
-			<with-param name="factor">3.6</with-param>
-			<with-param name="color">
-				<value-of select="$colorSpeed" />
-			</with-param>
-			<with-param name="posLegend">
-				<value-of select="$width" />
-			</with-param>
-			<with-param name="unit">km/h</with-param>
-			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Extensions/ae:TPX/ae:Speed" />
-		</call-template>
-
-		<!-- heart rate -->
-		<call-template name="graph">
-			<with-param name="color">url(#heartGradient)</with-param>
-			<with-param name="posLegend">
-				<value-of select="$width - 60" />
-			</with-param>
-			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value" />
-		</call-template>
-
-		<!-- cadence -->
-		<call-template name="graph">
-			<with-param name="color">
-				<value-of select="$colorCadence" />
-			</with-param>
-			<with-param name="posLegend">45</with-param>
-			<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Extensions/ae:TPX/ae:RunCadence" />
-		</call-template>
-
-		<!-- map -->>
-		<call-template name="map">
-			<with-param name="lats" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LatitudeDegrees" />
-			<with-param name="lons" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Position/tcd:LongitudeDegrees" />
-		</call-template>
-
-	</template>
-	<template match="/tcd:TrainingCenterDatabase/tcd:Author"/>
-
-	<!-- gpx document -->
-	<template match="/gpx:gpx|/gpx">
-		<call-template name="document">
-			<with-param name="times" select="gpx:trk/gpx:trkseg/gpx:trkpt/gpx:time|trk/trkseg/trkpt/time" />
-		</call-template>
-	</template>
-	<template match="/gpx:gpx/gpx:trk|/gpx/trk">
-	
-		<!-- laps -->
-		<variable name="distance">
-			<variable name="pi180" select="math:pi() div 180" />
-			<variable name="r" select="6372.797 * 1000" />
-			<for-each select="gpx:trkseg/gpx:trkpt|trkseg/trkpt">
-				<if test="position() > 1" xmlns:dummy="#">
-					<variable name="lat1" select="(preceding-sibling::gpx:trkpt[1]/@lat | preceding-sibling::trkpt[1]/@lat) * $pi180" />
-					<variable name="lon1" select="(preceding-sibling::gpx:trkpt[1]/@lon | preceding-sibling::trkpt[1]/@lon) * $pi180" />
-					<variable name="lat2" select="@lat * $pi180" />
-					<variable name="lon2" select="@lon * $pi180" />
-					<variable name="dlat" select="($lat2 - $lat1)" />
-					<variable name="dlon" select="($lon2 - $lon1)" />
-					<variable name="a" select="math:pow(math:sin($dlat div 2), 2) + math:cos($lat1) * math:cos($lat2) * math:pow(math:sin($dlon div 2), 2)" />
-					<variable name="c" select="2 * math:atan2(math:sqrt($a), math:sqrt(1 - $a))" />
-					<dummy:dummy>
-						<value-of select="$r * $c" />
-					</dummy:dummy>
-				</if>
-			</for-each>
-		</variable>
-		<call-template name="laps">
-			<with-param name="meters" select="sum(exslt:node-set($distance)/*)" />
-		</call-template>
-
-		<!-- heart gradient -->
-		<call-template name="heartColor">
-			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
-		</call-template>
-
-		<!-- altitude -->
-		<call-template name="graph">
-			<with-param name="color">
-				<value-of select="$colorAltitude" />
-			</with-param>
-			<with-param name="type">polygon</with-param>
-			<with-param name="unit">m</with-param>
-			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:ele|trkseg/trkpt/ele" />
-		</call-template>
-
-		<!-- speed -->
-		<call-template name="graph">
-			<with-param name="color">
-				<value-of select="$colorSpeed" />
-			</with-param>
-			<with-param name="factor">3.6</with-param>
-			<with-param name="posLegend">
-				<value-of select="$width" />
-			</with-param>
-			<with-param name="unit">km/h</with-param>
-			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:extensions/gpx:speed|trkseg/trkpt/extensions/speed" />
-		</call-template>
-
-		<!-- heart rate -->
-		<call-template name="graph">
-			<with-param name="color">url(#heartGradient)</with-param>
-			<with-param name="posLegend">
-				<value-of select="$width - 60" />
-			</with-param>
-			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
-		</call-template>
-
-		<!-- cadence -->
-		<call-template name="graph">
-			<with-param name="color">
-				<value-of select="$colorCadence" />
-			</with-param>
-			<with-param name="posLegend">45</with-param>
-			<with-param name="values" select="gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:cad|trkseg/trkpt/extensions/TrackPointExtension/cad" />
-		</call-template>
-
-		<!-- map -->>
-		<call-template name="map">
-			<with-param name="lats" select="gpx:trkseg/gpx:trkpt/@lat|trkseg/trkpt/@lat" />
-			<with-param name="lons" select="gpx:trkseg/gpx:trkpt/@lon|trkseg/trkpt/@lon" />
-		</call-template>
-
 	</template>
 
 	<!-- ignore text nodes -->
