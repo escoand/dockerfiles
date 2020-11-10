@@ -31,6 +31,6 @@ fi
 # graph
 if [ -n "$FORCE" ] || [ ! -f "$SVG" ]; then
 	echo "$NEW -> $SVG"
-	java -cp /usr/local/java/*.jar net.sf.saxon.Transform -xsl:"$XSL" -s:"$NEW" -o:"$SVG"
+	java -cp /usr/local/java/*.jar net.sf.saxon.Transform -xsl:"$XSL" -s:"$NEW" -o:"$SVG" &&
 	chmod 666 "$SVG"
 fi
