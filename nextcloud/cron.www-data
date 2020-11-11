@@ -1,3 +1,3 @@
 00,30 * * * * $HOME/html/occ preview:pre-generate
 07,37 * * * * nice php -d memory_limit=1G $HOME/html/occ facerecognition:background_job -t 1200
-15,45 * * * * find $HOME/html/data/andreas/files/Dokumente/Training/ -type f \( -name '*.gpx' -o -name '*.tcx' \) -print0 | sort -r | xargs -0rn1 sh /usr/local/bin/workout2svg.sh; $HOME/html/occ files:scan -qp andreas/files/Dokumente/Training/
+15,45 * * * * sh /usr/local/bin/workout2png.sh $HOME/html/data/andreas/files/Dokumente/Training/
