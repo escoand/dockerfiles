@@ -9,6 +9,7 @@
 		xmlns:math="http://www.w3.org/2005/xpath-functions/math"
 		xmlns:tcd="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"
 		xmlns:tpe="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
 		xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		>
 	<output
@@ -19,6 +20,10 @@
 		method="xml"
 		standalone="no"
 		/>
+
+	<!-- parameters -->
+	<param name="mapboxStyle">mapbox/outdoors-v11</param>
+	<param name="mapboxToken" />
 
 	<!-- config -->
 	<variable name="offsetX" as="xs:integer">40</variable>
@@ -131,6 +136,10 @@
 
 				<!-- heart gradient -->
 				<element name="linearGradient" namespace="http://www.w3.org/2000/svg">
+					<variable name="rates" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value|gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
+					<variable name="minRate" select="min($rates)" />
+					<variable name="maxRate" select="max($rates)" />
+
 					<attribute name="id">heartGradient</attribute>
 					<attribute name="gradientUnits">userSpaceOnUse</attribute>
 					<attribute name="x1">0</attribute>
@@ -183,8 +192,10 @@
 				<!-- km = 111.3 * ($maxLat - $minLat) -->
 
 				<element name="image" namespace="http://www.w3.org/2000/svg">
-					<attribute name="href">
-						<text>https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/</text>
+					<variable name="url">
+						<text>https://api.mapbox.com/styles/v1/</text>
+						<value-of select="$mapboxStyle" />
+						<text>/static/</text>
 						<value-of select="$centerLon" />
 						<text>,</text>
 						<value-of select="$centerLat" />
@@ -194,11 +205,14 @@
 						<value-of select="$width" />
 						<text>x</text>
 						<value-of select="$mapHeight" />
-						<text>@2x?access_token=pk.eyJ1IjoicGFzc3RzY2h1IiwiYSI6ImFwSFVvOVEifQ.djLlizVZhCdi5FCSB3U9OA</text>
-					</attribute>
+						<text>@2x?access_token=</text>
+						<value-of select="$mapboxToken" />
+					</variable>
 					<attribute name="height" select="$mapHeight" />
+					<attribute name="href" select="$url" />
 					<attribute name="width" select="$width" />
 					<attribute name="x">0</attribute>
+					<attribute name="xlink:href" select="$url" />
 					<attribute name="y">0</attribute>
 				</element>
 
@@ -280,9 +294,9 @@
 					<attribute name="points">
 						<for-each select="1 to count($lats)">
 							<variable name="pos" select="position()" />
-							<value-of select="$lons[position() = $pos]" />
+							<value-of select="($lons[position() = $pos] - $centerLon) * $scale div 1.61" />
 							<text>,</text>
-							<value-of select="$lats[position() = $pos]" />
+							<value-of select="($lats[position() = $pos] - $centerLat) * -$scale" />
 							<text> </text>
 						</for-each>
 					</attribute>
@@ -292,18 +306,7 @@
 						<text>,</text>
 						<value-of select="$mapHeight div 2" />
 						<text>) </text>
-						<text>scale(</text>
-						<value-of select="$scale div 1.61" />
-						<text>,</text>
-						<value-of select="-$scale" />
-						<text>) </text>
-						<text>translate(</text>
-						<value-of select="-$centerLon" />
-						<text>,</text>
-						<value-of select="-$centerLat" />
-						<text>)</text>
 					</attribute>
-					<attribute name="vector-effect">non-scaling-stroke</attribute>
 				</element>
 
 			</element>
@@ -449,23 +452,12 @@
 								<text> </text>
 							</if>
 							<for-each select="$values">
-								<value-of select="position()" />
+								<value-of select="position() * $scaleX" />
 								<text>,</text>
-								<value-of select="." />
+								<value-of select="(. - $maxValue) * -$scaleY" />
 								<text> </text>
 							</for-each>
 						</attribute>
-						<attribute name="transform">
-							<text>scale(</text>
-							<value-of select="$scaleX" />
-							<text>,</text>
-							<value-of select="-$scaleY" />
-							<text>) </text>
-							<text>translate(0,</text>
-							<value-of select="-$maxValue" />
-							<text>) </text>
-						</attribute>
-						<attribute name="vector-effect">non-scaling-stroke</attribute>
 					</element>
 				</element>
 

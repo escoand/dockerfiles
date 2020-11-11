@@ -49,6 +49,7 @@ RUN mkdir -p /usr/share/man/man1 \
         default-jre-headless \
         libbz2-dev \
         libopenblas-base \
+        librsvg2-bin \
         unzip \
         wget \
     && docker-php-ext-install bz2
