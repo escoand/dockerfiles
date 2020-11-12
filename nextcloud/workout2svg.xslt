@@ -263,7 +263,7 @@
 						<text disable-output-escaping="yes"><![CDATA[&#x23F1;&#xFE0E; ]]></text>
 						<value-of select="floor($pace)" />
 						<text>:</text>
-						<value-of select="format-number(($pace * 60) mod 60, '00')" />
+						<value-of select="format-number(($pace * 60) mod 60, '0.0')" />
 						<text> min/km</text>
 						<text> = </text>
 						<value-of select="format-number(60 div $pace, '0.0')" />
@@ -294,9 +294,9 @@
 					<attribute name="points">
 						<for-each select="1 to count($lats)">
 							<variable name="pos" select="position()" />
-							<value-of select="($lons[position() = $pos] - $centerLon) * $scale div 1.61" />
+							<value-of select="format-number(($lons[position() = $pos] - $centerLon) * $scale div 1.61, '0.0')" />
 							<text>,</text>
-							<value-of select="($lats[position() = $pos] - $centerLat) * -$scale" />
+							<value-of select="format-number(($lats[position() = $pos] - $centerLat) * -$scale, '0.0')" />
 							<text> </text>
 						</for-each>
 					</attribute>
@@ -442,19 +442,19 @@
 						</choose>
 						<attribute name="points">
 							<if test="$type = 'polygon'">
-								<value-of select="count($values)" />
+								<value-of select="format-number(count($values) * $scaleX, '0.0')" />
 								<text>,</text>
-								<value-of select="$minValue" />
+								<value-of select="format-number(($minValue - $maxValue) * -$scaleY, '0.0')" />
 								<text> </text>
 								<value-of select="1" />
 								<text>,</text>
-								<value-of select="$minValue" />
+								<value-of select="format-number(($minValue - $maxValue) * -$scaleY, '0.0')" />
 								<text> </text>
 							</if>
 							<for-each select="$values">
-								<value-of select="position() * $scaleX" />
+								<value-of select="format-number(position() * $scaleX, '0.0')" />
 								<text>,</text>
-								<value-of select="(. - $maxValue) * -$scaleY" />
+								<value-of select="format-number((. - $maxValue) * -$scaleY, '0.0')" />
 								<text> </text>
 							</for-each>
 						</attribute>
