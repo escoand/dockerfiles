@@ -253,7 +253,7 @@
 						<text> km</text>
 					</element>
 
-					<!-- pace -->
+					<!-- pace and speed -->
 					<element name="text" namespace="http://www.w3.org/2000/svg">
 						<variable name="pace" select="($seconds div 60) div ($meters div 1000)" />
 						<attribute name="dy" select="$fontSizeMeta" />
@@ -263,7 +263,7 @@
 						<text disable-output-escaping="yes"><![CDATA[&#x23F1;&#xFE0E; ]]></text>
 						<value-of select="floor($pace)" />
 						<text>:</text>
-						<value-of select="format-number(($pace * 60) mod 60, '0.0')" />
+						<value-of select="format-number(round(($pace * 60) mod 60), '00')" />
 						<text> min/km</text>
 						<text> = </text>
 						<value-of select="format-number(60 div $pace, '0.0')" />
