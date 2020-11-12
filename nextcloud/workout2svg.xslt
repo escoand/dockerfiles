@@ -39,15 +39,10 @@
 	<variable name="colorSpeed">#3498db</variable>
 	<!-- <variable name="colorCadence">#8e44ad</variable> -->
 	<variable name="colorCadence">none</variable>
+	<variable name="fontFamily">Noto Sans, sans-serif</variable>
 	<variable name="fontSizeChart">7pt</variable>
 	<variable name="fontSizeMeta">11pt</variable>
 	<variable name="fontOffsetY">9pt</variable>
-	<attribute-set name="fontStyle">
-		<attribute name="dy">9pt</attribute>
-		<attribute name="font-family">sans-serif</attribute>
-		<attribute name="font-size">9pt</attribute>
-		<attribute name="font-stretch">condensed</attribute>
-	</attribute-set>
 
 	<template match="/tcd:TrainingCenterDatabase/tcd:Activities/tcd:Activity|/gpx:gpx/gpx:trk|/gpx/trk">
 		<variable name="times" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Time|gpx:trkseg/gpx:trkpt/gpx:time|trkseg/trkpt/time" as="xs:dateTime*" />
@@ -223,7 +218,7 @@
 					<variable name="seconds" select="$diff div xs:dayTimeDuration('PT1S')" />
 
 					<attribute name="fill" select="$colorMeta" />
-					<attribute name="font-family">sans-serif</attribute>
+					<attribute name="font-family" select="$fontFamily" />
 					<attribute name="font-size" select="$fontSizeMeta" />
 
 					<!-- background -->
@@ -323,7 +318,7 @@
 				<element name="g" namespace="http://www.w3.org/2000/svg">
 					<variable name="countLaps" select="$meters div 1000" />
 
-					<attribute name="font-family">sans-serif</attribute>
+					<attribute name="font-family" select="$fontFamily" />
 					<attribute name="font-size" select="$fontSizeChart" />
 					<attribute name="stroke">lightgrey</attribute>
 						<attribute name="transform">
