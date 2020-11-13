@@ -271,7 +271,7 @@
 						<attribute name="text-anchor">end</attribute>
 						<attribute name="x" select="$width - $offsetX" />
 						<attribute name="y" select="20" />
-						<text disable-output-escaping="yes"><![CDATA[&#x1F3C1;&#xFE0E; ]]></text>
+						<text disable-output-escaping="yes"><![CDATA[&#x2691;&#xFE0E; ]]></text>
 						<value-of select="hours-from-duration($diff)" />
 						<text>:</text>
 						<value-of select="format-number(minutes-from-duration($diff), '00')" />
@@ -378,6 +378,7 @@
 					<call-template name="graph">
 						<with-param name="color">url(#heartGradient)</with-param>
 						<with-param name="posLegend" select="$width + 90" />
+						<with-param name="unit"><![CDATA[&#x2665;]]></with-param>
 						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value|gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
 					</call-template>
 
