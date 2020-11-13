@@ -38,7 +38,7 @@ while read -r FILE; do
 		sed -n 's|.*href="\([^"]*\)".*|\1|gp' "$TEMP" |
 		sort -u |
 		while read -r URL; do
-			DATA=$(wget -nv -O- "$URL" | base64 -w0)
+			DATA=$(wget -qO- "$URL" | base64 -w0)
 			sed -i -f - "$TEMP" <<EOF &&
 s|$URL|data:image/png;base64,$DATA|g
 EOF
