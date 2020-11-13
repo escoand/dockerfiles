@@ -243,7 +243,7 @@
 						<attribute name="dy" select="$fontSizeMeta" />
 						<attribute name="x" select="$offsetX" />
 						<attribute name="y" select="20" />
-						<text disable-output-escaping="yes"><![CDATA[&#x1F3C3;&#xFE0E; ]]></text>
+						<text disable-output-escaping="yes"><![CDATA[&#x1F30D;&#xFE0E; ]]></text>
 						<value-of select="format-number($meters div 1000, '0.0')" />
 						<text> km</text>
 					</element>
@@ -279,6 +279,7 @@
 						<value-of select="format-number(seconds-from-duration($diff), '00')" />
 					</element>
 
+       				        <!-- up #x2B08 and down #x2B0A -->
 				</element>
 
 				<!-- track -->
