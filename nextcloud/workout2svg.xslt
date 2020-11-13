@@ -379,7 +379,7 @@
 					<call-template name="graph">
 						<with-param name="color">url(#heartGradient)</with-param>
 						<with-param name="posLegend" select="$width + 90" />
-						<with-param name="unit"><![CDATA[&#x2665;]]></with-param>
+						<with-param name="unit">&#x2665;</with-param>
 						<with-param name="values" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:HeartRateBpm/tcd:Value|gpx:trkseg/gpx:trkpt/gpx:extensions/tpe:TrackPointExtension/tpe:hr|trkseg/trkpt/extensions/TrackPointExtension/hr" />
 					</call-template>
 
