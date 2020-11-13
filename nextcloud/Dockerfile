@@ -47,7 +47,7 @@ RUN mkdir -p /usr/share/man/man1 \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         default-jre-headless \
-        fonts-noto-hinted \
+        fonts-noto \
         libbz2-dev \
         libopenblas-base \
         librsvg2-bin \
