@@ -39,10 +39,15 @@
 	<variable name="colorSpeed">#3498db</variable>
 	<!-- <variable name="colorCadence">#8e44ad</variable> -->
 	<variable name="colorCadence">none</variable>
-	<variable name="fontFamily">Noto Sans, sans-serif</variable>
-	<variable name="fontSizeChart">7pt</variable>
-	<variable name="fontSizeMeta">11pt</variable>
-	<variable name="fontOffsetY">9pt</variable>
+        <attribute-set name="fontMeta">
+	    <attribute name="dy">12pt</attribute>
+	    <attribute name="font-family">Noto Sans, sans-serif</attribute>
+	    <attribute name="font-size">12pt</attribute>
+        </attribute-set>
+        <attribute-set name="fontGraph" use-attribute-sets="fontMeta">
+	    <attribute name="dy">9pt</attribute>
+	    <attribute name="font-size">9pt</attribute>
+        </attribute-set>
 
 	<template match="/tcd:TrainingCenterDatabase/tcd:Activities/tcd:Activity|/gpx:gpx/gpx:trk|/gpx/trk">
 		<variable name="times" select="tcd:Lap/tcd:Track/tcd:Trackpoint/tcd:Time|gpx:trkseg/gpx:trkpt/gpx:time|trkseg/trkpt/time" as="xs:dateTime*" />
@@ -218,8 +223,6 @@
 					<variable name="seconds" select="$diff div xs:dayTimeDuration('PT1S')" />
 
 					<attribute name="fill" select="$colorMeta" />
-					<attribute name="font-family" select="$fontFamily" />
-					<attribute name="font-size" select="$fontSizeMeta" />
 
 					<!-- background -->
 					<element name="rect" namespace="http://www.w3.org/2000/svg">
@@ -239,8 +242,7 @@
 					</element>
 
 					<!-- distance -->
-					<element name="text" namespace="http://www.w3.org/2000/svg">
-						<attribute name="dy" select="$fontSizeMeta" />
+					<element name="text" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontMeta">
 						<attribute name="x" select="$offsetX" />
 						<attribute name="y" select="20" />
 						<text disable-output-escaping="yes"><![CDATA[&#x1F30D;&#xFE0E; ]]></text>
@@ -249,9 +251,8 @@
 					</element>
 
 					<!-- pace and speed -->
-					<element name="text" namespace="http://www.w3.org/2000/svg">
+					<element name="text" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontMeta">
 						<variable name="pace" select="($seconds div 60) div ($meters div 1000)" />
-						<attribute name="dy" select="$fontSizeMeta" />
 						<attribute name="text-anchor">middle</attribute>
 						<attribute name="x" select="$width div 2" />
 						<attribute name="y" select="20" />
@@ -266,8 +267,7 @@
 					</element>
 
 					<!-- time -->
-					<element name="text" namespace="http://www.w3.org/2000/svg">
-						<attribute name="dy" select="$fontSizeMeta" />
+					<element name="text" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontMeta">
 						<attribute name="text-anchor">end</attribute>
 						<attribute name="x" select="$width - $offsetX" />
 						<attribute name="y" select="20" />
@@ -319,8 +319,6 @@
 				<element name="g" namespace="http://www.w3.org/2000/svg">
 					<variable name="countLaps" select="$meters div 1000" />
 
-					<attribute name="font-family" select="$fontFamily" />
-					<attribute name="font-size" select="$fontSizeChart" />
 					<attribute name="stroke">lightgrey</attribute>
 						<attribute name="transform">
 							<text>scale(</text>
@@ -336,8 +334,7 @@
 							<attribute name="y1" select="$graphHeight - 5" />
 							<attribute name="y2" select="$graphHeight" />
 						</element>
-						<element name="text" namespace="http://www.w3.org/2000/svg">
-							<attribute name="dy" select="$fontSizeChart" />
+						<element name="text" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontGraph">
 							<attribute name="fill">lightgrey</attribute>
 							<attribute name="stroke">none</attribute>
 							<attribute name="text-anchor">middle</attribute>
@@ -459,8 +456,7 @@
 				</element>
 
 				<!-- legend -->
-				<element name="text" namespace="http://www.w3.org/2000/svg">
-					<attribute name="dy" select="$fontSizeChart" />
+				<element name="text" namespace="http://www.w3.org/2000/svg" use-attribute-sets="fontGraph">
 					<attribute name="stroke">none</attribute>
 					<attribute name="text-anchor">end</attribute>
 					<attribute name="x" select="$posLegend" />
