@@ -1,0 +1,138 @@
+version: "3"
+services:
+
+  traefik:
+    container_name: traefik
+    image: traefik
+    restart: always
+    command: >-
+      --providers.docker
+      --providers.docker.exposedByDefault=false
+      --entrypoints.http.address=:80
+      --entrypoints.http.http.redirections.entryPoint.to=https
+      --entrypoints.https.address=:443
+      --certificatesResolvers.default.acme.email=${ACME_EMAIL}
+      --certificatesResolvers.default.acme.httpChallenge.entryPoint=http
+    ports:
+      - 80:80
+      - 443:443
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
+    volumes:
+      - ${DATA_DIR}/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    restart: always
+    depends_on:
+      - mariadb
+      - redis
+    links:
+      - mariadb:mariadb
+      - redis:redis
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_HOST: mariadb
+      MYSQL_PASSWORD: nextcloud
+      MYSQL_USER: nextcloud
+      NEXTCLOUD_TRUSTED_DOMAINS: ${DOMAIN_NEXTCLOUD}
+      REDIS_HOST: redis
+    volumes:
+      - nccontent:/var/www/html
+      - ${DATA_DIR}/nextcloud/config:/var/www/html/config
+      - ${DATA_DIR}/nextcloud/data:/var/www/html/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN_NEXTCLOUD}`)
+      - traefik.http.routers.nextcloud.tls=true
+      - traefik.http.routers.nextcloud.tls.certresolver=default
+
+  nextcloud_cron:
+    container_name: nextcloud_cron
+    image: nextcloud
+    restart: always
+    depends_on:
+      - mariadb
+      - redis
+    links:
+      - mariadb:mariadb
+      - redis:redis
+    entrypoint: /cron.sh
+    volumes:
+      - nccontent:/var/www/html
+      - ${DATA_DIR}/nextcloud/config:/var/www/html/config
+      - ${DATA_DIR}/nextcloud/data:/var/www/html/data
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_PASSWORD: nextcloud
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_USER: nextcloud
+    command: >-
+      --transaction-isolation=READ-COMMITTED
+      --binlog-format=ROW
+    volumes:
+      - ${DATA_DIR}/mariadb:/var/lib/mysql
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: always
+
+  backup:
+    container_name: backup
+    image: mazzolino/restic:1
+    hostname: ${RESTIC_HOSTNAME}
+    restart: always
+    environment:
+      B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
+      B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
+      BACKUP_CRON: "0 0 2 * * *"
+      PRE_COMMANDS: >-
+        docker exec mariadb mysqldump --single-transaction --databases nextcloud > /data/mariadb.dump.sql
+      RESTIC_BACKUP_ARGS: >-
+        --exclude '*.log'
+        --exclude 'appdata_*'
+        --exclude 'files_trashbin'
+        --exclude 'updater-*'
+        --exclude-if-present '.nobackup'
+        --exclude-if-present 'platformio.ini'
+      RESTIC_FORGET_ARGS: >-
+        --keep-daily 7
+        --keep-weekly 5
+        --keep-monthly 12
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
+      TZ: ${RESTIC_TIMEZONE}
+    volumes:
+      - ${DATA_DIR}:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  prune:
+    container_name: prune
+    image: mazzolino/restic:1
+    restart: always
+    hostname: ${RESTIC_HOSTNAME}
+    environment:
+      B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
+      B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
+      PRUNE_CRON: "0 0 5 * * *"
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
+      TZ: ${RESTIC_TIMEZONE}
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  nccontent:
