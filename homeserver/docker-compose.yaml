@@ -85,6 +85,15 @@ services:
     image: redis:alpine
     restart: always
 
+  minidlna:
+    container_name: minidlna
+    image: vladgh/minidlna
+    restart: always
+    env_file:
+      - minidlna.env
+    volumes:
+      - ${DATA_DIR}/nextcloud/data:/media:ro
+
   backup:
     container_name: backup
     image: mazzolino/restic:1
