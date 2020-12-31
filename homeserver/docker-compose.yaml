@@ -32,11 +32,10 @@ services:
     links:
       - mariadb:mariadb
       - redis:redis
+    env_file:
+      - db.env
     environment:
-      MYSQL_DATABASE: nextcloud
       MYSQL_HOST: mariadb
-      MYSQL_PASSWORD: nextcloud
-      MYSQL_USER: nextcloud
       NEXTCLOUD_TRUSTED_DOMAINS: ${DOMAIN_NEXTCLOUD}
       REDIS_HOST: redis
     volumes:
@@ -69,11 +68,10 @@ services:
     container_name: mariadb
     image: mariadb
     restart: always
+    env_file:
+      - db.env
     environment:
-      MYSQL_DATABASE: nextcloud
-      MYSQL_PASSWORD: nextcloud
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
-      MYSQL_USER: nextcloud
     command: >-
       --transaction-isolation=READ-COMMITTED
       --binlog-format=ROW
@@ -97,7 +95,7 @@ services:
   backup:
     container_name: backup
     image: mazzolino/restic:1
-    hostname: ${RESTIC_HOSTNAME}
+    hostname: ${HOSTNAME}
     restart: always
     env_file:
       - restic.env
@@ -125,7 +123,7 @@ services:
     container_name: prune
     image: mazzolino/restic:1
     restart: always
-    hostname: ${RESTIC_HOSTNAME}
+    hostname: ${HOSTNAME}
     env_file:
       - restic.env
     environment:
