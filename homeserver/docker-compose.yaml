@@ -47,6 +47,14 @@ services:
       - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN_NEXTCLOUD}`)
       - traefik.http.routers.nextcloud.tls=true
       - traefik.http.routers.nextcloud.tls.certresolver=default
+      - traefik.http.middlewares.nextcloud-dav.replacepathregex.regex=^/.well-known/(card|cal)dav
+      - traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement=/remote.php/dav/
+      - traefik.http.middlewares.nextcloud-headers.headers.customFrameOptionsValue=SAMEORIGIN
+      - traefik.http.middlewares.nextcloud-headers.headers.framedeny=true
+      - traefik.http.middlewares.nextcloud-headers.headers.sslredirect=true
+      - traefik.http.middlewares.nextcloud-headers.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.nextcloud-headers.headers.stsPreload=true
+      - traefik.http.middlewares.nextcloud-headers.headers.stsSeconds=15552000
 
   nextcloud_cron:
     container_name: nextcloud_cron
@@ -89,8 +97,14 @@ services:
     restart: always
     env_file:
       - minidlna.env
+    environment:
+      MINIDLNA_FRIENDLY_NAME: ${HOSTNAME}
+      MINIDLNA_USER: 33
+      PUID: 33
+      GUID: 33
+    network_mode: host
     volumes:
-      - ${DATA_DIR}/nextcloud/data:/media:ro
+      - ${DATA_DIR}/nextcloud/data:/data:ro
 
   backup:
     container_name: backup
@@ -109,6 +123,7 @@ services:
         --exclude 'files_trashbin'
         --exclude 'updater-*'
         --exclude-if-present '.nobackup'
+        --exclude-if-present 'ibdata1'
         --exclude-if-present 'platformio.ini'
       RESTIC_FORGET_ARGS: >-
         --keep-daily 7
