@@ -99,9 +99,9 @@ services:
     image: mazzolino/restic:1
     hostname: ${RESTIC_HOSTNAME}
     restart: always
+    env_file:
+      - restic.env
     environment:
-      B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
-      B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
       BACKUP_CRON: "0 0 2 * * *"
       PRE_COMMANDS: >-
         docker exec mariadb mysqldump --single-transaction --databases nextcloud > /data/mariadb.dump.sql
@@ -116,9 +116,7 @@ services:
         --keep-daily 7
         --keep-weekly 5
         --keep-monthly 12
-      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
-      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
-      TZ: ${RESTIC_TIMEZONE}
+      TZ: ${TIMEZONE}
     volumes:
       - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -128,23 +126,21 @@ services:
     image: mazzolino/restic:1
     restart: always
     hostname: ${RESTIC_HOSTNAME}
+    env_file:
+      - restic.env
     environment:
-      B2_ACCOUNT_ID: ${B2_ACCOUNT_ID}
-      B2_ACCOUNT_KEY: ${B2_ACCOUNT_KEY}
       PRUNE_CRON: "0 0 5 * * *"
-      RESTIC_PASSWORD: ${RESTIC_PASSWORD}
-      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY}
-      TZ: ${RESTIC_TIMEZONE}
+      TZ: ${TIMEZONE}
 
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
     restart: always
-    command: >-
-      --cleanup
-      --schedule "0 0 1 * * *"
+    environment:
+      TZ: ${TIMEZONE}
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_SCHEDULE: "0 0 1 * * *"
     volumes:
-      - /etc/timezone:/etc/timezone:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
