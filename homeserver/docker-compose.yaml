@@ -38,6 +38,7 @@ services:
       MYSQL_HOST: mariadb
       NEXTCLOUD_TRUSTED_DOMAINS: ${DOMAIN_NEXTCLOUD}
       REDIS_HOST: redis
+      TRUSTED_PROXIES: 172.16.0.0/12
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
