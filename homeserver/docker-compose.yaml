@@ -100,7 +100,6 @@ services:
       - minidlna.env
     environment:
       MINIDLNA_FRIENDLY_NAME: ${HOSTNAME}
-      MINIDLNA_USER: 33
       PUID: 33
       GUID: 33
     network_mode: host
