@@ -1,0 +1,73 @@
+version: "3"
+services:
+
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome:armhf-latest
+    restart: always
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 853:853
+      - 3000:3000
+    volumes:
+      - ${DATA_DIR}/adguard:/opt/adguardhome/conf
+
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:stable
+    restart: always
+    depends_on:
+      - mariadb
+    network_mode: host
+    volumes:
+      - ${DATA_DIR}/homeassistant:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homeassistant.rule=Host(`${DOMAIN_HOMEASSISTANT}`)
+      - traefik.http.routers.homeassistant.tls=true
+      - traefik.http.routers.homeassistant.tls.certresolver=default
+      - traefik.http.services.homeassistant.loadbalancer.server.port=8123
+
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
+    restart: always
+    ports:
+      - 1883:1883
+
+  smartmon:
+    container_name: smartmon
+    build: https://github.com/escoand/dockerfiles.git#:smartmon
+    restart: always
+    depends_on:
+      - mqtt
+    environment:
+      MQTT_HOST: mqtt
+      LOOP_DELAY: 600
+    privileged: true
+
+  esphome:
+    container_name: esphome
+    image: esphome/esphome-armv7:latest
+    restart: always
+    network_mode: host
+    ports:
+      - 6052:6052
+    volumes:
+      - ${DATA_DIR}/esphome:/config
+    #devices:
+      #- /dev/ttyUSB0
+
+  grocy:
+    container_name: grocy
+    image: linuxserver/grocy:latest
+    restart: always
+    volumes:
+      - ${DATA_DIR}/grocy:/config/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grocy.rule=Host(`${DOMAIN_GROCY}`)
+      - traefik.http.routers.grocy.tls=true
+      - traefik.http.routers.grocy.tls.certresolver=default
+      - traefik.http.services.grocy.loadbalancer.server.port=80
