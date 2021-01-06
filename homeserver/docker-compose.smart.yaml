@@ -33,6 +33,7 @@ services:
     container_name: glances
     image: nicolargo/glances:dev
     restart: always
+    pid: host
     environment:
       GLANCES_OPT: -w
     ports:
