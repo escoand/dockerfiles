@@ -33,12 +33,12 @@ services:
     container_name: glances
     image: nicolargo/glances:dev
     restart: always
-    pid: host
     environment:
-      GLANCES_OPT: -w
+      GLANCES_OPT: -w --disable-plugin network,processcount,processlist
     ports:
       - 61208:61208
     volumes:
+      - ${DATA_DIR}:/data:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   esphome:
