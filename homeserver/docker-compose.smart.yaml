@@ -17,8 +17,6 @@ services:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
     restart: always
-    links:
-      - mariadb
     network_mode: host
     volumes:
       - ${DATA_DIR}/homeassistant:/config
