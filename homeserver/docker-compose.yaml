@@ -68,7 +68,7 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb
+    image: yobasystems/alpine-mariadb
     restart: always
     env_file:
       - db.env
