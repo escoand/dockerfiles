@@ -76,8 +76,10 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
     command: >-
-      --transaction-isolation=READ-COMMITTED
       --binlog-format=ROW
+      --transaction-isolation=READ-COMMITTED
+    ports:
+      - 3306:3306
     volumes:
       - ${DATA_DIR}/mariadb:/var/lib/mysql
 
@@ -110,7 +112,7 @@ services:
     environment:
       BACKUP_CRON: "0 0 2 * * *"
       PRE_COMMANDS: >-
-        docker exec mariadb mysqldump --single-transaction --databases nextcloud > /data/mariadb.dump.sql
+        docker exec mariadb mysqldump --all-databases | restic backup --stdin --stdin-filename mysqldump.sql
       RESTIC_BACKUP_ARGS: >-
         --exclude '*.log'
         --exclude 'appdata_*'
@@ -125,7 +127,7 @@ services:
         --keep-monthly 12
       TZ: ${TIMEZONE}
     volumes:
-      - ${DATA_DIR}:/data
+      - ${DATA_DIR}:/data:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
   backup_prune:
