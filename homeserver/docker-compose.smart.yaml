@@ -3,7 +3,7 @@ services:
 
   adguard:
     container_name: adguard
-    image: adguard/adguardhome:armhf-latest
+    image: adguard/adguardhome
     restart: always
     ports:
       - 53:53/tcp
@@ -17,7 +17,7 @@ services:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
     restart: always
-    depends_on:
+    links:
       - mariadb
     network_mode: host
     volumes:
@@ -29,22 +29,12 @@ services:
       - traefik.http.routers.homeassistant.tls.certresolver=default
       - traefik.http.services.homeassistant.loadbalancer.server.port=8123
 
-  mqtt:
-    container_name: mqtt
-    image: eclipse-mosquitto
+  glances:
+    container_name: glances
+    image: nicolargo/glances
     restart: always
-    ports:
-      - 1883:1883
-
-  smartmon:
-    container_name: smartmon
-    build: https://github.com/escoand/dockerfiles.git#:smartmon
-    restart: always
-    depends_on:
-      - mqtt
     environment:
-      MQTT_HOST: mqtt
-      LOOP_DELAY: 600
+      GLANCES_OPT: -w
     privileged: true
 
   esphome:
