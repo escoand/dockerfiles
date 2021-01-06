@@ -6,13 +6,13 @@ services:
     image: traefik
     restart: always
     command: >-
-      --providers.docker
-      --providers.docker.exposedByDefault=false
+      --certificatesResolvers.default.acme.email=${ACME_EMAIL}
+      --certificatesResolvers.default.acme.httpChallenge.entryPoint=http
       --entrypoints.http.address=:80
       --entrypoints.http.http.redirections.entryPoint.to=https
       --entrypoints.https.address=:443
-      --certificatesResolvers.default.acme.email=${ACME_EMAIL}
-      --certificatesResolvers.default.acme.httpChallenge.entryPoint=http
+      --providers.docker
+      --providers.docker.exposedByDefault=false
     ports:
       - 80:80
       - 443:443
