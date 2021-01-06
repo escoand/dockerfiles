@@ -122,9 +122,9 @@ services:
         --keep-daily 7
         --keep-weekly 5
         --keep-monthly 12
-      TZ: ${TIMEZONE}
     volumes:
       - ${DATA_DIR}:/data
+      - /etc/timezone:/etc/timezone:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
   backup_prune:
@@ -136,17 +136,18 @@ services:
       - restic.env
     environment:
       PRUNE_CRON: "0 0 5 * * *"
-      TZ: ${TIMEZONE}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
 
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
     restart: always
     environment:
-      TZ: ${TIMEZONE}
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_SCHEDULE: "0 0 1 * * *"
     volumes:
+      - /etc/timezone:/etc/timezone:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
