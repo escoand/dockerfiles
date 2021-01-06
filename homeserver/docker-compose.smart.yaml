@@ -31,11 +31,12 @@ services:
 
   glances:
     container_name: glances
-    image: nicolargo/glances
+    image: nicolargo/glances:dev
     restart: always
     environment:
       GLANCES_OPT: -w
-    privileged: true
+    ports:
+      - 61208:61208
 
   esphome:
     container_name: esphome
