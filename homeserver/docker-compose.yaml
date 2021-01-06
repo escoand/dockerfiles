@@ -19,19 +19,15 @@ services:
     extra_hosts:
       - host.docker.internal:172.17.0.1
     volumes:
-      - ${DATA_DIR}/acme.json:/acme.json
       - /var/run/docker.sock:/var/run/docker.sock
 
   nextcloud:
     container_name: nextcloud
     image: nextcloud
     restart: always
-    depends_on:
+    links:
       - mariadb
       - redis
-    links:
-      - mariadb:mariadb
-      - redis:redis
     env_file:
       - db.env
     environment:
@@ -61,12 +57,9 @@ services:
     container_name: nextcloud_cron
     image: nextcloud
     restart: always
-    depends_on:
+    links:
       - mariadb
       - redis
-    links:
-      - mariadb:mariadb
-      - redis:redis
     entrypoint: /cron.sh
     volumes:
       - nccontent:/var/www/html
@@ -134,8 +127,8 @@ services:
       - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
 
-  prune:
-    container_name: prune
+  backup_prune:
+    container_name: backup_prune
     image: mazzolino/restic:1
     restart: always
     hostname: ${HOSTNAME}
