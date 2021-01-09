@@ -107,7 +107,7 @@ services:
     image: mazzolino/restic:1
     hostname: ${HOSTNAME}
     restart: always
-    cpu_count: 1
+    cpu_percent: 50
     env_file:
       - restic.env
     environment:
@@ -136,7 +136,7 @@ services:
     image: mazzolino/restic:1
     hostname: ${HOSTNAME}
     restart: always
-    cpu_count: 1
+    cpu_percent: 50
     env_file:
       - restic.env
     environment:
