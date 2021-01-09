@@ -1,4 +1,4 @@
-version: "3"
+version: "2.4"
 services:
 
   traefik:
@@ -107,6 +107,7 @@ services:
     image: mazzolino/restic:1
     hostname: ${HOSTNAME}
     restart: always
+    cpu_count: 1
     env_file:
       - restic.env
     environment:
@@ -133,8 +134,9 @@ services:
   backup_prune:
     container_name: backup_prune
     image: mazzolino/restic:1
-    restart: always
     hostname: ${HOSTNAME}
+    restart: always
+    cpu_count: 1
     env_file:
       - restic.env
     environment:
