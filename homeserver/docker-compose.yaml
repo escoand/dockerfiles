@@ -61,7 +61,10 @@ services:
     links:
       - mariadb
       - redis
-    entrypoint: /cron.sh
+    entrypoint: >-
+      grep -q "preview:pre-generate" ||
+      echo "00,30 * * * * php -f /var/www/html/occ preview:pre-generate" > /var/spool/cron/crontabs/www-data;
+      /cron.sh
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
