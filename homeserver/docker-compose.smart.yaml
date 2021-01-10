@@ -41,7 +41,7 @@ services:
 
   esphome:
     container_name: esphome
-    image: esphome/esphome-armv7:latest
+    image: esphome/esphome
     restart: always
     network_mode: host
     ports:
@@ -53,7 +53,7 @@ services:
 
   grocy:
     container_name: grocy
-    image: linuxserver/grocy:latest
+    image: linuxserver/grocy
     restart: always
     volumes:
       - ${DATA_DIR}/grocy:/config/data
