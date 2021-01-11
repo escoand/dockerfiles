@@ -118,7 +118,7 @@ services:
     environment:
       BACKUP_CRON: "0 0 2 * * *"
       PRE_COMMANDS: >-
-        docker exec mariadb mysqldump -A > /data/mariadb.sql.gz
+        docker exec mariadb mysqldump -A | gzip > /data/mariadb.sql.gz
       RESTIC_BACKUP_ARGS: >-
         --exclude '*.log'
         --exclude 'appdata_*'
