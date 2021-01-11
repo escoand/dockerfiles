@@ -118,9 +118,7 @@ services:
     environment:
       BACKUP_CRON: "0 0 2 * * *"
       PRE_COMMANDS: >-
-        docker exec mariadb mysqldump -A -l |
-        gzip |
-        restic backup --stdin --stdin-filename mysqldump.sql.gz
+        docker exec mariadb mysqldump -A > /data/mariadb.sql.gz
       RESTIC_BACKUP_ARGS: >-
         --exclude '*.log'
         --exclude 'appdata_*'
@@ -133,22 +131,11 @@ services:
         --keep-daily 7
         --keep-weekly 5
         --keep-monthly 12
+        --prune
       TZ: ${TIMEZONE}
     volumes:
-      - ${DATA_DIR}:/data:ro
+      - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
-
-  backup_prune:
-    container_name: backup_prune
-    image: mazzolino/restic:1
-    hostname: ${HOSTNAME}
-    restart: always
-    cpu_percent: 50
-    env_file:
-      - restic.env
-    environment:
-      PRUNE_CRON: "0 0 5 * * *"
-      TZ: ${TIMEZONE}
 
   watchtower:
     container_name: watchtower
