@@ -29,7 +29,8 @@ services:
 
   glances:
     container_name: glances
-    image: nicolargo/glances:dev
+    #image: nicolargo/glances:latest-alpine
+    build: https://github.com/nicolargo/glances.git#develop:docker-files/devel-alpine
     restart: always
     environment:
       GLANCES_OPT: -w --disable-plugin network,processcount,processlist
