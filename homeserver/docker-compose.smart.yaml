@@ -64,3 +64,18 @@ services:
       - traefik.http.routers.grocy.tls=true
       - traefik.http.routers.grocy.tls.certresolver=default
       - traefik.http.services.grocy.loadbalancer.server.port=80
+
+  deconz:
+    container_name: deconz
+    image: marthoc/deconz:stable
+    restart: always
+    network_mode: host
+    devices:
+      - /dev/ttyACM0
+    environment:
+      DECONZ_DEVICE: /dev/ttyACM0
+      DECONZ_WEB_PORT: 8080
+      DECONZ_WS_PORT: 8443
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${DATA_DIR}/deconz:/root/.local/share/dresden-elektronik/deCONZ
