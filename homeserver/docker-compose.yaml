@@ -13,6 +13,7 @@ services:
       --entrypoints.https.address=:443
       --providers.docker
       --providers.docker.exposedByDefault=false
+    cpu_percent: 50
     ports:
       - 80:80
       - 443:443
