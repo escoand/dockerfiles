@@ -30,13 +30,14 @@ services:
     links:
       - mariadb
       - redis
-    env_file:
-      - db.env
     environment:
-      MYSQL_HOST: mariadb
-      NEXTCLOUD_TRUSTED_DOMAINS: ${DOMAIN_NEXTCLOUD}
-      REDIS_HOST: redis
-      TRUSTED_PROXIES: 172.16.0.0/12
+      - MYSQL_DATABASE
+      - MYSQL_HOST=mariadb
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
+      - REDIS_HOST=redis
+      - TRUSTED_PROXIES=172.16.0.0/12
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
@@ -78,10 +79,11 @@ services:
     container_name: mariadb
     image: yobasystems/alpine-mariadb
     restart: always
-    env_file:
-      - db.env
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
     command: >-
       --binlog-format=ROW
       --transaction-isolation=READ-COMMITTED
@@ -99,42 +101,55 @@ services:
     container_name: minidlna
     image: vladgh/minidlna
     restart: always
-    env_file:
-      - minidlna.env
     environment:
-      MINIDLNA_FRIENDLY_NAME: ${HOSTNAME}
-      PUID: 33
-      GUID: 33
+      - GUID=33
+      - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
+      - MINIDLNA_MEDIA_DIR_1
+      - MINIDLNA_MEDIA_DIR_2
+      - MINIDLNA_MEDIA_DIR_3
+      - MINIDLNA_MEDIA_DIR_4
+      - MINIDLNA_MEDIA_DIR_5
+      - MINIDLNA_MEDIA_DIR_6
+      - MINIDLNA_MEDIA_DIR_7
+      - MINIDLNA_MEDIA_DIR_8
+      - MINIDLNA_MEDIA_DIR_9
+      - PUID=33
     network_mode: host
     volumes:
       - ${DATA_DIR}/nextcloud/data:/data:ro
 
   backup:
     container_name: backup
-    image: mazzolino/restic:1
+    #image: mazzolino/restic
+    build: https://github.com/escoand/resticker.git#patch-1
     hostname: ${HOSTNAME}
     restart: always
     cpu_percent: 50
-    env_file:
-      - restic.env
     environment:
-      BACKUP_CRON: "0 0 2 * * *"
-      PRE_COMMANDS: >-
-        docker exec mariadb mysqldump -A | gzip > /data/mariadb.sql.gz
-      RESTIC_BACKUP_ARGS: >-
-        --exclude '*.log'
-        --exclude 'appdata_*'
-        --exclude 'files_trashbin'
-        --exclude 'updater-*'
-        --exclude-if-present '.nobackup'
-        --exclude-if-present 'ibdata1'
-        --exclude-if-present 'platformio.ini'
-      RESTIC_FORGET_ARGS: >-
-        --keep-daily 7
-        --keep-weekly 5
-        --keep-monthly 12
-        --prune
-      TZ: ${TIMEZONE}
+      - B2_ACCOUNT_ID
+      - B2_ACCOUNT_KEY
+      - BACKUP_CRON=0 0 2 * * *
+      - POST_COMMANDS_FAILURE
+      - POST_COMMANDS_SUCCESS
+      - PRE_COMMANDS=
+          docker exec mariadb mysqldump -A |
+          gzip > /data/mariadb.sql.gz
+      - RESTIC_BACKUP_ARGS=
+          --exclude '*.log'
+          --exclude 'appdata_*'
+          --exclude 'files_trashbin'
+          --exclude 'updater-*'
+          --exclude-if-present '.nobackup'
+          --exclude-if-present 'ibdata1'
+          --exclude-if-present 'platformio.ini'
+      - RESTIC_FORGET_ARGS=
+          --keep-daily 7
+          --keep-weekly 5
+          --keep-monthly 12
+          --prune
+      - RESTIC_PASSWORD
+      - RESTIC_REPOSITORY
+      - TZ
     volumes:
       - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -144,9 +159,9 @@ services:
     image: containrrr/watchtower
     restart: always
     environment:
-      TZ: ${TIMEZONE}
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_SCHEDULE: "0 0 1 * * *"
+      - TZ
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 0 1 * * *
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
