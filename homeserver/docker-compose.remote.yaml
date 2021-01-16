@@ -1,0 +1,36 @@
+version: "2.4"
+services:
+
+  backup_remote:
+    container_name: backup_remote
+    extends: backup
+    environment:
+      - B2_ACCOUNT_ID
+      - B2_ACCOUNT_KEY
+      - BACKUP_CRON=0 0 12 * * *
+      - POST_COMMANDS_EXIT=killall -q rclone
+      - POST_COMMANDS_FAILURE
+      - POST_COMMANDS_SUCCESS
+      - PRE_COMMANDS=
+          rclone config show |
+          tr -d '\r' |
+          sed -n 's/^\[\(.*\)\]$$/\1/p' |
+          xargs -rti sh -c '
+            mkdir -p "/remote/{}" &&
+            rclone mount --daemon --read-only "{}:" "/remote/{}"
+          '
+      - RESTIC_BACKUP_ARGS=
+          --exclude '*.log'
+          --exclude 'appdata_*'
+          --exclude 'files_trashbin'
+          --exclude 'updater-*'
+          --exclude-if-present '.nobackup'
+      - RESTIC_BACKUP_SOURCES=/remote
+      - RESTIC_PASSWORD
+      - RESTIC_REPOSITORY
+      - TZ
+    devices:
+      - /dev/fuse:/dev/fuse
+    privileged: true
+    volumes:
+      - ${DATA_DIR}/rclone:/root/.config/rclone
