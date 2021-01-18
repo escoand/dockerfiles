@@ -26,6 +26,7 @@ services:
           --exclude 'updater-*'
           --exclude-if-present '.nobackup'
       - RESTIC_BACKUP_SOURCES=/remote
+      - RESTIC_FORGET_ARGS=
       - RESTIC_PASSWORD
       - RESTIC_REPOSITORY
       - TZ
