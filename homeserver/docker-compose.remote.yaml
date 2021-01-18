@@ -4,6 +4,7 @@ services:
   backup_remote:
     container_name: backup_remote
     extends: backup
+    hostname: ${HOSTNAME}
     environment:
       - B2_ACCOUNT_ID
       - B2_ACCOUNT_KEY
@@ -25,7 +26,9 @@ services:
           --exclude 'files_trashbin'
           --exclude 'updater-*'
           --exclude-if-present '.nobackup'
+          --tag remote
       - RESTIC_BACKUP_SOURCES=/remote
+      - RESTIC_FORGET_ARGS=
       - RESTIC_PASSWORD
       - RESTIC_REPOSITORY
       - TZ
