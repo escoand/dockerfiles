@@ -142,7 +142,9 @@ services:
           --exclude-if-present '.nobackup'
           --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
+          --tag local
       - RESTIC_FORGET_ARGS=
+          --group-by tag
           --keep-daily 7
           --keep-weekly 5
           --keep-monthly 12
