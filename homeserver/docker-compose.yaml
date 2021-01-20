@@ -120,8 +120,7 @@ services:
 
   backup:
     container_name: backup
-    #image: mazzolino/restic
-    build: https://github.com/escoand/resticker.git#patch-1
+    image: mazzolino/restic
     hostname: ${HOSTNAME}
     restart: always
     cpu_percent: 50
