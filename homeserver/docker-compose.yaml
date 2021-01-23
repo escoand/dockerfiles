@@ -36,6 +36,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_USER
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
+      - OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=172.16.0.0/12
     volumes:
