@@ -105,13 +105,16 @@ services:
       #- 137:137/udp
       #- 138:138/udp
       - 139:139
-      - 445:44
+      - 445:445
     environment:
+      - GROUPID=33
+      #- NMBD=1
       - RECYCLE=1
       - SHARE1
       - SHARE2
       - SHARE3
       - TZ
+      - USERID=33
     volumes:
       - ${DATA_DIR}/nextcloud/data:/data:ro
 
