@@ -98,6 +98,23 @@ services:
     image: redis:alpine
     restart: always
 
+  samba:
+    container_name: samba
+    image: dperson/samba
+    ports:
+      #- 137:137/udp
+      #- 138:138/udp
+      - 139:139
+      - 445:44
+    environment:
+      - RECYCLE=1
+      - SHARE1
+      - SHARE2
+      - SHARE3
+      - TZ
+    volumes:
+      - ${DATA_DIR}/nextcloud/data:/data:ro
+
   minidlna:
     container_name: minidlna
     image: vladgh/minidlna
