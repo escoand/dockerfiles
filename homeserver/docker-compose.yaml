@@ -134,6 +134,7 @@ services:
       - MINIDLNA_MEDIA_DIR_7
       - MINIDLNA_MEDIA_DIR_8
       - MINIDLNA_MEDIA_DIR_9
+      - MINIDLNA_ROOT_CONTAINER
       - PUID=33
     network_mode: host
     volumes:
