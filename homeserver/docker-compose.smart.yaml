@@ -3,7 +3,7 @@ services:
 
   dnsmasq:
     container_name: dnsmasq
-    image: alpine
+    image: alpine:3.12
     restart: always
     ports:
       - 53:53/tcp
@@ -12,15 +12,17 @@ services:
       - NET_ADMIN
     entrypoint: >-
       sh -c '
-        apk --no-cache add dnsmasq-dnssec &&
-        dnsmasq
-          --conf-dir=/config
-          --keep-in-foreground
-          --no-hosts
-          --no-resolv
+        apk add --no-cache dnsmasq &&
+        dnsmasq \
+          --address=/${DOMAIN_NEXTCLOUD}/${DOMAIN_HOMEASSISTANT}/${DOMAIN_GROCY}/${LOCAL_IP} \
+          --all-servers \
+          --keep-in-foreground \
+          --log-facility=- \
+          --no-hosts \
+          --no-resolv \
+          --server=94.140.14.14 \
+          --server=94.140.15.15
       '
-    volumes:
-      - ${DATA_DIR}/dnsmasq:/config:ro
 
   homeassistant:
     container_name: homeassistant
