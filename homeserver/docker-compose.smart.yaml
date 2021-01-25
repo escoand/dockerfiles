@@ -3,17 +3,22 @@ services:
 
   dnsmasq:
     container_name: dnsmasq
-    image: andyshinn/dnsmasq
+    image: apk --no-cache add dnsmasq-dnssec
     restart: always
     ports:
       - 53:53/tcp
       - 53:53/udp
     cap_add:
       - NET_ADMIN
-    command: >-
-      --conf-dir=/config
-      --no-hosts
-      --no-resolv
+    entrypoint: >-
+      sh -c '
+        apk --no-cache add dnsmasq-dnssec &&
+        dnsmasq
+          --conf-dir=/config
+          --keep-in-foreground
+          --no-hosts
+          --no-resolv
+      '
     volumes:
       - ${DATA_DIR}/dnsmasq:/config:ro
 
