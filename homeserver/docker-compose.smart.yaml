@@ -21,6 +21,7 @@ services:
     restart: always
     network_mode: host
     volumes:
+      - /etc/hosts:/host:ro
       - ${DATA_DIR}/homeassistant:/config
     labels:
       - traefik.enable=true
