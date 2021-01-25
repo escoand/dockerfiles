@@ -29,21 +29,6 @@ services:
       - traefik.http.routers.homeassistant.tls.certresolver=default
       - traefik.http.services.homeassistant.loadbalancer.server.port=8123
 
-  glances:
-    container_name: glances
-    image: blackdark93/glances
-    #build: https://github.com/nicolargo/glances.git#develop:docker-files/devel-alpine
-    restart: always
-    environment:
-      - GLANCES_OPT=
-          --disable-plugin network,processcount,processlist
-          -w
-    ports:
-      - 61208:61208
-    volumes:
-      - ${DATA_DIR}:/data:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
   esphome:
     container_name: esphome
     image: esphome/esphome
