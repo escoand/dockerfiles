@@ -3,7 +3,7 @@ services:
 
   dnsmasq:
     container_name: dnsmasq
-    image: apk --no-cache add dnsmasq-dnssec
+    image: alpine
     restart: always
     ports:
       - 53:53/tcp
