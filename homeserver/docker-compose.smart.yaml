@@ -1,17 +1,19 @@
 version: "2.4"
 services:
 
-  adguard:
-    container_name: adguard
-    image: adguard/adguardhome
+  dnsmasq:
+    container_name: dnsmasq
+    image: andyshinn/dnsmasq
     restart: always
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 853:853
-      - 3000:3000
+    command: >-
+      --conf-dir=/config
+      --no-hosts
+      --no-resolv
     volumes:
-      - ${DATA_DIR}/adguard:/opt/adguardhome/conf
+      - ${DATA_DIR}/dnsmasq:/config:ro
 
   homeassistant:
     container_name: homeassistant
