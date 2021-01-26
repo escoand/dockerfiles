@@ -97,6 +97,7 @@ services:
     container_name: redis
     image: redis:alpine
     restart: always
+    command: redis-server --appendonly no --save ""
 
   samba:
     container_name: samba
