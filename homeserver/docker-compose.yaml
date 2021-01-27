@@ -1,31 +1,26 @@
 version: "2.4"
 services:
 
-  traefik:
-    container_name: traefik
-    image: traefik
+  caddy:
+    container_name: caddy
+    image: caddy:alpine
     restart: always
-    command: >-
-      --certificatesResolvers.default.acme.email=${ACME_EMAIL}
-      --certificatesResolvers.default.acme.httpChallenge.entryPoint=http
-      --entrypoints.http.address=:80
-      --entrypoints.http.http.redirections.entryPoint.to=https
-      --entrypoints.https.address=:443
-      --providers.docker
-      --providers.docker.exposedByDefault=false
-    cpu_percent: 50
     ports:
       - 80:80
       - 443:443
-    extra_hosts:
-      - host.docker.internal:172.17.0.1
+    environment:
+      - DOMAIN_GROCY
+      - DOMAIN_HOMEASSISTANT
+      - DOMAIN_NEXTCLOUD
+    volumes_from:
+      - nextcloud:ro
     volumes:
-      - ${DATA_DIR}/acme.json:/acme.json
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${DATA_DIR}/caddy:/data/caddy
 
   nextcloud:
     container_name: nextcloud
-    image: nextcloud
+    image: nextcloud:fpm-alpine
     restart: always
     links:
       - mariadb
@@ -39,28 +34,16 @@ services:
       - OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=172.16.0.0/12
+    ports:
+      - 9000:9000
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.nextcloud.rule=Host(`${DOMAIN_NEXTCLOUD}`)
-      - traefik.http.routers.nextcloud.tls=true
-      - traefik.http.routers.nextcloud.tls.certresolver=default
-      - traefik.http.routers.nextcloud.middlewares=nextcloud-dav@docker,nextcloud-headers@docker
-      - traefik.http.middlewares.nextcloud-dav.replacepathregex.regex=^/.well-known/(card|cal)dav
-      - traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement=/remote.php/dav/
-      - traefik.http.middlewares.nextcloud-headers.headers.customFrameOptionsValue=SAMEORIGIN
-      - traefik.http.middlewares.nextcloud-headers.headers.framedeny=true
-      - traefik.http.middlewares.nextcloud-headers.headers.sslredirect=true
-      - traefik.http.middlewares.nextcloud-headers.headers.stsIncludeSubdomains=true
-      - traefik.http.middlewares.nextcloud-headers.headers.stsPreload=true
-      - traefik.http.middlewares.nextcloud-headers.headers.stsSeconds=15552000
 
   nextcloud_cron:
     container_name: nextcloud_cron
-    image: nextcloud
+    image: nextcloud:fpm-alpine
     restart: always
     links:
       - mariadb
@@ -72,7 +55,7 @@ services:
         /cron.sh
       '
     volumes:
-      - nccontent:/var/www/html
+      - nccontent:/var/www/html:ro
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
 
@@ -108,14 +91,14 @@ services:
       - 139:139
       - 445:445
     environment:
-      - GROUPID=33
+      - GROUPID=82
       #- NMBD=1
       - RECYCLE=1
       - SHARE1
       - SHARE2
       - SHARE3
       - TZ
-      - USERID=33
+      - USERID=82
     volumes:
       - ${DATA_DIR}/nextcloud/data:/data:ro
 
@@ -124,7 +107,7 @@ services:
     image: vladgh/minidlna
     restart: always
     environment:
-      - GUID=33
+      - GUID=82
       - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
       - MINIDLNA_MEDIA_DIR_1
       - MINIDLNA_MEDIA_DIR_2
@@ -136,7 +119,7 @@ services:
       - MINIDLNA_MEDIA_DIR_8
       - MINIDLNA_MEDIA_DIR_9
       - MINIDLNA_ROOT_CONTAINER
-      - PUID=33
+      - PUID=82
     network_mode: host
     volumes:
       - ${DATA_DIR}/nextcloud/data:/data:ro

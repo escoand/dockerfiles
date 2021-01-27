@@ -28,16 +28,12 @@ services:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
     restart: always
-    network_mode: host
+    #network_mode: host
+    ports:
+      - 8123:8123
     volumes:
       - /etc/hosts:/host:ro
       - ${DATA_DIR}/homeassistant:/config
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.homeassistant.rule=Host(`${DOMAIN_HOMEASSISTANT}`)
-      - traefik.http.routers.homeassistant.tls=true
-      - traefik.http.routers.homeassistant.tls.certresolver=default
-      - traefik.http.services.homeassistant.loadbalancer.server.port=8123
 
   esphome:
     container_name: esphome
@@ -57,13 +53,6 @@ services:
     restart: always
     volumes:
       - ${DATA_DIR}/grocy:/config/data
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.grocy.rule=Host(`${DOMAIN_GROCY}`)
-      - traefik.http.routers.grocy.tls=true
-      - traefik.http.routers.grocy.tls.certresolver=default
-      - traefik.http.services.grocy.loadbalancer.server.port=80
-
   deconz:
     container_name: deconz
     image: marthoc/deconz:stable
