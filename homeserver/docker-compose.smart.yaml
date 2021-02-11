@@ -3,7 +3,7 @@ services:
 
   dnsmasq:
     container_name: dnsmasq
-    image: alpine:3.12
+    image: alpine
     restart: always
     ports:
       - 53:53/tcp
@@ -28,9 +28,7 @@ services:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
     restart: always
-    #network_mode: host
-    ports:
-      - 8123:8123
+    network_mode: host
     volumes:
       - /etc/hosts:/host:ro
       - ${DATA_DIR}/homeassistant:/config
@@ -53,6 +51,7 @@ services:
     restart: always
     volumes:
       - ${DATA_DIR}/grocy:/config/data
+
   deconz:
     container_name: deconz
     image: marthoc/deconz:stable
