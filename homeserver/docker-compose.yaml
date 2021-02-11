@@ -108,6 +108,7 @@ services:
     environment:
       - GUID=82
       - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
+      - MINIDLNA_INOTIFY=yes
       - MINIDLNA_MEDIA_DIR_1
       - MINIDLNA_MEDIA_DIR_2
       - MINIDLNA_MEDIA_DIR_3
