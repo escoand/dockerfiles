@@ -66,3 +66,21 @@ services:
       - TZ
     volumes:
       - ${DATA_DIR}/deconz:/root/.local/share/dresden-elektronik/deCONZ
+
+  paperless:
+    container_name: paperless
+    image: jonaswinkler/paperless-ng
+    restart: always
+    links:
+      - redis
+    ports:
+      - 8000:8000
+    environment:
+      - PAPERLESS_OCR_LANGUAGE=deu
+      - PAPERLESS_REDIS=redis://redis:6379
+      - PAPERLESS_TIME_ZONE=${TZ}
+    volumes:
+      - ${DATA_DIR}/paperless/data:/usr/src/paperless/data
+      - ${DATA_DIR}/paperless/data:/usr/src/paperless/media
+      - ${DATA_DIR}/paperless/export:/usr/src/paperless/export
+      - ${DATA_DIR}/paperless/consume:/usr/src/paperless/consume
