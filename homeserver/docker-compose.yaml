@@ -46,13 +46,9 @@ services:
     links:
       - mariadb
       - redis
-    entrypoint: >-
-      sh -c '
-        grep -q "preview:pre-generate" /var/spool/cron/crontabs/www-data ||
-        echo "*/30 * * * * php -f /var/www/html/occ preview:pre-generate" >> /var/spool/cron/crontabs/www-data;
-        /cron.sh
-      '
+    entrypoint: /cron.sh
     volumes:
+      - ./crontab.nextcloud:/var/spool/cron/crontabs/www-data:ro
       - nccontent:/var/www/html:ro
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
