@@ -34,8 +34,6 @@ services:
       - OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=172.16.0.0/12
-    ports:
-      - 9000:9000
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
@@ -97,6 +95,7 @@ services:
       - SHARE1
       - SHARE2
       - SHARE3
+      - SMB=1
       - TZ
       - USERID=82
     volumes:
@@ -174,3 +173,11 @@ services:
 
 volumes:
   nccontent:
+
+# seccomp on 32bit systems
+#wget -qO- https://raw.githubusercontent.com/moby/moby/master/profiles/seccomp/default.json |
+#sed "s/SCMP_ACT_ERRNO/SCMP_ACT_TRACE/" |
+#sudo tee /etc/docker/default.json >/dev/null &&
+#echo "DOCKER_OPTS=--seccomp-profile=/etc/docker/default.json" |
+#sudo tee -a /etc/default/docker >/dev/null &&
+#sudo systemctl restart docker
