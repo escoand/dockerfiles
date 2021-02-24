@@ -46,9 +46,9 @@ services:
     links:
       - mariadb
       - redis
-    entrypoint: /cron.sh
+    entrypoint: sh -c 'cat /crontab > /var/spool/cron/crontabs/www-data && /cron.sh'
     volumes:
-      - ./crontab.nextcloud:/var/spool/cron/crontabs/www-data:ro
+      - ./crontab.nextcloud:/crontab:ro
       - nccontent:/var/www/html:ro
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
