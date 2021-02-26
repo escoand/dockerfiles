@@ -63,7 +63,7 @@ services:
       - caddy:${DOMAIN_NEXTCLOUD}
     entrypoint: /var/www/html/apps/notify_push/bin/armv7/notify_push /var/www/html/config/config.php
     volumes:
-      - nccontent:/var/www/html:ro
+      - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
 
