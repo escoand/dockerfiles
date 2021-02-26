@@ -2,6 +2,10 @@
 	root * /var/www/html
 	file_server
 
+	handle_path /push/* {
+ 		reverse_proxy nextcloud_push:7867
+	}
+
 	php_fastcgi nextcloud:9000 {
 		header_down Referrer-Policy                   "no-referrer"
 		header_down Strict-Transport-Security         "max-age=15768000;"
