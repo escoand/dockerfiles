@@ -4,13 +4,14 @@
 
 solar_auth() {
 	curl -sS -X POST -o /dev/null -c "$COOKIE" \
-		-F "u=$SOLARLOG_USER" \
-		-F "p=$SOLARLOG_PASSWORD" \
+		--data-urlencode "u=$SOLARLOG_USER" \
+		--data-urlencode "p=$SOLARLOG_PASSWORD" \
 		"$URL_SOLARLOG/login"
 }
 
 solar_load() {
-	curl -sS -X POST -b "$COOKIE" -d "$1" "$URL_SOLARLOG/getjp"
+	TOKEN=$(sed -n 's/.*\tSolarLog\t//p' "$COOKIE")
+	curl -sS -X POST -b "$COOKIE" -d "token=$TOKEN;$1" "$URL_SOLARLOG/getjp"
 }
 
 solar_summary() {

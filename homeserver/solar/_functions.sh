@@ -57,7 +57,9 @@ solar_summary() {
 }
 
 solar_current() {
-	echo no_data
+	YEAR=$(date +%Y)
+	MONTH=$(date +%m)
+	solar_summary_days "$YEAR" "$MONTH"
 }
 
 solar_clean() {
