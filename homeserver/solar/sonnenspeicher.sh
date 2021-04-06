@@ -16,30 +16,40 @@ solar_load() {
 
 solar_prepare() {
 	awk -vFS=';' -vTYPE="$1" '
-		NR==1 {
-			for(i = 2; i < NF; i++) {
-				h[i] = $i
-				if(TYPE == "months")
-					sub(/ \(kWh\)/, " Monat Wh", h[i])
-				else if(TYPE == "days")
-					sub(/ \(kWh\)/, " Tag Wh", h[i])
-			}
+		BEGIN {
 			printf "{\"data\":["
 		}
-		NR>=3 {
-			printf ","
+		NR==1 {
+			for(i = 2; i <= NF; i++) {
+				h[i] = $i
+				if(TYPE == "months") {
+					sub(/ \(kWh\)$/, " Monat Wh", h[i])
+					sub(/ %$/, " Monat %", h[i])
+				} else if(TYPE == "days") {
+					sub(/ \(kWh\)$/, " Tag Wh", h[i])
+					sub(/ %$/, " Tag %", h[i])
+				}
+			}
 		}
 		NR>=2 {
 			ds = ""
 			split($1, d, "-")
-			if(TYPE == "months")
+			if(TYPE == "months") {
 				ds = sprintf("%04i-%02i", d[1], d[2])
-			else if(TYPE == "days")
+			} else if(TYPE == "days") {
 				ds = sprintf("%04i-%02i-%02i", d[1], d[2], d[3])
-			printf "{\"dimension1\":\"%s\",\"dimension2\":\"%s\",\"value\":%i}\n", h[i], ds, $i
-			for(i = 2; i < 9; i++) {
+			}
+			for(i = 2; i < NF; i++) {
+				if(NR > 2 || i > 2) {
+					printf ","
+				}
 				sub(/,/, ".", $i)
-				printf ",{\"dimension1\":\"%s\",\"dimension2\":\"%s\",\"value\":%i}\n", h[i], ds, $i * 1000
+				if(i == NF-1) {
+					val = $i
+				} else {
+					val = $i * 1000
+				}
+				printf "{\"dimension1\":\"%s\",\"dimension2\":\"%s\",\"value\":%i}\n", h[i], ds, val
 			}
 		}
 		END {
