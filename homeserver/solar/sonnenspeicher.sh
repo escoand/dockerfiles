@@ -2,6 +2,13 @@
 
 . ./_functions.sh
 
+solar_auth() {
+	curl -sS -X POST -o /dev/null -c "$COOKIE" \
+		-F "UserName=$SONNENSPEICHER_USERNAME" \
+		-F "Password=$SONNENSPEICHER_PASSWORD" \
+		"http://mein-sonnenspeicher.de/Account/Login"
+}
+
 solar_load() {
 	curl -sS -b "$COOKIE" "http://mein-sonnenspeicher.de/Device/CsvExport?dtype=2&service=0&typ=$1&period=$2"
 
@@ -39,14 +46,6 @@ solar_prepare() {
 			printf "]}"
 		}
 	'
-}
-
-solar_auth() {
-	curl -sS -X POST -o /dev/null -c "$COOKIE" \
-		-F "UserName=$SONNENSPEICHER_USERNAME" \
-		-F "Password=$SONNENSPEICHER_PASSWORD" \
-		"http://mein-sonnenspeicher.de/Account/Login" ||
-	exit
 }
 
 solar_summary_months() {

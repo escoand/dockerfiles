@@ -7,6 +7,10 @@ solar_log() {
 	printf '%-15s %-8s ' "$SCRIPT" "$1"
 }
 
+solar_auth() {
+	true
+}
+
 solar_prepare() {
 	cat
 }
@@ -22,20 +26,16 @@ solar_send() {
 	grep -v '^$'
 }
 
-solar_auth() {
-	true
-}
-
 solar_summary_years() {
-	echo not_defined
+	echo no_data
 }
 
 solar_summary_months() {
-	echo not_defined
+	echo no_data
 }
 
 solar_summary_days() {
-	echo not_defined
+	echo no_data
 }
 
 solar_summary() {
@@ -57,7 +57,7 @@ solar_summary() {
 }
 
 solar_current() {
-	echo not_defined
+	echo no_data
 }
 
 solar_clean() {
@@ -65,7 +65,11 @@ solar_clean() {
 }
 
 solar_run() {
-	solar_auth
+	if ! solar_auth; then
+		solar_log login
+		echo failed
+		return
+	fi
 	[ -n "$START_YEAR" ] && solar_summary
 	solar_log current
 	solar_current
