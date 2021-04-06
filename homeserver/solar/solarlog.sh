@@ -2,8 +2,15 @@
 
 . ./_functions.sh
 
+solar_auth() {
+	curl -sS -X POST -o /dev/null -c "$COOKIE" \
+		-F "u=$SOLARLOG_USER" \
+		-F "p=$SOLARLOG_PASSWORD" \
+		"$URL_SOLARLOG/login"
+}
+
 solar_load() {
-	curl -sS -X POST -d "$1" "$URL_SOLARLOG"
+	curl -sS -X POST -b "$COOKIE" -d "$1" "$URL_SOLARLOG"
 }
 
 solar_summary() {
