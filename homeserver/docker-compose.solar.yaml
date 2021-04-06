@@ -31,4 +31,4 @@ services:
       '
     working_dir: /app
     volumes:
-      ./solar:/app:ro
+      - ./solar:/app:ro

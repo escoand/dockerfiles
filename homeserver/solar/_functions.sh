@@ -12,15 +12,14 @@ solar_prepare() {
 }
 
 solar_send() {
-	echo
-	return
 	# shellcheck disable=SC1003
 	curl -sS -X POST \
 		-u "$AUTH_NEXTCLOUD" \
 		-H "Content-type: application/json" \
 		--data-binary @- \
 		"https://$DOMAIN_NEXTCLOUD/index.php/apps/analytics/api/2.0/adddata/$1" |
-	sed -e '$a\'
+	sed -e '$a\' |
+	grep -v '^$'
 }
 
 solar_auth() {
