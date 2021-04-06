@@ -1,26 +1,34 @@
 version: "2.4"
 services:
 
-  solarlog:
-    container_name: solarlog
+  solar:
+    container_name: solar
     image: alpine
     restart: always
     environment:
       - AUTH_NEXTCLOUD
       - DOMAIN_NEXTCLOUD
-      - DATASET_CURRENT=2
-      - DATASET_KACO=3
-      - DATASET_SOLARLOG=1
+      - DATASET_CURRENT
+      - DATASET_KACO
+      - DATASET_SOLARLOG
+      - DATASET_SONNENSPEICHER
+      - SONNENSPEICHER_PASSWORD
+      - SONNENSPEICHER_USERNAME
+      - START_YEAR
       - TZ
       - URL_KACO
       - URL_SOLARLOG
     command: >-
-      apk --no-cache add curl jq &&
-      while true; do
-        sh /kaco.sh;
-        sh /solarlog.sh;
-        sleep 600;
-      done
+      sh -c '
+        apk --no-cache add curl jq &&
+        while true; do
+          sh kaco.sh;
+          sh solarlog.sh;
+          sh sonnenspeicher.sh;
+          unset START_YEAR;
+          sleep 600;
+        done
+      '
+    working_dir: /app
     volumes:
-      ./kaco.sh:/kaco.sh:ro
-      ./solarlog.sh:/solarlog.sh:ro
+      ./solar:/app:ro
