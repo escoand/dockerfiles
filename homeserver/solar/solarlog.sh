@@ -10,7 +10,7 @@ solar_auth() {
 }
 
 solar_load() {
-	curl -sS -X POST -b "$COOKIE" -d "$1" "$URL_SOLARLOG"
+	curl -sS -X POST -b "$COOKIE" -d "$1" "$URL_SOLARLOG/getjp"
 }
 
 solar_summary() {
