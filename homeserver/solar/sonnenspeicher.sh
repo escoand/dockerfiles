@@ -3,10 +3,12 @@
 . ./_functions.sh
 
 solar_auth() {
-	curl -sS -X POST -o /dev/null -c "$COOKIE" \
+	solar_log auth
+	curl -isS -X POST -c "$COOKIE" \
 		-F "UserName=$SONNENSPEICHER_USERNAME" \
 		-F "Password=$SONNENSPEICHER_PASSWORD" \
-		"http://mein-sonnenspeicher.de/Account/Login"
+		"http://mein-sonnenspeicher.de/Account/Login" |
+	sed -n 's/^HTTP\/[^ ]* //p'
 }
 
 solar_load() {

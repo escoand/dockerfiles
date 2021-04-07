@@ -3,10 +3,12 @@
 . ./_functions.sh
 
 solar_auth() {
-	curl -sS -X POST -o /dev/null -c "$COOKIE" \
+	solar_log auth
+	curl -isS -X POST -c "$COOKIE" \
 		--data-urlencode "u=$SOLARLOG_USER" \
 		--data-urlencode "p=$SOLARLOG_PASSWORD" \
-		"http://$SOLARLOG_HOST/login"
+		"http://$SOLARLOG_HOST/login" |
+	sed -n 's/^HTTP\/[^ ]* //p'
 }
 
 solar_load() {

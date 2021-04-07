@@ -18,12 +18,15 @@ solar_prepare() {
 solar_send() {
 	# shellcheck disable=SC1003
 	jq -r --arg type "$SCRIPT" '
-		.data[] |
+		try .data[] |
 			.name=(.dimension1 | ascii_downcase | gsub("[^a-z]+";"_")) |
-			.tstamp=(.dimension2 | (try fromdate, try strptime("%Y-%m-%d"), try strptime("%Y-%m"), try strptime("%Y")) | mktime * 1000000) |
+			.tstamp=(.dimension2 | (try fromdate, try strptime("%Y-%m-%d"), try strptime("%Y-%m"), try strptime("%Y")) | mktime | tostring) |
 			.name + ",type=" + $type + " value=" + (.value | tostring) + " " + .tstamp
 	' |
-	curl -isS -XPOST --data-binary @- "http://$INFLUXDB_HOST/write?db=$INFLUXDB_BUCKET" |
+	curl -isS -XPOST \
+		-H "Authorization: Token $INFLUXDB_TOKEN" \
+		--data-binary @- \
+		"http://$INFLUXDB_HOST/api/v2/write?org=$INFLUXDB_ORG&bucket=$INFLUXDB_BUCKET&precision=s" |
 	sed -n 's/^HTTP\/[^ ]* //p'
 }
 
@@ -68,6 +71,15 @@ solar_clean() {
 }
 
 solar_run() {
+	# check db
+	solar_log db
+	while ! curl -s -o /dev/null "http://$INFLUXDB_HOST/ready"; do
+		printf .
+		sleep 5
+	done
+	echo ready
+
+	# do it
 	if ! solar_auth; then
 		solar_log login
 		echo failed
