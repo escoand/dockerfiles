@@ -17,13 +17,14 @@ solar_prepare() {
 
 solar_send() {
 	# shellcheck disable=SC1003
-	curl -sS -X POST \
-		-u "$AUTH_NEXTCLOUD" \
-		-H "Content-type: application/json" \
-		--data-binary @- \
-		"https://$DOMAIN_NEXTCLOUD/index.php/apps/analytics/api/2.0/adddata/$1" |
-	sed -e '$a\' |
-	grep -v '^$'
+	jq -r --arg type "$SCRIPT" '
+		.data[] |
+			.name=(.dimension1 | ascii_downcase | gsub("[^a-z]+";"_")) |
+			.tstamp=(.dimension2 | (try fromdate, try strptime("%Y-%m-%d"), try strptime("%Y-%m"), try strptime("%Y")) | mktime * 1000000) |
+			.name + ",type=" + $type + " value=" + (.value | tostring) + " " + .tstamp
+	' |
+	curl -isS -XPOST --data-binary @- "http://$INFLUXDB_HOST/write?db=$INFLUXDB_BUCKET" |
+	sed -n 's/^HTTP\/[^ ]* //p'
 }
 
 solar_summary_years() {
