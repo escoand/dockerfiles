@@ -12,9 +12,9 @@ solar_prepare() {
 	sed -n \
 		-e '1i{"data":[' \
 		-e '5,$s/^/,/' \
-		-e '4,${s/^\(..\)\/\(..\)\/\(....\);\(.*\)$/{"dimension1":"Ertrag Tag Wh","dimension2":"\3-\2-\1","value":\4}/p;}' \
-		-e '4,${s/^\(..\)\/\(....\);\(.*\)$/{"dimension1":"Ertrag Monat Wh","dimension2":"\2-\1","value":\3}/p;}' \
-		-e '4,${s/^\(....\);\(.*\)$/{"dimension1":"Ertrag Jahr Wh","dimension2":"\1","value":\2}/p;}' \
+		-e '4,${s/^\(..\)\/\(..\)\/\(....\);\(.*\)$/{"field":"Erzeugung Tag Wh","value":\4,"date":"\3-\2-\1"}/p;}' \
+		-e '4,${s/^\(..\)\/\(....\);\(.*\)$/{"field":"Erzeugung Monat Wh","value":\3,"date":"\2-\1"}/p;}' \
+		-e '4,${s/^\(....\);\(.*\)$/{"field":"Erzeugung Jahr Wh","value":\2,"date":"\1"}/p;}' \
 		-e '$i]}'
 }
 

@@ -19,9 +19,9 @@ solar_send() {
 	# shellcheck disable=SC1003
 	jq -r --arg type "$SCRIPT" '
 		try .data[] |
-			.name=(.dimension1 | ascii_downcase | gsub("[^a-z]+";"_")) |
-			.tstamp=(.dimension2 | (try fromdate, try strptime("%Y-%m-%d"), try strptime("%Y-%m"), try strptime("%Y")) | mktime | tostring) |
-			.name + ",type=" + $type + " value=" + (.value | tostring) + " " + .tstamp
+			.name=(.field | ascii_downcase | gsub("[^a-z,]+"; "_")) |
+			.tstamp=(.date | (try fromdate, try strptime("%Y-%m-%d"), try strptime("%Y-%m"), try strptime("%Y")) | mktime | tostring) |
+			(if .tag then .tag else $type end) " " + .name + "=" + (.value | tostring) + " " + .tstamp
 	' |
 	curl -isS -XPOST \
 		-H "Authorization: Token $INFLUXDB_TOKEN" \
