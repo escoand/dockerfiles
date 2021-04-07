@@ -17,18 +17,46 @@ solar_load() {
 }
 
 solar_prepare() {
-	jq '{"data":[
-		try ."801"."170" |
+	jq --arg host "$SOLARLOG_HOST" '{"data":[
+		(try ."801"."170" |
 			.date=(."100" | strptime("%d.%m.%y %H:%M:%S") | todate) |
-			{"dimension1":"Ertrag W","dimension2":.date,"value":."101"},
-			{"dimension1":"Ertrag V","dimension2":.date,"value":."103"},
-			{"dimension1":"Verbrauch W","dimension2":.date,"value":."110"},
-		try ."877"[] |
+			{
+				"field": "Erzeugung W",
+				"value": ."101",
+				"date": .date,
+				"tag": "solarlog,host=" + $host
+			},
+			{
+				"field": "Erzeugung V",
+				"value": ."103",
+				"date": .date,
+				"tag": "solarlog,host=" + $host
+			},
+			{
+				"field": "Verbrauch W",
+				"value": ."110",
+				"date": .date,
+				"tag": "solarlog,host=" + $host
+			}
+		),
+		(try ."877"[] |
 			.[99]=(.[0] | strptime("%d.%m.%y") | strflocaltime("%Y-%m")) |
-			{"dimension1":"Ertrag Monat Wh","dimension2":.[99],"value":.[1]},
-		try ."878"[] |
+			{
+				"field": "Erzeugung Monat Wh",
+				"value": .[1],
+				"date": .[99],
+				"tag": "solarlog,host=" + $host
+			}
+		),
+		(try ."878"[] |
 			.[99]=(.[0] | strptime("%d.%m.%y") | strflocaltime("%Y")) |
-			{"dimension1":"Ertrag Jahr Wh","dimension2":.[99],"value":.[1]}
+			{
+				"field": "Erzeugung Jahr Wh",
+				"value": .[1],
+				"date": .[99],
+				"tag": "solarlog,host=" + $host
+			}
+		)
 	]}'
 }
 

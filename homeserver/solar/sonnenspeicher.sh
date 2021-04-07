@@ -26,10 +26,10 @@ solar_prepare() {
 				h[i] = $i
 				if(TYPE == "months") {
 					sub(/ \(kWh\)$/, " Monat Wh", h[i])
-					sub(/ %$/, " Monat %", h[i])
+					sub(/ %$/, " Monat Prz", h[i])
 				} else if(TYPE == "days") {
 					sub(/ \(kWh\)$/, " Tag Wh", h[i])
-					sub(/ %$/, " Tag %", h[i])
+					sub(/ %$/, " Tag Prz", h[i])
 				}
 			}
 		}
@@ -51,7 +51,7 @@ solar_prepare() {
 				} else {
 					val = $i * 1000
 				}
-				printf "{\"dimension1\":\"%s\",\"dimension2\":\"%s\",\"value\":%i}\n", h[i], ds, val
+				printf "{\"field\":\"%s\",\"value\":%i,\"date\":\"%s\"}\n", h[i], val, ds
 			}
 		}
 		END {
