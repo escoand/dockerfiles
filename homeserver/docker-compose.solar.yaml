@@ -5,21 +5,19 @@ services:
     container_name: solar
     image: alpine
     restart: always
+    links:
+      - influxdb
     environment:
-      - AUTH_NEXTCLOUD
-      - DOMAIN_NEXTCLOUD
-      - DATASET_CURRENT
-      - DATASET_KACO
-      - DATASET_SOLARLOG
-      - DATASET_SONNENSPEICHER
+      - INFLUXDB_BUCKET
+      - INFLUXDB_HOST=influxdb:8086
+      - KACO_HOST
+      - SOLARLOG_HOST
       - SOLARLOG_PASSWORD
       - SOLARLOG_USER
       - SONNENSPEICHER_PASSWORD
       - SONNENSPEICHER_USERNAME
       - START_YEAR
       - TZ
-      - URL_KACO
-      - URL_SOLARLOG
     command: >-
       sh -c '
         apk --no-cache add curl jq &&
@@ -34,3 +32,10 @@ services:
     working_dir: /app
     volumes:
       - ./solar:/app:ro
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb:alpine
+    restart: always
+    ports:
+      - 8086:8086

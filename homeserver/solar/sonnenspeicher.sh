@@ -61,14 +61,14 @@ solar_prepare() {
 solar_summary_months() {
 	solar_load jahresstatistik "$1" |
 	solar_prepare months |
-	solar_send "$DATASET_SONNENSPEICHER"
+	solar_send
 }
 
 solar_summary_days() {
 	RANGE=$(printf "%04i-%02i" "$1" "$2")
 	solar_load monatsstatistik "$RANGE" |
 	solar_prepare days |
-	solar_send "$DATASET_SONNENSPEICHER"
+	solar_send
 }
 
 solar_run
