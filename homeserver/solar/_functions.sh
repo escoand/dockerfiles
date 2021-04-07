@@ -73,7 +73,7 @@ solar_clean() {
 solar_run() {
 	# check db
 	solar_log db
-	while ! curl -s -o /dev/null "http://$INFLUXDB_HOST/ready"; do
+	while ! curl -s -o /dev/null "http://$INFLUXDB_HOST/health"; do
 		printf .
 		sleep 5
 	done
