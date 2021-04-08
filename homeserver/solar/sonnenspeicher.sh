@@ -13,7 +13,6 @@ solar_auth() {
 
 solar_load() {
 	curl -sS -b "$COOKIE" "http://mein-sonnenspeicher.de/Device/CsvExport?dtype=2&service=0&typ=$1&period=$2"
-
 }
 
 solar_prepare() {
