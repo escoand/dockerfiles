@@ -8,6 +8,7 @@ solar_load() {
 
 solar_prepare() {
 	# shellcheck disable=SC2016
+	iconv |
 	awk -vDATE="$1" -vRS='\r' -vFS='[/;]' '
 		BEGIN {
 			printf "["
@@ -44,7 +45,7 @@ solar_prepare() {
 }
 
 solar_summary_years() {
-	solar_load eternal |
+	solar_load eternal.CSV |
 	solar_prepare |
 	solar_send
 }
@@ -56,16 +57,17 @@ solar_summary_months() {
 }
 
 solar_summary_days() {
-	RANGE=$(printf "%04i%02i.CSV" "$1" "$2")
-	solar_load "$RANGE" |
+	DATE=$(printf "%04i%02i" "$1" "$2")
+	solar_load "$DATE.CSV" |
 	solar_prepare |
 	solar_send
 }
 
 solar_current() {
-	RANGE=$(date +%Y%m%d)
+	DATE=$(date +%Y%m%d)
+	DATE2=$(date +%Y-%m-%d)
 	solar_load "$DATE.CSV" |
-	solar_prepare "$DATE" |
+	solar_prepare "$DATE2" |
 	solar_send
 }
 
