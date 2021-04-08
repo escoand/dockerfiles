@@ -17,8 +17,7 @@ services:
       - SOLARLOG_PASSWORD
       - SOLARLOG_USER
       - SONNENSPEICHER_PASSWORD
-      - SONNENSPEICHER_USERNAME
-      - START_YEAR
+      - SONNENSPEICHER_USER
       - TZ
     command: >-
       sh -c '

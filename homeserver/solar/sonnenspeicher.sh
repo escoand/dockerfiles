@@ -5,7 +5,7 @@
 solar_auth() {
 	solar_log auth
 	curl -isS -X POST -c "$COOKIE" \
-		-F "UserName=$SONNENSPEICHER_USERNAME" \
+		-F "UserName=$SONNENSPEICHER_USER" \
 		-F "Password=$SONNENSPEICHER_PASSWORD" \
 		"http://mein-sonnenspeicher.de/Account/Login" |
 	sed -n 's/^HTTP\/[^ ]* //p'
