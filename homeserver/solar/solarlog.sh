@@ -18,7 +18,7 @@ solar_load() {
 
 solar_prepare() {
 	jq --arg host "$SOLARLOG_HOST" '[
-		(try ."801"."170" |
+		(."801"."170" | if . then . else empty end |
 			.date=(."100" | strptime("%d.%m.%y %H:%M:%S") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung W",
@@ -39,7 +39,7 @@ solar_prepare() {
 				"tag": ("solarlog,host=" + $host)
 			}
 		),
-		(try ."877"[] |
+		(."877" | if . then .[] else empty end |
 			.[99]=(.[0] | strptime("%d.%m.%y") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung Monat Wh",
@@ -48,7 +48,7 @@ solar_prepare() {
 				"tag": ("solarlog,host=" + $host)
 			}
 		),
-		(try ."878"[] |
+		(."878" | if . then .[] else empty end |
 			.[99]=(.[0] | strptime("%d.%m.%y") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung Jahr Wh",
