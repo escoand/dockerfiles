@@ -67,15 +67,15 @@ solar_summary_months() {
 }
 
 solar_summary_days() {
-	RANGE=$(printf "%04i-%02i" "$1" "$2")
-	solar_load monatsstatistik "$RANGE" |
+	DATE=$(printf "%04i-%02i" "$1" "$2")
+	solar_load monatsstatistik "$DATE" |
 	solar_prepare days |
 	solar_send
 }
 
 solar_current() {
-	RANGE=$(date +%Y-%m-%d)
-	solar_load tagesstatistik "$RANGE" |
+	DATE=$(date +%Y-%m-%d)
+	solar_load tagesstatistik "$DATE" |
 	solar_prepare minutes |
 	solar_send
 }

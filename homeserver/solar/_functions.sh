@@ -18,7 +18,7 @@ solar_prepare() {
 solar_send() {
 	# shellcheck disable=SC1003
 	jq -r --arg type "$SCRIPT" '
-		try .[] |
+		.[] |
 			.name=(.field | ascii_downcase | gsub("[^a-z,]+"; "_") | sub("_+$"; "")) |
 			.tstamp=(.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime) |
 			(if .tstamp < now then
@@ -32,6 +32,7 @@ solar_send() {
 			"http://$INFLUXDB_HOST/api/v2/write?org=$INFLUXDB_ORG&bucket=$INFLUXDB_BUCKET&precision=s" |
 		sed -n 's/^HTTP\/[^ ]* //p'
 	else
+		echo
 		cat >&2
 		echo
 	fi
