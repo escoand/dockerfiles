@@ -3,19 +3,44 @@
 . ./_functions.sh
 
 solar_load() {
-	curl -sS "http://$KACO_HOST/$1.CSV"
+	curl -sS "http://$KACO_HOST/$1"
 }
 
 solar_prepare() {
 	# shellcheck disable=SC2016
-	tr '\r' '\n' |
-	sed -n \
-		-e '1i{"data":[' \
-		-e '5,$s/^/,/' \
-		-e '4,${s/^\(..\)\/\(..\)\/\(....\);\(.*\)$/{"field":"Erzeugung Tag Wh","value":\4,"date":"\3-\2-\1"}/p;}' \
-		-e '4,${s/^\(..\)\/\(....\);\(.*\)$/{"field":"Erzeugung Monat Wh","value":\3,"date":"\2-\1"}/p;}' \
-		-e '4,${s/^\(....\);\(.*\)$/{"field":"Erzeugung Jahr Wh","value":\2,"date":"\1"}/p;}' \
-		-e '$i]}'
+	awk -vDATE="$1" -vRS='\r' -vFS='[/;]' '
+		BEGIN {
+			printf "["
+		}
+		NR==3 {
+			for(i = 2; i <= NF; i++) {
+				h[i] = $i
+			}
+		}
+		NR>4 {
+			printf ","
+		}
+		NR>=4&&NF==2 {
+			printf "{\"field\":\"Erzeugung Jahr Wh\",\"value\":%f,\"date\":\"%04i-01-01T00:00:00\"}", $2, $1
+		}
+		NR>=4&&NF==3 {
+			printf "{\"field\":\"Erzeugung Monat Wh\",\"value\":%f,\"date\":\"%04i-%02i-01T00:00:00\"}", $3, $2, $1
+		}
+		NR>=4&&NF==4 {
+			printf "{\"field\":\"Erzeugung Tag Wh\",\"value\":%f,\"date\":\"%04i-%02i-%02iT00:00:00\"}", $4, $3, $2, $1
+		}
+		NR>=4&&NF>4 {
+			for(i = 2; i <= NF; i++) {
+				if(i > 2) {
+					printf ","
+				}
+				printf "{\"field\":\"Erzeugung %s\",\"value\":%f,\"date\":\"%sT%s\"}", h[i], $i, DATE, $1
+			}
+		}
+		END {
+			printf "]"
+		}
+	'
 }
 
 solar_summary_years() {
@@ -25,15 +50,22 @@ solar_summary_years() {
 }
 
 solar_summary_months() {
-	solar_load "$1" |
+	solar_load "$1.CSV" |
 	solar_prepare |
 	solar_send
 }
 
 solar_summary_days() {
-	RANGE=$(printf "%04i%02i" "$1" "$2")
+	RANGE=$(printf "%04i%02i.CSV" "$1" "$2")
 	solar_load "$RANGE" |
 	solar_prepare |
+	solar_send
+}
+
+solar_current() {
+	RANGE=$(date +%Y%m%d)
+	solar_load "$DATE.CSV" |
+	solar_prepare "$DATE" |
 	solar_send
 }
 

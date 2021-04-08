@@ -19,16 +19,16 @@ solar_load() {
 solar_prepare() {
 	awk -vFS=';' -vTYPE="$1" '
 		BEGIN {
-			printf "{\"data\":["
+			printf "["
 		}
 		NR==1 {
 			for(i = 2; i <= NF; i++) {
 				h[i] = $i
 				if(TYPE == "months") {
-					sub(/ \(kWh\)$/, " Monat Wh", h[i])
+					sub(/ \(kWh\)$/, " Monat (kWh)", h[i])
 					sub(/ %$/, " Monat Prz", h[i])
 				} else if(TYPE == "days") {
-					sub(/ \(kWh\)$/, " Tag Wh", h[i])
+					sub(/ \(kWh\)$/, " Tag (kWh)", h[i])
 					sub(/ %$/, " Tag Prz", h[i])
 				}
 			}
@@ -37,25 +37,25 @@ solar_prepare() {
 			ds = ""
 			split($1, d, "-")
 			if(TYPE == "months") {
-				ds = sprintf("%04i-%02i", d[1], d[2])
+				ds = sprintf("%04i-%02i-01T00:00:00", d[1], d[2])
 			} else if(TYPE == "days") {
-				ds = sprintf("%04i-%02i-%02i", d[1], d[2], d[3])
+				ds = sprintf("%04i-%02i-%02iT00:00:00", d[1], d[2], d[3])
+			} else if(TYPE == "minutes") {
+				split(d[3], t, ":")
+				sub(/ .*/, "", d[3])
+				sub(/.* /, "", t[1])
+				ds = sprintf("%04i-%02i-%02iT%02i:%02i:00", d[1], d[2], d[3], t[1], t[2])
 			}
 			for(i = 2; i < NF; i++) {
 				if(NR > 2 || i > 2) {
 					printf ","
 				}
 				sub(/,/, ".", $i)
-				if(i == NF-1) {
-					val = $i
-				} else {
-					val = $i * 1000
-				}
-				printf "{\"field\":\"%s\",\"value\":%i,\"date\":\"%s\"}\n", h[i], val, ds
+				printf "{\"field\":\"%s\",\"value\":%f,\"date\":\"%s\"}\n", h[i], $i, ds
 			}
 		}
 		END {
-			printf "]}"
+			printf "]"
 		}
 	'
 }
@@ -70,6 +70,13 @@ solar_summary_days() {
 	RANGE=$(printf "%04i-%02i" "$1" "$2")
 	solar_load monatsstatistik "$RANGE" |
 	solar_prepare days |
+	solar_send
+}
+
+solar_current() {
+	RANGE=$(date +%Y-%m-%d)
+	solar_load tagesstatistik "$RANGE" |
+	solar_prepare minutes |
 	solar_send
 }
 
