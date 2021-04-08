@@ -21,7 +21,7 @@ services:
       - TZ
     command: >-
       sh -c '
-        apk --no-cache add curl jq &&
+        apk --no-cache add curl jq tzdata &&
         while true; do
           sh kaco.sh;
           sh solarlog.sh;

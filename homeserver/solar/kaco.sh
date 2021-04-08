@@ -68,6 +68,9 @@ solar_current() {
 	DATE2=$(date +%Y-%m-%d)
 	solar_load "$DATE.CSV" |
 	solar_prepare "$DATE2" |
+	TZ=UTC jq --arg tzoffset "$TZOFFSET" '[
+		.[] | .date = (.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime - ($tzoffset | tonumber) | strftime("%Y-%m-%dT%H:%M:%S") )
+	]' |
 	solar_send
 }
 

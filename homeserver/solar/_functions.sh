@@ -2,6 +2,7 @@
 
 COOKIE=$(mktemp)
 SCRIPT=$(basename "$0" .sh)
+TZOFFSET=$(date +'"%z"' | jq -r '(.[0:3] | tonumber) * 60 *60 + (.[3:5] | tonumber) * 60')
 
 solar_log() {
 	printf '%-15s %-8s ' "$SCRIPT" "$1"
