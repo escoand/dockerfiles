@@ -28,7 +28,7 @@ services:
           sh solarlog.sh;
           sh sonnenspeicher.sh;
           unset START_YEAR;
-          sleep 600;
+          sleep 300;
         done
       '
     working_dir: /app

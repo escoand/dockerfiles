@@ -4,11 +4,11 @@
 
 solar_auth() {
 	solar_log auth
-	curl -isS -X POST -c "$COOKIE" \
+	curl -sS -X POST -c "$COOKIE" \
 		--data-urlencode "u=$SOLARLOG_USER" \
 		--data-urlencode "p=$SOLARLOG_PASSWORD" \
 		"http://$SOLARLOG_HOST/login" |
-	sed -n 's/^HTTP\/[^ ]* //p'
+	tail -n1
 }
 
 solar_load() {
@@ -17,47 +17,47 @@ solar_load() {
 }
 
 solar_prepare() {
-	jq --arg host "$SOLARLOG_HOST" '{"data":[
+	jq --arg host "$SOLARLOG_HOST" '[
 		(try ."801"."170" |
-			.date=(."100" | strptime("%d.%m.%y %H:%M:%S") | todate) |
+			.date=(."100" | strptime("%d.%m.%y %H:%M:%S") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung W",
 				"value": ."101",
 				"date": .date,
-				"tag": "solarlog,host=" + $host
+				"tag": ("solarlog,host=" + $host)
 			},
 			{
 				"field": "Erzeugung V",
 				"value": ."103",
 				"date": .date,
-				"tag": "solarlog,host=" + $host
+				"tag": ("solarlog,host=" + $host)
 			},
 			{
 				"field": "Verbrauch W",
 				"value": ."110",
 				"date": .date,
-				"tag": "solarlog,host=" + $host
+				"tag": ("solarlog,host=" + $host)
 			}
 		),
 		(try ."877"[] |
-			.[99]=(.[0] | strptime("%d.%m.%y") | strflocaltime("%Y-%m")) |
+			.[99]=(.[0] | strptime("%d.%m.%y") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung Monat Wh",
 				"value": .[1],
 				"date": .[99],
-				"tag": "solarlog,host=" + $host
+				"tag": ("solarlog,host=" + $host)
 			}
 		),
 		(try ."878"[] |
-			.[99]=(.[0] | strptime("%d.%m.%y") | strflocaltime("%Y")) |
+			.[99]=(.[0] | strptime("%d.%m.%y") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
 				"field": "Erzeugung Jahr Wh",
 				"value": .[1],
 				"date": .[99],
-				"tag": "solarlog,host=" + $host
+				"tag": ("solarlog,host=" + $host)
 			}
 		)
-	]}'
+	]'
 }
 
 solar_summary() {
