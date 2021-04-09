@@ -31,7 +31,7 @@ solar_send() {
 			.tstamp=(.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime) |
 			(if .tstamp < now then
 				(if .tag then .tag else $type end) + " " + .name + "=" + (.value | tostring) + " " + (.tstamp | tostring)
-			else empty fi)
+			else empty end)
 	' |
 	if [ -z "$DEBUG" ]; then
 		curl -isS -XPOST \
