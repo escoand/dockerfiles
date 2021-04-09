@@ -97,7 +97,7 @@ solar_history() {
 		MONTH=$(date +%m -d "@$TSTAMP")
 		DAY=$(date +%d -d "@$TSTAMP")
 		solar_log "$YEAR-$MONTH-$DAY"
-		solar_day "$YEAR" "$MONTH" "$DAY"
+		solar_day "$YEAR" "$MONTH" "$DAY" "$OFFSET"
 		OFFSET=$((OFFSET+1))
 	done
 }
