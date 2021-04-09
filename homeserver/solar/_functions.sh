@@ -25,7 +25,7 @@ solar_localtime2utc() {
 
 solar_send() {
 	# shellcheck disable=SC1003
-	jq -r --arg type "$SCRIPT" '
+	TZ=UTC jq -r --arg type "$SCRIPT" '
 		.[] |
 			.name=(.field | ascii_downcase | gsub("[^a-z,]+"; "_") | sub("_+$"; "")) |
 			.tstamp=(.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime) |

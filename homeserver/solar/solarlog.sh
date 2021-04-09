@@ -17,7 +17,7 @@ solar_load() {
 }
 
 solar_prepare() {
-	jq --arg host "$SOLARLOG_HOST" '[
+	TZ=UTC jq --arg host "$SOLARLOG_HOST" '[
 		(."801"."170" | if . then . else empty end |
 			.date=(."100" | strptime("%d.%m.%y %H:%M:%S") | strftime("%Y-%m-%dT%H:%M:%S")) |
 			{
