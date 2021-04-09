@@ -74,10 +74,28 @@ solar_summary() {
 	done
 }
 
+solar_day() {
+	echo no_data
+}
+
 solar_current() {
 	YEAR=$(date +%Y)
 	MONTH=$(date +%m)
-	solar_summary_days "$YEAR" "$MONTH"
+	DAY=$(date +%d)
+	solar_log current
+	solar_day "$YEAR" "$MONTH" "$DAY"
+}
+
+solar_history() {
+	OFFSET=0
+	while [ "$OFFSET" -le "$HISTORY" ]; do
+		YEAR=$(date +%Y -d "-${OFFSET}days")
+		MONTH=$(date +%m -d "-${OFFSET}days")
+		DAY=$(date +%d -d "-${OFFSET}days")
+		solar_log "$YEAR-$MONTH-$DAY"
+		solar_day "$YEAR" "$MONTH" "$DAY"
+		OFFSET=$((OFFSET+1))
+	done
 }
 
 solar_clean() {
@@ -95,14 +113,22 @@ solar_run() {
 		echo ready
 	fi
 
-	# do it
+	# auth
 	if ! solar_auth; then
 		solar_log login
 		echo failed
 		return
 	fi
-	[ -n "$START_YEAR" ] && solar_summary
-	solar_log current
-	solar_current
+
+	# load
+	if [ -n "$START_YEAR" ]; then
+		solar_summary
+	elif [ -n "$HISTORY" ]; then
+		solar_history
+	else
+		solar_current
+	fi
+
+	# clean
 	solar_clean
 }

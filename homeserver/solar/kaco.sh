@@ -63,9 +63,9 @@ solar_summary_days() {
 	solar_send
 }
 
-solar_current() {
-	DATE=$(date +%Y%m%d)
-	DATE2=$(date +%Y-%m-%d)
+solar_day() {
+	DATE=$(printf "%04i%02i%02i" "$1" "$2" "$3")
+	DATE2=$(printf "%04i-%02i-%02i" "$1" "$2" "$3")
 	solar_load "$DATE.CSV" |
 	solar_prepare "$DATE2" |
 	solar_localtime2utc |
