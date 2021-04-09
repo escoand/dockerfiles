@@ -29,7 +29,9 @@ solar_send() {
 		.[] |
 			.name=(.field | ascii_downcase | gsub("[^a-z,]+"; "_") | sub("_+$"; "")) |
 			.tstamp=(.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime) |
-			(if .tag then .tag else $type end) + " " + .name + "=" + (.value | tostring) + " " + (.tstamp | tostring)
+			(if .tstamp < now then
+				(if .tag then .tag else $type end) + " " + .name + "=" + (.value | tostring) + " " + (.tstamp | tostring)
+			else empty fi)
 	' |
 	if [ -z "$DEBUG" ]; then
 		curl -isS -XPOST \
@@ -87,9 +89,10 @@ solar_current() {
 }
 
 solar_history() {
+	BASE=$(date +%s)
 	OFFSET=0
 	while [ "$OFFSET" -le "$HISTORY" ]; do
-		TSTAMP=$(($(date +%s)-OFFSET*60*60))
+		TSTAMP=$((BASE-OFFSET*24*60*60))
 		YEAR=$(date +%Y -d "@$TSTAMP")
 		MONTH=$(date +%m -d "@$TSTAMP")
 		DAY=$(date +%d -d "@$TSTAMP")
