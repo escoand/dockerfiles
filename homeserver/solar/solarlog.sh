@@ -78,6 +78,7 @@ solar_current() {
 	solar_log current
 	solar_load '{"801":{"170":null}}' |
 	solar_prepare |
+	solar_localtime2utc |
 	solar_send
 }
 

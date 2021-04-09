@@ -2,7 +2,6 @@
 
 COOKIE=$(mktemp)
 SCRIPT=$(basename "$0" .sh)
-TZOFFSET=$(date +'"%z"' | jq -r '(.[0:3] | tonumber) * 60 *60 + (.[3:5] | tonumber) * 60')
 
 solar_log() {
 	printf '%-15s %-8s ' "$SCRIPT" "$1"
@@ -16,15 +15,21 @@ solar_prepare() {
 	cat
 }
 
+solar_localtime2utc() {
+	TZOFFSET=$(date +'"%z"' | jq -r '(.[0:3] | tonumber) * 60 *60 + (.[3:5] | tonumber) * 60')
+
+	TZ=UTC jq --arg tzoffset "$TZOFFSET" '[
+		.[] | .date = (.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime - ($tzoffset | tonumber) | strftime("%Y-%m-%dT%H:%M:%S") )
+	]'
+}
+
 solar_send() {
 	# shellcheck disable=SC1003
 	jq -r --arg type "$SCRIPT" '
 		.[] |
 			.name=(.field | ascii_downcase | gsub("[^a-z,]+"; "_") | sub("_+$"; "")) |
 			.tstamp=(.date | strptime("%Y-%m-%dT%H:%M:%S") | mktime) |
-			(if .tstamp < now then
-				(if .tag then .tag else $type end) + " " + .name + "=" + (.value | tostring) + " " + (.tstamp | tostring)
-			else empty end)
+			(if .tag then .tag else $type end) + " " + .name + "=" + (.value | tostring) + " " + (.tstamp | tostring)
 	' |
 	if [ -z "$DEBUG" ]; then
 		curl -isS -XPOST \
