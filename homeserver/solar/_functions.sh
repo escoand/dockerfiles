@@ -80,8 +80,8 @@ solar_day() {
 
 solar_current() {
 	YEAR=$(date +%Y)
-	MONTH=$(date +%m)
-	DAY=$(date +%d)
+	MONTH=$(date +%m | sed 's/^0//')
+	DAY=$(date +%d | sed 's/^0//')
 	solar_log current
 	solar_day "$YEAR" "$MONTH" "$DAY"
 }
@@ -89,9 +89,10 @@ solar_current() {
 solar_history() {
 	OFFSET=0
 	while [ "$OFFSET" -le "$HISTORY" ]; do
-		YEAR=$(date +%Y -d "-${OFFSET}days")
-		MONTH=$(date +%m -d "-${OFFSET}days")
-		DAY=$(date +%d -d "-${OFFSET}days")
+		TSTAMP=$(($(date +%s)-OFFSET*60*60))
+		YEAR=$(date +%Y -d "@$TSTAMP")
+		MONTH=$(date +%m -d "@$TSTAMP")
+		DAY=$(date +%d -d "@$TSTAMP")
 		solar_log "$YEAR-$MONTH-$DAY"
 		solar_day "$YEAR" "$MONTH" "$DAY"
 		OFFSET=$((OFFSET+1))
