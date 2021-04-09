@@ -66,14 +66,14 @@ solar_summary_months() {
 }
 
 solar_summary_days() {
-	DATE=$(printf "%04i-%02i" "$1" "$2")
+	DATE=$(printf "%04i-%02i" "${1#0}" "${2#0}")
 	solar_load monatsstatistik "$DATE" |
 	solar_prepare days |
 	solar_send
 }
 
 solar_day() {
-	DATE=$(printf "%04i-%02i-%02i" "$1" "$2" "$3")
+	DATE=$(printf "%04i-%02i-%02i" "${1#0}" "${2#0}" "${3#0}")
 	solar_load tagesstatistik "$DATE" |
 	solar_prepare minutes |
 	solar_send
