@@ -4,7 +4,7 @@ COOKIE=$(mktemp)
 SCRIPT=$(basename "$0" .sh)
 
 solar_log() {
-	printf '%-15s %-8s ' "$SCRIPT" "$1"
+	printf '%-15s %-10s ' "$SCRIPT" "$1"
 }
 
 solar_auth() {
