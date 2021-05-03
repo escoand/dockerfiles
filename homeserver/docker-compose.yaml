@@ -45,13 +45,15 @@ services:
     container_name: nextcloud_cron
     image: nextcloud:fpm-alpine
     restart: always
-    links:
+    de
+    depends_on:
       - mariadb
+      - nextcloud
       - redis
     entrypoint: sh -c 'cat /crontab > /var/spool/cron/crontabs/www-data && /cron.sh'
     volumes:
       - ./crontab.nextcloud:/crontab:ro
-      - nccontent:/var/www/html:ro
+      - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
 
@@ -59,9 +61,11 @@ services:
     container_name: nextcloud_push
     image: nextcloud:fpm-alpine
     restart: always
-    links:
+    depends_on:
       - mariadb
+      - nextcloud
       - redis
+    links:
       - caddy:${DOMAIN_NEXTCLOUD}
     entrypoint: /var/www/html/apps/notify_push/bin/armv7/notify_push /var/www/html/config/config.php
     volumes:
@@ -172,17 +176,6 @@ services:
       - TZ
     volumes:
       - ${DATA_DIR}:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower
-    restart: always
-    environment:
-      - TZ
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_SCHEDULE=0 0 1 * * *
-    volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
