@@ -45,7 +45,6 @@ services:
     container_name: nextcloud_cron
     image: nextcloud:fpm-alpine
     restart: always
-    de
     depends_on:
       - mariadb
       - nextcloud
