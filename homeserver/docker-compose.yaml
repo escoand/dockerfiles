@@ -6,7 +6,7 @@ services:
     image: caddy:alpine
     restart: always
     extra_hosts:
-      - homeassistant:192.168.1.43
+      - homeassistant:${LOCAL_IP}
     ports:
       - 80:80
       - 443:443
