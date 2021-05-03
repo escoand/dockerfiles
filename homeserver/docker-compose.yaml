@@ -187,4 +187,4 @@ volumes:
 #curl -fsSL https://download.docker.com/linux/debian/gpg |
 #sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg &&
 #sudo apt-get update &&
-#sudo apt-get install docker-ce docker-ce-cli containerd.io
+#sudo apt-get install containerd.io docker-ce docker-ce-cli libseccomp2/buster-backports
