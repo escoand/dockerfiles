@@ -75,5 +75,5 @@ services:
     ports:
       - "${SSH_MASTER_PORT}:22"
     volumes:
-      - ${DATA_DIR}/dropbear:/etc/dropbear/
+      - ${DATA_DIR}/dropbear:/etc/dropbear
       - /home/admin/.ssh/authorized_keys:/home/satellite/.ssh/authorized_keys:ro
