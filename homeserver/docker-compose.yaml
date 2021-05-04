@@ -177,6 +177,21 @@ services:
       - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
 
+  ssh_satellite:
+    container_name: ssh_satellite
+    image: jnovack/autossh
+    restart: always
+    environment:
+      - SSH_REMOTE_USER=satellite
+      - SSH_REMOTE_HOST=${SSH_MASTER_HOST}
+      - SSH_REMOTE_PORT=${SSH_MASTER_PORT}
+      - SSH_STRICT_HOST_IP_CHECK=false
+      - SSH_TARGET_HOST=172.17.0.1
+      - SSH_TARGET_PORT=22
+      - SSH_TUNNEL_PORT=${SSH_TUNNEL_PORT}
+    volumes:
+      - /home/admin/.ssh/id_rsa:/id_rsa:ro
+
 volumes:
   nccontent:
 

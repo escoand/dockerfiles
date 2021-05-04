@@ -38,8 +38,8 @@ services:
     container_name: influxdb
     image: influxdb:1.8
     restart: always
-    #ports:
-    #  - 8086:8086
+    ports:
+      - 8086:8086
     environment:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
