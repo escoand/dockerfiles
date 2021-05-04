@@ -1,29 +1,6 @@
 version: "2.4"
 services:
 
-  dnsmasq:
-    container_name: dnsmasq
-    image: alpine
-    restart: always
-    ports:
-      - 53:53/tcp
-      - 53:53/udp
-    cap_add:
-      - NET_ADMIN
-    entrypoint: >-
-      sh -c '
-        apk add --no-cache dnsmasq &&
-        dnsmasq \
-          --address=/${DOMAIN_NEXTCLOUD}/${DOMAIN_HOMEASSISTANT}/${DOMAIN_GROCY}/${LOCAL_IP} \
-          --all-servers \
-          --keep-in-foreground \
-          --log-facility=- \
-          --no-hosts \
-          --no-resolv \
-          --server=94.140.14.14 \
-          --server=94.140.15.15
-      '
-
   homeassistant:
     container_name: homeassistant
     image: homeassistant/home-assistant:stable
