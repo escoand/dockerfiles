@@ -20,6 +20,14 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ${DATA_DIR}/caddy:/data/caddy
 
+  dyndns:
+    container_name: dyndns
+    image: qmcgaw/ddns-updater
+    restart: always
+    environment:
+      - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
+      - TZ
+
   nextcloud:
     container_name: nextcloud
     image: nextcloud:fpm-alpine
