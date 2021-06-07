@@ -26,6 +26,7 @@ services:
     restart: always
     environment:
       - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
+      - LOG_LEVEL=debug
       - TZ
 
   nextcloud:
@@ -173,9 +174,11 @@ services:
           --exclude-if-present '.nobackup'
           --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
+          --json
           --tag local
       - RESTIC_FORGET_ARGS=
           --group-by tag
+          --json
           --keep-daily 7
           --keep-weekly 5
           --keep-monthly 12
