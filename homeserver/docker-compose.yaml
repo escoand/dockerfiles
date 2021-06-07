@@ -44,7 +44,7 @@ services:
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
       - OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
-      - TRUSTED_PROXIES=172.17.0.0/16,172.18.0.0/16
+      - TRUSTED_PROXIES=172.17.0.0/16 172.18.0.0/16
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
