@@ -9,6 +9,7 @@ services:
     volumes:
       - /etc/hosts:/host:ro
       - ${DATA_DIR}/homeassistant:/config
+      - /var/run/docker.sock:/var/run/docker.sock
     devices:
       - /dev/ttyACM0
 
