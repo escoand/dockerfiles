@@ -12,9 +12,7 @@ sudo apt-get update -qy
 sudo apt-get install -qy containerd.io docker-ce docker-ce-cli libseccomp2/buster-backports
 
 # add mountpoint
-UUID=$(lsblk -pro UUID,NAME | grep /dev/sda1 | cut -d' ' -f1)
-[ -z "$UUID" ] && exit 1
-echo "UUID=$UUID /media/external btrfs defaults,rw,relatime,space_cache,subvolid=5,subvol=/ 0 1" |
+echo "UUID=$(blkid -s UUID -o value /dev/sda1) /media/external btrfs defaults,rw,relatime,space_cache,subvolid=5,subvol=/ 0 1" |
 sudo tee -a /etc/fstab > /dev/null
 sudo mkdir /media/external
 sudo mount -a
