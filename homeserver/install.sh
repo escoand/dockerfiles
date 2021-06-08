@@ -1,5 +1,7 @@
 #!/bin/sh -ex
 
+DEVICE=${DEVICE:-/dev/sda1}
+
 # remove debian dependencies
 sudo apt-get remove -qy docker docker-engine docker.io runc
 
@@ -12,7 +14,7 @@ sudo apt-get update -qy
 sudo apt-get install -qy containerd.io docker-ce docker-ce-cli libseccomp2/buster-backports
 
 # add mountpoint
-echo "UUID=$(blkid -s UUID -o value /dev/sda1) /media/external ext4 defaults,noatime 0 2" |
+echo "UUID=$(blkid -s UUID -o value $DEVICE) /media/external $(blkid -s TYPE -o value $DEVICE) defaults,noatime 0 2" |
 sudo tee -a /etc/fstab > /dev/null
 sudo mkdir /media/external
 sudo mount -a
