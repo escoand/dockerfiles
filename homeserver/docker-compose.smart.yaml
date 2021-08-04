@@ -36,6 +36,7 @@ services:
     container_name: paperless
     image: jonaswinkler/paperless-ng
     restart: always
+    cpu_percent: 50
     links:
       - redis
     ports:
