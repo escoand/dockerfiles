@@ -63,20 +63,22 @@ services:
     volumes:
       - ./crontab.nextcloud:/crontab:ro
       - nccontent:/var/www/html
+      - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
 
   nextcloud_push:
     container_name: nextcloud_push
     image: nextcloud:fpm-alpine
-    restart: always
+    restart: unless-stopped
     depends_on:
       - mariadb
       - nextcloud
       - redis
     links:
       - caddy:${DOMAIN_NEXTCLOUD}
-    entrypoint: /var/www/html/custom_apps/notify_push/bin/armv7/notify_push /var/www/html/config/config.php
+    working_dir: /var/www/html/config
+    entrypoint: /var/www/html/custom_apps/notify_push/bin/armv7/notify_push config.php
     volumes:
       - nccontent:/var/www/html
       - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
@@ -155,7 +157,7 @@ services:
     container_name: backup
     image: mazzolino/restic
     hostname: ${HOSTNAME}
-    restart: always
+    restart: unless-stopped
     cpu_percent: 50
     environment:
       - B2_ACCOUNT_ID
@@ -174,11 +176,9 @@ services:
           --exclude-if-present '.nobackup'
           --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
-          --json
           --tag local
       - RESTIC_FORGET_ARGS=
           --group-by tag
-          --json
           --keep-daily 7
           --keep-weekly 5
           --keep-monthly 12

@@ -16,7 +16,7 @@ services:
   esphome:
     container_name: esphome
     image: esphome/esphome
-    restart: always
+    restart: unless-stopped
     network_mode: host
     ports:
       - 6052:6052
@@ -28,14 +28,16 @@ services:
   grocy:
     container_name: grocy
     image: linuxserver/grocy
-    restart: always
+    restart: unless-stopped
     volumes:
       - ${DATA_DIR}/grocy:/config/data
 
   paperless:
     container_name: paperless
     image: jonaswinkler/paperless-ng
-    restart: always
+    restart: unless-stopped
+    mem_limit: 1GB
+    cpu_percent: 50
     links:
       - redis
     ports:
