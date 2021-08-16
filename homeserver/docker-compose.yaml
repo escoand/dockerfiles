@@ -50,6 +50,7 @@ services:
       - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
+      - ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
 
   nextcloud_cron:
     container_name: nextcloud_cron
@@ -167,7 +168,7 @@ services:
       - POST_COMMANDS_SUCCESS
       - PRE_COMMANDS=
           docker exec mariadb mysqldump -A |
-          gzip > /data/mariadb.sql.gz
+          gzip --rsyncable /data/mariadb.sql.gz
       - RESTIC_BACKUP_ARGS=
           --exclude '*.log'
           --exclude 'appdata_*'
