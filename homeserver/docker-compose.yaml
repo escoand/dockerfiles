@@ -168,7 +168,7 @@ services:
       - POST_COMMANDS_SUCCESS
       - PRE_COMMANDS=
           docker exec mariadb mysqldump -A |
-          gzip --rsyncable /data/mariadb.sql.gz
+          gzip -f --rsyncable > /data/mariadb.sql.gz
       - RESTIC_BACKUP_ARGS=
           --exclude '*.log'
           --exclude 'appdata_*'
@@ -178,18 +178,35 @@ services:
           --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
           --tag local
-      - RESTIC_FORGET_ARGS=
-          --group-by tag
-          --keep-daily 7
-          --keep-weekly 5
-          --keep-monthly 12
-          --prune
       - RESTIC_PASSWORD
       - RESTIC_REPOSITORY
       - TZ
     volumes:
       - ${DATA_DIR}:/data
       - /var/run/docker.sock:/var/run/docker.sock
+
+  backup_prune:
+    container_name: backup_prune
+    image: mazzolino/restic
+    hostname: ${HOSTNAME}
+    restart: unless-stopped
+    cpu_percent: 50
+    environment:
+      - B2_ACCOUNT_ID
+      - B2_ACCOUNT_KEY
+      - PRUNE_CRON=0 0 4 * * *
+      - POST_COMMANDS_FAILURE
+      - POST_COMMANDS_SUCCESS
+      - RESTIC_FORGET_ARGS=
+          --group-by tag
+          --keep-daily 7
+          --keep-weekly 5
+          --keep-monthly 12
+      - RESTIC_PASSWORD
+      - RESTIC_REPOSITORY
+      - TZ
+    volumes:
+      - ${DATA_DIR}:/data
 
   ssh_satellite:
     container_name: ssh_satellite
