@@ -1,2 +1,0 @@
-*/5 * * * *  php -f /var/www/html/cron.php
-*/30 * * * * php -f /var/www/html/occ preview:pre-generate

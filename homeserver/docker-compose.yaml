@@ -51,40 +51,16 @@ services:
       - ${DATA_DIR}/nextcloud/config:/var/www/html/config
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
       - ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
-
-  nextcloud_cron:
-    container_name: nextcloud_cron
-    image: nextcloud:fpm-alpine
-    restart: always
-    depends_on:
-      - mariadb
-      - nextcloud
-      - redis
-    entrypoint: sh -c 'cat /crontab > /var/spool/cron/crontabs/www-data && /cron.sh'
-    volumes:
-      - ./crontab.nextcloud:/crontab:ro
-      - nccontent:/var/www/html
-      - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
-      - ${DATA_DIR}/nextcloud/config:/var/www/html/config
-      - ${DATA_DIR}/nextcloud/data:/var/www/html/data
-
-  nextcloud_push:
-    container_name: nextcloud_push
-    image: nextcloud:fpm-alpine
-    restart: unless-stopped
-    depends_on:
-      - mariadb
-      - nextcloud
-      - redis
-    links:
-      - caddy:${DOMAIN_NEXTCLOUD}
-    working_dir: /var/www/html/config
-    entrypoint: /var/www/html/custom_apps/notify_push/bin/armv7/notify_push config.php
-    volumes:
-      - nccontent:/var/www/html
-      - ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
-      - ${DATA_DIR}/nextcloud/config:/var/www/html/config
-      - ${DATA_DIR}/nextcloud/data:/var/www/html/data
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.nc_cron.schedule: "@every 5m"
+      ofelia.job-exec.nc_cron.command: >-
+        php -f /var/www/html/cron.php
+      ofelia.job-exec.nc_cron.user: www-data
+      ofelia.job-exec.nc_preview.schedule: "@every 30m"
+      ofelia.job-exec.nc_preview.command: >-
+        php -f /var/www/html/occ preview:pre-generate
+      ofelia.job-exec.nc_preview.user: www-data
 
   mariadb:
     container_name: mariadb
@@ -101,7 +77,14 @@ services:
     ports:
       - 3306:3306
     volumes:
+      - ${DATA_DIR}:/backup
       - ${DATA_DIR}/mariadb:/var/lib/mysql
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
+      ofelia.job-exec.db_backup.command: >-
+        mysqldump -A |
+        gzip > /backup/mariadb.sql.gz
 
   redis:
     container_name: redis
@@ -160,15 +143,13 @@ services:
     hostname: ${HOSTNAME}
     restart: unless-stopped
     cpu_percent: 50
+    #command: unlock
     environment:
       - B2_ACCOUNT_ID
       - B2_ACCOUNT_KEY
       - BACKUP_CRON=0 0 2 * * *
       - POST_COMMANDS_FAILURE
       - POST_COMMANDS_SUCCESS
-      - PRE_COMMANDS=
-          docker exec mariadb mysqldump -A |
-          gzip -f --rsyncable > /data/mariadb.sql.gz
       - RESTIC_BACKUP_ARGS=
           --exclude '*.log'
           --exclude 'appdata_*'
@@ -178,35 +159,17 @@ services:
           --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
           --tag local
-      - RESTIC_PASSWORD
-      - RESTIC_REPOSITORY
-      - TZ
-    volumes:
-      - ${DATA_DIR}:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  backup_prune:
-    container_name: backup_prune
-    image: mazzolino/restic
-    hostname: ${HOSTNAME}
-    restart: unless-stopped
-    cpu_percent: 50
-    environment:
-      - B2_ACCOUNT_ID
-      - B2_ACCOUNT_KEY
-      - PRUNE_CRON=0 0 4 * * *
-      - POST_COMMANDS_FAILURE
-      - POST_COMMANDS_SUCCESS
       - RESTIC_FORGET_ARGS=
           --group-by tag
           --keep-daily 7
           --keep-weekly 5
           --keep-monthly 12
+          --prune
       - RESTIC_PASSWORD
       - RESTIC_REPOSITORY
       - TZ
     volumes:
-      - ${DATA_DIR}:/data
+      - ${DATA_DIR}:/data:ro
 
   ssh_satellite:
     container_name: ssh_satellite
@@ -222,6 +185,13 @@ services:
       - SSH_TUNNEL_PORT=${SSH_TUNNEL_PORT}
     volumes:
       - /home/admin/.ssh/id_rsa:/id_rsa:ro
+
+  ofelia:
+    container_name: ofelia
+    image: mcuadros/ofelia
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   nccontent:
