@@ -1,4 +1,5 @@
 #!/bin/sh -ex
+set -e
 
 DEVICE=${DEVICE:-/dev/sda1}
 
