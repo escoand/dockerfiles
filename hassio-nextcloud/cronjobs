@@ -1,3 +1,0 @@
-*/5 * * * * php -f /data/nextcloud/cron.php
-05  0 * * * php -f /data/nextcloud/occ files:scan --all
-35  0 * * * php -f /data/nextcloud/occ preview:pre-generate
