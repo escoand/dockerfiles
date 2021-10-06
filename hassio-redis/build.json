@@ -1,9 +1,0 @@
-{
-  "build_from": {
-    "i386":    "i386/redis:alpine",
-    "amd64":   "amd64/redis:alpine",
-    "armhf":   "arm32v6/redis:alpine",
-    "armv7":   "arm32v7/redis:alpine",
-    "aarch64": "arm64v8/redis:alpine"
-  }
-}
