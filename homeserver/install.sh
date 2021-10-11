@@ -3,6 +3,7 @@ set -e
 
 DEVICE=${DEVICE:-/dev/sda1}
 EXTERNAL=${EXTERNAL:-/media/external}
+PATH="$PATH:/usr/sbin"
 
 # remove debian dependencies
 sudo apt-get remove -qy docker docker-engine docker.io runc
