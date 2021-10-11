@@ -30,7 +30,7 @@ sudo mkdir -p "$EXTERNAL/docker"
 [ -f /etc/defaults/docker ] &&
 sudo sed -i "\$aDOCKER_OPTS=\"\$DOCKER_OPTS --data-root=$EXTERNAL/docker\"" /etc/defaults/docker
 [ -f /usr/lib/systemd/system/docker.service ] &&
-sudo sed -i "s#^ExecStart=.*\.sock$#& --data-root=$EXTERNAL/docker#" /usr/lib/systemd/system/docker.service
+sudo sed -i "s#^ExecStart=.*\.sock\$#& --data-root=$EXTERNAL/docker#" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 
