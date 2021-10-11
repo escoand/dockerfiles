@@ -20,13 +20,16 @@ sudo apt-get install -qy containerd.io docker-ce docker-ce-cli libseccomp2/buste
 UUID=$(blkid -s UUID -o value $DEVICE)
 TYPE=$(blkid -s TYPE -o value $DEVICE)
 [ -n "$UUID" ] && [ -n "$TYPE" ] || echo "device $DEVICE not found" >&2
+grep -q "UUID=$UUID" /etc/fstab ||
 sudo sed -i "\$aUUID=$UUID $EXTERNAL $TYPE defaults,noatime 0 2" /etc/fstab
 sudo mkdir -p "$EXTERNAL"
 sudo mount -a
 
 # docker data on external
 sudo mkdir -p "$EXTERNAL/docker"
+[ -f /etc/defaults/docker ] &&
 sudo sed -i '$aDOCKER_OPTS="$DOCKER_OPTS --data-root=\"'"$EXTERNAL"'/docker\"' /etc/defaults/docker
+[ -f /usr/lib/systemd/system/docker.service ] &&
 sudo sed -i 's#^ExecStart=.*\.sock$#& --data-root='"$EXTERNAL"'/docker#' /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload
 sudo systemctl restart docker
