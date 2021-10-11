@@ -6,7 +6,8 @@ services:
     image: caddy:alpine
     restart: always
     extra_hosts:
-      - homeassistant:${LOCAL_IP}
+      - homeassistant:172.17.0.1
+      - esphome:172.17.0.1
     ports:
       - 80:80
       - 443:443
@@ -42,7 +43,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_USER
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
-      - OVERWRITEPROTOCOL=https
+      #- OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=172.17.0.0/16 172.18.0.0/16
     volumes:
@@ -143,7 +144,6 @@ services:
     hostname: ${HOSTNAME}
     restart: unless-stopped
     cpu_percent: 50
-    #command: unlock
     environment:
       - B2_ACCOUNT_ID
       - B2_ACCOUNT_KEY
@@ -170,6 +170,10 @@ services:
       - TZ
     volumes:
       - ${DATA_DIR}:/data:ro
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.backup_unlock.schedule: "0 55 1 * * *"
+      ofelia.job-exec.backup_unlock.command: restic unlock
 
   ssh_satellite:
     container_name: ssh_satellite
