@@ -12,13 +12,15 @@ sudo apt-get remove -qy docker docker-engine docker.io runc
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" |
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 curl -fsSL https://download.docker.com/linux/debian/gpg |
-sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 sudo apt-get update -qy
 sudo apt-get install -qy containerd.io docker-ce docker-ce-cli libseccomp2/buster-backports
 
 # add mountpoint
-echo "UUID=$(blkid -s UUID -o value $DEVICE) $EXTERNAL $(blkid -s TYPE -o value $DEVICE) defaults,noatime 0 2" |
-sudo tee -a /etc/fstab > /dev/null
+UUID=$(blkid -s UUID -o value $DEVICE)
+TYPE=$(blkid -s TYPE -o value $DEVICE)
+[ -n "$UUID" ] && [ -n "$TYPE" ] || echo "device $DEVICE not found" >&2
+sudo sed -i "$aUUID=$UUID $EXTERNAL $TYPE defaults,noatime 0 2" /etc/fstab
 sudo mkdir -p "$EXTERNAL"
 sudo mount -a
 
