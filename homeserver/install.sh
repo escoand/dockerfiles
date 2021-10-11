@@ -28,15 +28,15 @@ sudo mount -a
 # docker data on external
 sudo mkdir -p "$EXTERNAL/docker"
 [ -f /etc/defaults/docker ] &&
-sudo sed -i '$aDOCKER_OPTS="$DOCKER_OPTS --data-root=\"'"$EXTERNAL"'/docker\"' /etc/defaults/docker
+sudo sed -i "\$aDOCKER_OPTS=\"\$DOCKER_OPTS --data-root=$EXTERNAL/docker\"' /etc/defaults/docker
 [ -f /usr/lib/systemd/system/docker.service ] &&
-sudo sed -i 's#^ExecStart=.*\.sock$#& --data-root='"$EXTERNAL"'/docker#' /usr/lib/systemd/system/docker.service
+sudo sed -i "s#^ExecStart=.*\.sock$#& --data-root=$EXTERNAL/docker#" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 
 # init repo
 git clone https://github.com/escoand/dockerfiles.git
-cp -n dockerfiles/homeserver/.env.sample /media/external/docker-compose.env
-ln -s /media/external/docker-compose.env dockerfiles/homeserver/.env
+sudo install -o "$USER" dockerfiles/homeserver/.env.sample "$EXTERNAL/docker-compose.env"
+ln -s "$EXTERNAL/docker-compose.env" dockerfiles/homeserver/.env
 cd dockerfiles/homeserver
 echo "start editing .env file and run 'sudo docker-compose up -d'"
