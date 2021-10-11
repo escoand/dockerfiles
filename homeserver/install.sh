@@ -14,7 +14,7 @@ sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 curl -fsSL https://download.docker.com/linux/debian/gpg |
 sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 sudo apt-get update -qy
-sudo apt-get install -qy containerd.io docker-ce docker-ce-cli libseccomp2/buster-backports
+sudo apt-get install -qy containerd.io docker-ce docker-ce-cli docker-compose libseccomp2/buster-backports
 
 # add mountpoint
 UUID=$(blkid -s UUID -o value $DEVICE)
