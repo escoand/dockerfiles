@@ -143,20 +143,24 @@ services:
     image: mazzolino/restic
     hostname: ${HOSTNAME}
     restart: unless-stopped
+    #command: unlock
     cpu_percent: 50
+    mem_limit: 500M
     environment:
       - B2_ACCOUNT_ID
       - B2_ACCOUNT_KEY
       - BACKUP_CRON=0 0 2 * * *
       - POST_COMMANDS_FAILURE
       - POST_COMMANDS_SUCCESS
+      - PRE_COMMANDS=restic unlock
       - RESTIC_BACKUP_ARGS=
+          --exclude /data/docker
+          --exclude /data/mariadb
           --exclude '*.log'
           --exclude 'appdata_*'
           --exclude 'files_trashbin'
           --exclude 'updater-*'
           --exclude-if-present '.nobackup'
-          --exclude-if-present 'ibdata1'
           --exclude-if-present 'platformio.ini'
           --tag local
       - RESTIC_FORGET_ARGS=
@@ -164,16 +168,12 @@ services:
           --keep-daily 7
           --keep-weekly 5
           --keep-monthly 12
-          --prune
       - RESTIC_PASSWORD
       - RESTIC_REPOSITORY
+      #- RUN_ON_STARTUP=true
       - TZ
     volumes:
       - ${DATA_DIR}:/data:ro
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.backup_unlock.schedule: "0 55 1 * * *"
-      ofelia.job-exec.backup_unlock.command: restic unlock
 
   ssh_satellite:
     container_name: ssh_satellite
