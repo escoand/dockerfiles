@@ -3,7 +3,8 @@ services:
 
   solar:
     container_name: solar
-    image: alpine
+    image: docker.io/alpine
+    security_opt: [ label=disable ]
     restart: always
     depends_on:
       - influxdb
@@ -36,7 +37,8 @@ services:
 
   influxdb:
     container_name: influxdb
-    image: influxdb:1.8
+    image: docker.io/influxdb:1.8
+    security_opt: [ label=disable ]
     restart: always
     ports:
       - 8086:8086
@@ -54,7 +56,8 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana
+    image: docker.io/grafana/grafana
+    security_opt: [ label=disable ]
     restart: always
     links:
       - influxdb
