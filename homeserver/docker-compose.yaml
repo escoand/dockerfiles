@@ -3,8 +3,9 @@ services:
 
   caddy:
     container_name: caddy
-    image: caddy:alpine
+    image: docker.io/library/caddy:alpine
     restart: always
+    security_opt: [ label=disable ]
     extra_hosts:
       - homeassistant:172.17.0.1
       - esphome:172.17.0.1
@@ -23,7 +24,7 @@ services:
 
   dyndns:
     container_name: dyndns
-    image: qmcgaw/ddns-updater
+    image: docker.io/qmcgaw/ddns-updater
     restart: always
     environment:
       - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
@@ -32,9 +33,10 @@ services:
 
   nextcloud:
     container_name: nextcloud
-    image: nextcloud:fpm-alpine
+    image: docker.io/library/nextcloud:fpm-alpine
+    security_opt: [ label=disable ]
     restart: always
-    links:
+    depends_on:
       - mariadb
       - redis
     environment:
@@ -65,7 +67,8 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: yobasystems/alpine-mariadb
+    image: docker.io/yobasystems/alpine-mariadb
+    security_opt: [ label=disable ]
     restart: always
     environment:
       - MYSQL_DATABASE
@@ -89,13 +92,14 @@ services:
 
   redis:
     container_name: redis
-    image: redis:alpine
+    image: docker.io/library/redis:alpine
     restart: always
     command: redis-server --appendonly no --save ""
 
   samba:
     container_name: samba
-    image: dperson/samba
+    image: docker.io/dperson/samba
+    security_opt: [ label=disable ]
     ports:
       #- 137:137/udp
       #- 138:138/udp
@@ -117,7 +121,8 @@ services:
 
   minidlna:
     container_name: minidlna
-    image: vladgh/minidlna
+    image: docker.io/vladgh/minidlna
+    security_opt: [ label=disable ]
     restart: always
     environment:
       - GUID=82
@@ -177,7 +182,8 @@ services:
 
   ssh_satellite:
     container_name: ssh_satellite
-    image: jnovack/autossh
+    image: docker.io/jnovack/autossh
+    security_opt: [ label=disable ]
     restart: always
     environment:
       - SSH_REMOTE_USER=satellite
@@ -194,6 +200,8 @@ services:
     container_name: ofelia
     image: mcuadros/ofelia
     command: daemon --docker
+    security_opt: [ label=disable ]
+    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 

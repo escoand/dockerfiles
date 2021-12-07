@@ -3,7 +3,8 @@ services:
 
   homeassistant:
     container_name: homeassistant
-    image: homeassistant/home-assistant:stable
+    image: docker.io/homeassistant/home-assistant:stable
+    security_opt: [ label=disable ]
     restart: always
     network_mode: host
     volumes:
@@ -15,7 +16,8 @@ services:
 
   esphome:
     container_name: esphome
-    image: esphome/esphome
+    image: docker.io/esphome/esphome
+    security_opt: [ label=disable ]
     restart: unless-stopped
     network_mode: host
     ports:
@@ -27,14 +29,16 @@ services:
 
   grocy:
     container_name: grocy
-    image: linuxserver/grocy
+    image: docker.io/linuxserver/grocy
+    security_opt: [ label=disable ]
     restart: unless-stopped
     volumes:
       - ${DATA_DIR}/grocy:/config/data
 
   paperless:
     container_name: paperless
-    image: jonaswinkler/paperless-ng
+    image: docker.io/jonaswinkler/paperless-ng
+    security_opt: [ label=disable ]
     restart: unless-stopped
     mem_limit: 1GB
     cpu_percent: 50
@@ -54,7 +58,8 @@ services:
 
   ssh_master:
     container_name: ssh_master
-    image: alpine
+    image: docker.io/alpine
+    security_opt: [ label=disable ]
     restart: always
     command: sh -c '
         adduser -DH satellite;
