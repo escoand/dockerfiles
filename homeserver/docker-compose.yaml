@@ -4,8 +4,8 @@ services:
   caddy:
     container_name: caddy
     image: docker.io/library/caddy:alpine
-    restart: always
     security_opt: [ label=disable ]
+    restart: unless-stopped
     extra_hosts:
       - homeassistant:172.17.0.1
       - esphome:172.17.0.1
@@ -25,7 +25,8 @@ services:
   dyndns:
     container_name: dyndns
     image: docker.io/qmcgaw/ddns-updater
-    restart: always
+    security_opt: [ label=disable ]
+    restart: unless-stopped
     environment:
       - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
       - LOG_LEVEL=debug
@@ -35,8 +36,8 @@ services:
     container_name: nextcloud
     image: docker.io/library/nextcloud:fpm-alpine
     security_opt: [ label=disable ]
-    restart: always
-    depends_on:
+    restart: unless-stopped
+    links:
       - mariadb
       - redis
     environment:
@@ -69,7 +70,7 @@ services:
     container_name: mariadb
     image: docker.io/yobasystems/alpine-mariadb
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     environment:
       - MYSQL_DATABASE
       - MYSQL_PASSWORD
@@ -87,19 +88,20 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
       ofelia.job-exec.db_backup.command: >-
-        mysqldump -A |
-        gzip > /backup/mariadb.sql.gz
+        mysqldump -A | gzip > /backup/mariadb.sql.gz
 
   redis:
     container_name: redis
-    image: docker.io/library/redis:alpine
-    restart: always
+    image: docker.io/redis:alpine
+    security_opt: [ label=disable ]
+    restart: unless-stopped
     command: redis-server --appendonly no --save ""
 
   samba:
     container_name: samba
     image: docker.io/dperson/samba
     security_opt: [ label=disable ]
+    restart: unless-stopped
     ports:
       #- 137:137/udp
       #- 138:138/udp
@@ -123,7 +125,7 @@ services:
     container_name: minidlna
     image: docker.io/vladgh/minidlna
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     environment:
       - GUID=82
       - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
@@ -145,10 +147,11 @@ services:
 
   backup:
     container_name: backup
-    image: mazzolino/restic
+    image: docker.io/mazzolino/restic
+    security_opt: [ label=disable ]
     hostname: ${HOSTNAME}
     restart: unless-stopped
-    #command: unlock
+    command: unlock
     cpu_percent: 50
     mem_limit: 500M
     environment:
@@ -184,7 +187,7 @@ services:
     container_name: ssh_satellite
     image: docker.io/jnovack/autossh
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     environment:
       - SSH_REMOTE_USER=satellite
       - SSH_REMOTE_HOST=${SSH_MASTER_HOST}
@@ -198,10 +201,42 @@ services:
 
   ofelia:
     container_name: ofelia
-    image: mcuadros/ofelia
-    command: daemon --docker
+    image: docker.io/mcuadros/ofelia
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.reload_config.command: killall -HUP ofelia
+      ofelia.job-exec.reload_config.container: ofelia
+      ofelia.job-exec.reload_config.schedule: "@daily"
+      ofelia.email-from: ${MAIL_RECEIVER}
+      ofelia.email-to: ${MAIL_RECEIVER}
+      ofelia.mail-only-on-error: "true"
+      ofelia.smtp-host: ${MAIL_HOST}
+      ofelia.smtp-port: ${MAIL_PORT}
+      ofelia.smtp-user: ${MAIL_USER}
+      ofelia.smtp-password: ${MAIL_PASSWORD}
+      
+  watchtower:
+    container_name: watchtower
+    image: docker.io/containrrr/watchtower
+    security_opt: [ label=disable ]
+    restart: unless-stopped
+    environment:
+      - TZ
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_NOTIFICATIONS=email
+      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${MAIL_RECEIVER}
+      - WATCHTOWER_NOTIFICATION_EMAIL_TO=${MAIL_RECEIVER}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SUBJECTTAG=${HOSTNAME}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=${MAIL_HOST}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=${MAIL_PORT}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${MAIL_USER}
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${MAIL_PASSWORD}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
