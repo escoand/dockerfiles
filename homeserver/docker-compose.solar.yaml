@@ -3,9 +3,9 @@ services:
 
   solar:
     container_name: solar
-    image: docker.io/alpine
+    image: docker.io/library/alpine
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     depends_on:
       - influxdb
     environment:
@@ -37,9 +37,9 @@ services:
 
   influxdb:
     container_name: influxdb
-    image: docker.io/influxdb:1.8
+    image: docker.io/library/influxdb:1.8
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     ports:
       - 8086:8086
     environment:
@@ -58,7 +58,7 @@ services:
     container_name: grafana
     image: docker.io/grafana/grafana
     security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     links:
       - influxdb
     ports:
