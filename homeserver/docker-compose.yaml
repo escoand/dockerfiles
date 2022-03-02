@@ -68,7 +68,7 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: docker.io/yobasystems/alpine-mariadb
+    image: docker.io/yobasystems/alpine-mariadb:10.5
     security_opt: [ label=disable ]
     restart: unless-stopped
     environment:
