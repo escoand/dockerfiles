@@ -88,7 +88,7 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
       ofelia.job-exec.db_backup.command: >-
-        mysqldump -A | gzip > /backup/mariadb.sql.gz
+        sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
   redis:
     container_name: redis
@@ -151,7 +151,7 @@ services:
     security_opt: [ label=disable ]
     hostname: ${HOSTNAME}
     restart: unless-stopped
-    command: unlock
+    #command: unlock
     cpu_percent: 50
     mem_limit: 500M
     environment:
@@ -224,6 +224,7 @@ services:
     container_name: watchtower
     image: docker.io/containrrr/watchtower
     security_opt: [ label=disable ]
+    hostname: ${HOSTNAME}
     restart: unless-stopped
     environment:
       - TZ
