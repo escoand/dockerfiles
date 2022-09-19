@@ -36,4 +36,4 @@ services:
       - /dev/fuse:/dev/fuse
     privileged: true
     volumes:
-      - ${DATA_DIR}/rclone:/root/.config/rclone
+            - ${DATA_DIR}/rclone.conf:/run/secrets/rclone.conf:ro

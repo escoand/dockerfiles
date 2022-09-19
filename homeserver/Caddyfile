@@ -1,3 +1,11 @@
+{
+    servers {
+        protocol {
+            experimental_http3
+        }
+    }
+}
+
 {$DOMAIN_NEXTCLOUD}, :80 {
 	root * /var/www/html
 	file_server
@@ -23,20 +31,20 @@
 	
 	rewrite /remote/* /remote.php/{path}
 
-	respond	/.htaccess   404 { close }
-	respond	/3rdparty/*  404 { close }
-	respond	/autotest*   404 { close }
-	respond	/build/*     404 { close }
-	respond	/config/*    404 { close }
-	respond	/console*    404 { close }
-	respond	/data*       404 { close }
-	respond	/db_*        404 { close }
-	respond	/indie*      404 { close }
-	respond	/issue*      404 { close }
-	respond	/lib/*       404 { close }
-	respond	/occ         404 { close }
-	respond	/templates/* 404 { close }
-	respond	/test/*      404 { close }
+	respond	/.htaccess   404
+	respond	/3rdparty/*  404
+	respond	/autotest*   404
+	respond	/build/*     404
+	respond	/config/*    404
+	respond	/console*    404
+	respond	/data*       404
+	respond	/db_*        404
+	respond	/indie*      404
+	respond	/issue*      404
+	respond	/lib/*       404
+	respond	/occ         404
+	respond	/templates/* 404
+	respond	/test/*      404
 }
 
 {$DOMAIN_HOMEASSISTANT} {
