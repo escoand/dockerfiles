@@ -4,22 +4,24 @@ services:
   homeassistant:
     container_name: homeassistant
     image: docker.io/homeassistant/home-assistant:stable
-    security_opt: [ label=disable ]
-    restart: always
+    restart: unless-stopped
     network_mode: host
+    privileged: true
     volumes:
       - /etc/hosts:/host:ro
       - ${DATA_DIR}/homeassistant:/config
       - /var/run/docker.sock:/var/run/docker.sock
-    devices:
-      - /dev/ttyACM0
+      - /run/dbus:/run/dbus:ro
+    labels:
+      caddy: ${DOMAIN_HOMEASSISTANT}
+      caddy.reverse_proxy: "{{upstreams 8123}}"
 
   esphome:
     container_name: esphome
-    image: docker.io/esphome/esphome
-    security_opt: [ label=disable ]
+    image: esphome/esphome
     restart: unless-stopped
     network_mode: host
+    privileged: true
     ports:
       - 6052:6052
     volumes:
@@ -58,8 +60,7 @@ services:
 
   ssh_master:
     container_name: ssh_master
-    image: docker.io/alpine
-    security_opt: [ label=disable ]
+    image: alpine
     restart: always
     command: sh -c '
         adduser -DH satellite;

@@ -12,6 +12,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 443:443/udp
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -19,12 +20,15 @@ services:
     volumes_from:
       - nextcloud:ro
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ${DATA_DIR}/caddy:/data/caddy
+    labels:
+      caddy.servers.protocol.experimental_http3: ""
 
   dyndns:
     container_name: dyndns
-    image: docker.io/qmcgaw/ddns-updater
+    image: docker.io/qmcgaw/ddns-updater:branch-v2.4
     security_opt: [ label=disable ]
     restart: unless-stopped
     environment:
@@ -56,6 +60,38 @@ services:
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
       - ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
+      caddy: ${DOMAIN_NEXTCLOUD}, :80
+      caddy.root: "* /var/www/html"
+      caddy.file_server: ""
+      caddy.php_fastcgi: "{{ upstreams 9000 }}"
+      caddy.php_fastcgi.header_down: Referrer-Policy                   "no-referrer"
+      caddy.php_fastcgi.header_down: Strict-Transport-Security         "max-age=15768000;"
+      caddy.php_fastcgi.header_down: X-Content-Type-Options            "nosniff"
+      caddy.php_fastcgi.header_down: X-Download-Options                "noopen"
+      caddy.php_fastcgi.header_down: X-Frame-Options                   "SAMEORIGIN"
+      caddy.php_fastcgi.header_down: X-Permitted-Cross-Domain-Policies "none"
+      caddy.php_fastcgi.header_down: X-Robots-Tag                      "none"
+      caddy.php_fastcgi.header_down: X-XSS-Protection                  "1; mode=block"
+      caddy.@davclnt.header: User-agent DavClnt
+      caddy.@davclnt.path:   /
+      caddy.redir: "@davclnt             /remote.php/webdav/ 302"
+      caddy.redir: /.well-known/carddav /remote.php/dav/    301
+      caddy.redir: /.well-known/caldav  /remote.php/dav/    301
+      caddy.rewrite: /remote/* /remote.php/{path}
+      caddy.respond: /.htaccess   404
+      caddy.respond: /3rdparty/*  404
+      caddy.respond: /autotest*   404
+      caddy.respond: /build/*     404
+      caddy.respond: /config/*    404
+      caddy.respond: /console*    404
+      caddy.respond: /data*       404
+      caddy.respond: /db_*        404
+      caddy.respond: /indie*      404
+      caddy.respond: /issue*      404
+      caddy.respond: /lib/*       404
+      caddy.respond: /occ         404
+      caddy.respond: /templates/* 404
+      caddy.respond: /test/*      404
       ofelia.enabled: "true"
       ofelia.job-exec.nc_cron.schedule: "@every 5m"
       ofelia.job-exec.nc_cron.command: >-
@@ -116,10 +152,10 @@ services:
       - SHARE3
       - SMB=1
       - TZ
+      - USER1
       - USERID=82
     volumes:
-      - ${DATA_DIR}/nextcloud/data:/data:ro
-      - ${DATA_DIR}/paperless/consume:/paperless
+      - ${DATA_DIR}/nextcloud/data:/data
 
   minidlna:
     container_name: minidlna
@@ -229,6 +265,7 @@ services:
     environment:
       - TZ
       - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_ROLLING_RESTART=true
       - WATCHTOWER_SCHEDULE=0 0 4 * * *
       - WATCHTOWER_NOTIFICATIONS=email
       - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${MAIL_RECEIVER}
