@@ -131,7 +131,7 @@ services:
 
 networks:
   caddy:
-    external: true
+    driver: bridge
 
 volumes:
   caddy:
