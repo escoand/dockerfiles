@@ -45,7 +45,8 @@ services:
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       #caddy: "${DOMAIN_NEXTCLOUD}, :8080"
-      caddy: ":80"
+      caddy: ${DOMAIN_NEXTCLOUD}
+      #caddy: ":80"
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{ upstreams 9000 }}"
@@ -89,6 +90,8 @@ services:
     image: docker.io/homeassistant/home-assistant:stable
     restart: unless-stopped
     network_mode: host
+    networks:
+      - frontend
     privileged: true
     volumes:
       - /etc/hosts:/host:ro
