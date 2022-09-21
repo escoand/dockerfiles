@@ -9,7 +9,7 @@ services:
       - 8443:443
       - 8443:443/udp
     networks:
-      - caddy
+      - frontend
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -19,14 +19,13 @@ services:
       - caddy:/data/caddy
 
   nextcloud:
-    container_name: nextcloud2
     image: docker.io/library/nextcloud:24.0.5-fpm-alpine
     restart: unless-stopped
     links:
       - mariadb
       - redis
     networks:
-      - caddy
+      - frontend
     environment:
       - MYSQL_DATABASE
       - MYSQL_HOST=mariadb
@@ -45,9 +44,10 @@ services:
     labels:
       #caddy: "${DOMAIN_NEXTCLOUD}, :8080"
       caddy: ":8080"
+      caddy.log: ""
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
-      caddy.php_fastcgi: "nextcloud2:9000"
+      caddy.php_fastcgi: "{{ upstreams 9000 }}"
       caddy.php_fastcgi.1_header_down: Referrer-Policy                   no-referrer
       caddy.php_fastcgi.2_header_down: Strict-Transport-Security         "max-age=15768000;"
       caddy.php_fastcgi.3_header_down: X-Content-Type-Options            nosniff
@@ -128,7 +128,7 @@ services:
       ofelia.smtp-password: ${MAIL_PASSWORD}
 
 networks:
-  caddy:
+  frontend:
     driver: overlay
 
 volumes:
