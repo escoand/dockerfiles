@@ -11,6 +11,8 @@ services:
       - 8080:80
       - 8443:443
       - 8443:443/udp
+    networks:
+      - caddy
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -25,6 +27,8 @@ services:
     links:
       - mariadb
       - redis
+    networks:
+      - caddy
     environment:
       - MYSQL_DATABASE
       - MYSQL_HOST=mariadb
@@ -124,6 +128,10 @@ services:
       ofelia.smtp-port: ${MAIL_PORT}
       ofelia.smtp-user: ${MAIL_USER}
       ofelia.smtp-password: ${MAIL_PASSWORD}
+
+networks:
+  caddy:
+    external: true
 
 volumes:
   caddy:
