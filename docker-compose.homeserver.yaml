@@ -14,3 +14,49 @@ services:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
       - DOMAIN_NEXTCLOUD
+
+  mariadb:
+    image: docker.io/yobasystems/alpine-mariadb
+    restart: always
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+    command: >-
+      --binlog-format=ROW
+      --transaction-isolation=READ-COMMITTED
+    ports:
+      - 13306:3306
+    volumes:
+      - ./mariadb:/var/lib/mysql
+    labels:
+      chadburn.enabled: "true"
+      chadburn.job-exec.db_backup.schedule: 0 0 1 * * *
+      chadburn.job-exec.db_backup.command: >-
+        mysqldump -A |
+        gzip > /backup/mariadb.sql.gz
+
+  redis:
+    image: docker.io/library/redis:alpine
+    restart: always
+    command: redis-server --appendonly no --save ""
+
+  ofelia:
+    image: docker.io/mcuadros/ofelia
+    restart: unless-stopped
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.reload_config.command: killall -HUP ofelia
+      ofelia.job-exec.reload_config.container: ofelia
+      ofelia.job-exec.reload_config.schedule: "@daily"
+      ofelia.email-from: ${MAIL_RECEIVER}
+      ofelia.email-to: ${MAIL_RECEIVER}
+      ofelia.mail-only-on-error: "true"
+      ofelia.smtp-host: ${MAIL_HOST}
+      ofelia.smtp-port: ${MAIL_PORT}
+      ofelia.smtp-user: ${MAIL_USER}
+      ofelia.smtp-password: ${MAIL_PASSWORD}
