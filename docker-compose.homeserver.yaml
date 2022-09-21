@@ -6,7 +6,7 @@ services:
     restart: always
     ports:
       - 2019:2019
-      - 8080:80
+      - 8080:8080
       - 8443:443
       - 8443:443/udp
     networks:
@@ -18,8 +18,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy:/data/caddy
-    labels:
-      caddy.admin: :2019
 
   nextcloud:
     image: docker.io/library/nextcloud:24.0.5-fpm-alpine
@@ -46,7 +44,7 @@ services:
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       #caddy: "${DOMAIN_NEXTCLOUD}, :8080"
-      caddy: ":80"
+      caddy: ":8080"
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{ upstreams 9000 }}"
