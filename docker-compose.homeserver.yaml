@@ -1,6 +1,6 @@
 version: "2.4"
 services:
-
+      
   caddy:
     image: docker.io/lucaslorentz/caddy-docker-proxy:alpine
     restart: always
@@ -10,14 +10,82 @@ services:
     ports:
       - 8080:80
       - 8443:443
+      - 8443:443/udp
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
       - DOMAIN_NEXTCLOUD
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy:/data/caddy
+
+nextcloud:
+    image: docker.io/library/nextcloud:fpm-alpine
+    restart: unless-stopped
+    links:
+      - mariadb
+      - redis
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_HOST=mariadb
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
+      #- OVERWRITEPROTOCOL=https
+      - REDIS_HOST=redis
+      - TRUSTED_PROXIES=172.17.0.0/16 172.18.0.0/16
+    volumes:
+      - nextcloud:/var/www/html
+      #- ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
+      #- ${DATA_DIR}/nextcloud/config:/var/www/html/config
+      #- ${DATA_DIR}/nextcloud/data:/var/www/html/data
+      #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
+    labels:
+      caddy: ${DOMAIN_NEXTCLOUD}, :80
+      caddy.root: "* /var/www/html"
+      caddy.file_server: ""
+      caddy.php_fastcgi: "{{ upstreams 9000 }}"
+      caddy.php_fastcgi.header_down: Referrer-Policy                   "no-referrer"
+      caddy.php_fastcgi.header_down: Strict-Transport-Security         "max-age=15768000;"
+      caddy.php_fastcgi.header_down: X-Content-Type-Options            "nosniff"
+      caddy.php_fastcgi.header_down: X-Download-Options                "noopen"
+      caddy.php_fastcgi.header_down: X-Frame-Options                   "SAMEORIGIN"
+      caddy.php_fastcgi.header_down: X-Permitted-Cross-Domain-Policies "none"
+      caddy.php_fastcgi.header_down: X-Robots-Tag                      "none"
+      caddy.php_fastcgi.header_down: X-XSS-Protection                  "1; mode=block"
+      caddy.@davclnt.header: User-agent DavClnt
+      caddy.@davclnt.path:   /
+      caddy.redir: "@davclnt             /remote.php/webdav/ 302"
+      caddy.redir: /.well-known/carddav /remote.php/dav/    301
+      caddy.redir: /.well-known/caldav  /remote.php/dav/    301
+      caddy.rewrite: /remote/* /remote.php/{path}
+      caddy.respond: /.htaccess   404
+      caddy.respond: /3rdparty/*  404
+      caddy.respond: /autotest*   404
+      caddy.respond: /build/*     404
+      caddy.respond: /config/*    404
+      caddy.respond: /console*    404
+      caddy.respond: /data*       404
+      caddy.respond: /db_*        404
+      caddy.respond: /indie*      404
+      caddy.respond: /issue*      404
+      caddy.respond: /lib/*       404
+      caddy.respond: /occ         404
+      caddy.respond: /templates/* 404
+      caddy.respond: /test/*      404
+      ofelia.enabled: "true"
+      ofelia.job-exec.nc_cron.schedule: "@every 5m"
+      ofelia.job-exec.nc_cron.command: >-
+        php -f /var/www/html/cron.php
+      ofelia.job-exec.nc_cron.user: www-data
+      ofelia.job-exec.nc_preview.schedule: "@every 30m"
+      ofelia.job-exec.nc_preview.command: >-
+        php -f /var/www/html/occ preview:pre-generate
+      ofelia.job-exec.nc_preview.user: www-data
 
   mariadb:
-    image: docker.io/yobasystems/alpine-mariadb
-    restart: always
+    image: docker.io/yobasystems/alpine-mariadb:10.5
+    restart: unless-stopped
     environment:
       - MYSQL_DATABASE
       - MYSQL_PASSWORD
@@ -26,20 +94,17 @@ services:
     command: >-
       --binlog-format=ROW
       --transaction-isolation=READ-COMMITTED
-    ports:
-      - 13306:3306
     volumes:
-      - ./mariadb:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     labels:
-      chadburn.enabled: "true"
-      chadburn.job-exec.db_backup.schedule: 0 0 1 * * *
-      chadburn.job-exec.db_backup.command: >-
-        mysqldump -A |
-        gzip > /backup/mariadb.sql.gz
+      #ofelia.enabled: "true"
+      #ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
+      #ofelia.job-exec.db_backup.command: >-
+      #  sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
   redis:
     image: docker.io/library/redis:alpine
-    restart: always
+    restart: unless-stopped
     command: redis-server --appendonly no --save ""
 
   ofelia:
@@ -60,3 +125,8 @@ services:
       ofelia.smtp-port: ${MAIL_PORT}
       ofelia.smtp-user: ${MAIL_USER}
       ofelia.smtp-password: ${MAIL_PASSWORD}
+
+volumes:
+  caddy:
+  mariadb:
+  nextcloud:

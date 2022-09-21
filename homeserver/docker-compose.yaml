@@ -10,8 +10,8 @@ services:
       - homeassistant:172.17.0.1
       - esphome:172.17.0.1
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 8443:443
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -55,15 +55,15 @@ services:
       - ${DATA_DIR}/nextcloud/data:/var/www/html/data
       - ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.nc_cron.schedule: "@every 5m"
-      ofelia.job-exec.nc_cron.command: >-
+      chadburn.enabled: "true"
+      chadburn.job-exec.nc_cron.schedule: "@every 5m"
+      chadburn.job-exec.nc_cron.command: >-
         php -f /var/www/html/cron.php
-      ofelia.job-exec.nc_cron.user: www-data
-      ofelia.job-exec.nc_preview.schedule: "@every 30m"
-      ofelia.job-exec.nc_preview.command: >-
+      chadburn.job-exec.nc_cron.user: www-data
+      chadburn.job-exec.nc_preview.schedule: "@every 30m"
+      chadburn.job-exec.nc_preview.command: >-
         php -f /var/www/html/occ preview:pre-generate
-      ofelia.job-exec.nc_preview.user: www-data
+      chadburn.job-exec.nc_preview.user: www-data
 
   mariadb:
     container_name: mariadb
@@ -84,9 +84,9 @@ services:
       - ${DATA_DIR}:/backup
       - ${DATA_DIR}/mariadb:/var/lib/mysql
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
-      ofelia.job-exec.db_backup.command: >-
+      chadburn.enabled: "true"
+      chadburn.job-exec.db_backup.schedule: 0 0 1 * * *
+      chadburn.job-exec.db_backup.command: >-
         mysqldump -A |
         gzip > /backup/mariadb.sql.gz
 
@@ -103,8 +103,8 @@ services:
     ports:
       #- 137:137/udp
       #- 138:138/udp
-      - 139:139
-      - 445:445
+      - 8139:139
+      - 8445:445
     environment:
       - GROUPID=82
       #- NMBD=1
@@ -143,43 +143,6 @@ services:
     volumes:
       - ${DATA_DIR}/nextcloud/data:/data:ro
 
-  backup:
-    container_name: backup
-    image: mazzolino/restic
-    hostname: ${HOSTNAME}
-    restart: unless-stopped
-    #command: unlock
-    cpu_percent: 50
-    mem_limit: 500M
-    environment:
-      - B2_ACCOUNT_ID
-      - B2_ACCOUNT_KEY
-      - BACKUP_CRON=0 0 2 * * *
-      - POST_COMMANDS_FAILURE
-      - POST_COMMANDS_SUCCESS
-      - PRE_COMMANDS=restic unlock
-      - RESTIC_BACKUP_ARGS=
-          --exclude /data/docker
-          --exclude /data/mariadb
-          --exclude '*.log'
-          --exclude 'appdata_*'
-          --exclude 'files_trashbin'
-          --exclude 'updater-*'
-          --exclude-if-present '.nobackup'
-          --exclude-if-present 'platformio.ini'
-          --tag local
-      - RESTIC_FORGET_ARGS=
-          --group-by tag
-          --keep-daily 7
-          --keep-weekly 5
-          --keep-monthly 12
-      - RESTIC_PASSWORD
-      - RESTIC_REPOSITORY
-      #- RUN_ON_STARTUP=true
-      - TZ
-    volumes:
-      - ${DATA_DIR}:/data:ro
-
   ssh_satellite:
     container_name: ssh_satellite
     image: docker.io/jnovack/autossh
@@ -196,14 +159,13 @@ services:
     volumes:
       - /home/admin/.ssh/id_rsa:/id_rsa:ro
 
-  ofelia:
-    container_name: ofelia
-    image: mcuadros/ofelia
-    command: daemon --docker
+  cron:
+    container_name: cron
+    image: docker.io/premoweb/chadburn
     security_opt: [ label=disable ]
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
 
 volumes:
   nccontent:

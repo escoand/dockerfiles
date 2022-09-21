@@ -1,7 +1,7 @@
 #!/bin/sh
 
-XSL=/usr/local/bin/workout2svg.xslt
-CLASSPATH=$(ls /usr/local/java/*.jar 2>/dev/null | tr '\n' ';' | sed 's/;$//')
+XSL=./workout2svg.xslt
+CLASSPATH=$(ls ./*.jar 2>/dev/null | tr '\n' ';' | sed 's/;$//')
 TEMP=$(mktemp)
 
 export CLASSPATH
@@ -35,6 +35,7 @@ while read -r FILE; do
 	if [ -n "$FORCE" ] || [ ! -f "$PNG" ]; then
 		echo "$NEW -> $PNG"
 		java net.sf.saxon.Transform -xsl:"$XSL" -s:"$NEW" -o:"$TEMP" "mapboxStyle=$MAPBOX_STYLE" "mapboxToken=$MAPBOX_TOKEN" &&
+		#cp "$TEMP" "$DIR/$BASE.svg" &&
 		sed -n 's|.*href="\([^"]*\)".*|\1|gp' "$TEMP" |
 		sort -u |
 		while read -r URL; do
