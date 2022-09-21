@@ -5,9 +5,9 @@ services:
     image: docker.io/lucaslorentz/caddy-docker-proxy:2.6.0-alpine
     restart: always
     ports:
-      - 80:80
-      - 443:443
-      - 443:443/udp
+      - 8080:80
+      - 8443:443
+      - 8443:443/udp
     networks:
       - frontend
     environment:
@@ -17,6 +17,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy:/data/caddy
+    volumes_from:
+      - nextcloud:ro
     labels:
       caddy.log: ""
 
@@ -45,8 +47,8 @@ services:
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       #caddy: "${DOMAIN_NEXTCLOUD}, :8080"
-      caddy: ${DOMAIN_NEXTCLOUD}
-      #caddy: ":80"
+      #caddy: ${DOMAIN_NEXTCLOUD}
+      caddy: ":80"
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{ upstreams 9000 }}"
