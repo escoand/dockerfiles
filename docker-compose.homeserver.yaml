@@ -9,7 +9,7 @@ services:
       - 8443:443
       - 8443:443/udp
     networks:
-      - caddy
+      - frontend
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -25,7 +25,7 @@ services:
       - mariadb
       - redis
     networks:
-      - caddy
+      - frontend
     environment:
       - MYSQL_DATABASE
       - MYSQL_HOST=mariadb
@@ -128,8 +128,8 @@ services:
       ofelia.smtp-password: ${MAIL_PASSWORD}
 
 networks:
-  caddy:
-    driver: overlay
+  frontend:
+    driver: bridge
 
 volumes:
   caddy:
