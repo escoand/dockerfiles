@@ -131,7 +131,7 @@ services:
 
 networks:
   caddy:
-    driver: bridge
+    driver: overlay
 
 volumes:
   caddy:
