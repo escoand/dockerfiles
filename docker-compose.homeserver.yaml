@@ -97,10 +97,10 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     labels:
-      #ofelia.enabled: "true"
-      #ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
-      #ofelia.job-exec.db_backup.command: >-
-      #  sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
+      ofelia.enabled: "true"
+      ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
+      ofelia.job-exec.db_backup.command: >-
+        sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
   redis:
     image: docker.io/library/redis:7.0.4-alpine
