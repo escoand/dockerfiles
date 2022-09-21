@@ -43,8 +43,7 @@ services:
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       #caddy: "${DOMAIN_NEXTCLOUD}, :8080"
-      caddy: ":8080"
-      caddy.log: ""
+      caddy: ":80"
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{ upstreams 9000 }}"
@@ -58,7 +57,7 @@ services:
       caddy.php_fastcgi.8_header_down: X-XSS-Protection                  "1; mode=block"
       caddy.@davclnt.header:           User-agent DavClnt
       caddy.@davclnt.path:             /
-      caddy.1_redir: "@davclnt             /remote.php/webdav/ 302"
+      caddy.1_redir: \@davclnt            /remote.php/webdav/ 302
       caddy.2_redir: /.well-known/carddav /remote.php/dav/    301
       caddy.3_redir: /.well-known/caldav  /remote.php/dav/    301
       caddy.rewrite: /remote/*            /remote.php/{path}
