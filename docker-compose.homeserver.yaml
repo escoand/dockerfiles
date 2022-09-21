@@ -8,8 +8,8 @@ services:
       - 80:80
       - 443:443
       - 443:443/udp
-    networks:
-      - frontend
+    #networks:
+    #  - frontend
     environment:
       - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
@@ -26,8 +26,8 @@ services:
     links:
       - mariadb
       - redis
-    networks:
-      - frontend
+    #networks:
+    #  - frontend
     environment:
       - MYSQL_DATABASE
       - MYSQL_HOST=mariadb
