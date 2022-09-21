@@ -19,7 +19,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy:/data/caddy
 
-nextcloud:
+  nextcloud:
     image: docker.io/library/nextcloud:24.0.5-fpm-alpine
     restart: unless-stopped
     links:
