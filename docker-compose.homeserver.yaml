@@ -2,7 +2,7 @@ version: "2.4"
 services:
       
   caddy:
-    image: docker.io/lucaslorentz/caddy-docker-proxy:alpine
+    image: docker.io/lucaslorentz/caddy-docker-proxy:2.6.0-alpine
     restart: always
     extra_hosts:
       - homeassistant:172.17.0.1
@@ -20,7 +20,7 @@ services:
       - caddy:/data/caddy
 
 nextcloud:
-    image: docker.io/library/nextcloud:fpm-alpine
+    image: docker.io/library/nextcloud:24.0.5-fpm-alpine
     restart: unless-stopped
     links:
       - mariadb
@@ -84,7 +84,7 @@ nextcloud:
       ofelia.job-exec.nc_preview.user: www-data
 
   mariadb:
-    image: docker.io/yobasystems/alpine-mariadb:10.5
+    image: docker.io/yobasystems/alpine-mariadb:10.5.11
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE
@@ -103,12 +103,12 @@ nextcloud:
       #  sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
   redis:
-    image: docker.io/library/redis:alpine
+    image: docker.io/library/redis:7.0.4-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --save ""
 
   ofelia:
-    image: docker.io/mcuadros/ofelia
+    image: docker.io/mcuadros/ofelia:94edcdf
     restart: unless-stopped
     command: daemon --docker
     volumes:
