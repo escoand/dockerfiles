@@ -5,6 +5,7 @@ services:
     image: docker.io/lucaslorentz/caddy-docker-proxy:2.6.0-alpine
     restart: always
     ports:
+      - 2019:2019
       - 8080:80
       - 8443:443
       - 8443:443/udp
@@ -17,6 +18,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - caddy:/data/caddy
+    labels:
+      caddy.admin.listen: :2019
 
   nextcloud:
     image: docker.io/library/nextcloud:24.0.5-fpm-alpine
