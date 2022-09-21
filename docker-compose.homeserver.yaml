@@ -1,0 +1,16 @@
+version: "2.4"
+services:
+
+  caddy:
+    image: docker.io/lucaslorentz/caddy-docker-proxy:alpine
+    restart: always
+    extra_hosts:
+      - homeassistant:172.17.0.1
+      - esphome:172.17.0.1
+    ports:
+      - 8080:80
+      - 8443:443
+    environment:
+      - DOMAIN_GROCY
+      - DOMAIN_HOMEASSISTANT
+      - DOMAIN_NEXTCLOUD
