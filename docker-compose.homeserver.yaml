@@ -86,7 +86,6 @@ services:
       ofelia.job-exec.nc_preview.user:     www-data
 
   homeassistant:
-    container_name: homeassistant
     image: docker.io/homeassistant/home-assistant:stable
     restart: unless-stopped
     network_mode: host
