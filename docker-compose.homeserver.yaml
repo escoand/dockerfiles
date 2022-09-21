@@ -6,8 +6,8 @@ services:
     restart: always
     ports:
       - 80:80
-      - 8443:443
-      - 8443:443/udp
+      - 443:443
+      - 443:443/udp
     networks:
       - frontend
     environment:
@@ -84,6 +84,21 @@ services:
       ofelia.job-exec.nc_preview.schedule: "@every 30m"
       ofelia.job-exec.nc_preview.command:  php -f /var/www/html/occ preview:pre-generate
       ofelia.job-exec.nc_preview.user:     www-data
+
+  homeassistant:
+    container_name: homeassistant
+    image: docker.io/homeassistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /etc/hosts:/host:ro
+      - ./homeassistant:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/dbus:/run/dbus:ro
+    labels:
+      caddy: ${DOMAIN_HOMEASSISTANT}
+      caddy.reverse_proxy: "{{upstreams 8123}}"
 
   mariadb:
     image: docker.io/yobasystems/alpine-mariadb:10.5.11
