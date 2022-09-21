@@ -41,7 +41,7 @@ services:
       #- ${DATA_DIR}/nextcloud/data:/var/www/html/data
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
-      caddy: ${DOMAIN_NEXTCLOUD}, :80
+      caddy: ${DOMAIN_NEXTCLOUD}, :8080
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{ upstreams 9000 }}"
