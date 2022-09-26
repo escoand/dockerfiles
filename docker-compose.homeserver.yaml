@@ -81,21 +81,6 @@ services:
       ofelia.job-exec.nc_preview.command:  php -f /var/www/html/occ preview:pre-generate
       ofelia.job-exec.nc_preview.user:     www-data
 
-  homeassistant:
-    image: docker.io/homeassistant/home-assistant:stable
-    restart: unless-stopped
-    network_mode: host
-    privileged: true
-    volumes:
-      - /etc/hosts:/host:ro
-      - homeassistant:/config
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /run/dbus:/run/dbus:ro
-    labels:
-      caddy: ${DOMAIN_HOMEASSISTANT}
-      #caddy.reverse_proxy: "{{upstreams 8123}}"
-      caddy.reverse_proxy: host.docker.internal:8123
-
   mariadb:
     image: docker.io/yobasystems/alpine-mariadb
     restart: unless-stopped
@@ -149,8 +134,6 @@ networks:
     driver: bridge
 
 volumes:
-  homeassistant:
-    external: true
   mariadb:
     external: true
   nextcloud_config:
