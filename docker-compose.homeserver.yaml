@@ -11,7 +11,7 @@ services:
     networks:
       - frontend
     extra_hosts:
-      - host.docker.internal:host.docker.internal
+      - host.docker.internal:host-gateway
     environment:
       - DOMAIN_HOMEASSISTANT
       - DOMAIN_NEXTCLOUD
@@ -96,7 +96,7 @@ services:
     labels:
       caddy: ${DOMAIN_HOMEASSISTANT}
       #caddy.reverse_proxy: "{{upstreams 8123}}"
-      caddy.reverse_proxy: host.docker.internal:8123
+      caddy.reverse_proxy: host-gateway:8123
 
   mariadb:
     image: docker.io/yobasystems/alpine-mariadb
