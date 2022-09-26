@@ -1,0 +1,31 @@
+version: "2.4"
+services:
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /etc/hosts:/host:ro
+      - homeassistant:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/dbus:/run/dbus:ro
+    labels:
+      caddy: ${DOMAIN_HOMEASSISTANT}
+      caddy.reverse_proxy: host.docker.internal:8123
+
+  esphome:
+    image: esphome/esphome
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - 6052:6052
+    volumes:
+      - esphome:/config
+
+volumes:
+  esphome:
+    external: true
+  homeassistant:
+    external: true
