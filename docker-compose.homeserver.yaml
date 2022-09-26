@@ -26,6 +26,7 @@ services:
       - redis
     networks:
       - frontend
+      - backend
     environment:
       - MYSQL_DATABASE
       - MYSQL_HOST=mariadb
@@ -105,6 +106,8 @@ services:
     command: >-
       --binlog-format=ROW
       --transaction-isolation=READ-COMMITTED
+    networks:
+      - backend
     volumes:
       - mariadb:/var/lib/mysql
     labels:
@@ -117,6 +120,8 @@ services:
     image: docker.io/library/redis:7.0.4-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --save ""
+    networks:
+      - backend
 
   ofelia:
     image: docker.io/mcuadros/ofelia:94edcdf
@@ -140,6 +145,7 @@ services:
 networks:
   frontend:
     driver: bridge
+  backend:
 
 volumes:
   homeassistant:
