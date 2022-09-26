@@ -2,7 +2,7 @@ version: "2.4"
 services:
       
   caddy:
-    image: docker.io/lucaslorentz/caddy-docker-proxy:2.6.0-alpine
+    image: docker.io/lucaslorentz/caddy-docker-proxy:alpine
     restart: always
     ports:
       - 8080:80
@@ -19,7 +19,7 @@ services:
       - nextcloud:ro
 
   nextcloud:
-    image: docker.io/library/nextcloud:24.0.5-fpm-alpine
+    image: docker.io/library/nextcloud:24-fpm-alpine
     restart: unless-stopped
     links:
       - mariadb
@@ -82,9 +82,9 @@ services:
   homeassistant:
     image: docker.io/homeassistant/home-assistant:stable
     restart: unless-stopped
-    #network_mode: host
-    networks:
-      - frontend
+    network_mode: host
+    #networks:
+    #  - frontend
     privileged: true
     volumes:
       - /etc/hosts:/host:ro
@@ -93,10 +93,11 @@ services:
       - /run/dbus:/run/dbus:ro
     labels:
       caddy: ${DOMAIN_HOMEASSISTANT}
-      caddy.reverse_proxy: "{{upstreams 8123}}"
+      #caddy.reverse_proxy: "{{upstreams 8123}}"
+      caddy.reverse_proxy: host.docker.internal:8123
 
   mariadb:
-    image: docker.io/yobasystems/alpine-mariadb:10.5.11
+    image: docker.io/yobasystems/alpine-mariadb
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE
@@ -117,14 +118,14 @@ services:
         sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
   redis:
-    image: docker.io/library/redis:7.0.4-alpine
+    image: docker.io/library/redis:alpine
     restart: unless-stopped
     command: redis-server --appendonly no --save ""
     networks:
       - backend
 
   ofelia:
-    image: docker.io/mcuadros/ofelia:94edcdf
+    image: docker.io/mcuadros/ofelia
     restart: unless-stopped
     command: daemon --docker
     volumes:
@@ -143,9 +144,9 @@ services:
       ofelia.smtp-password: ${MAIL_PASSWORD}
 
 networks:
+  backend:
   frontend:
     driver: bridge
-  backend:
 
 volumes:
   homeassistant:
