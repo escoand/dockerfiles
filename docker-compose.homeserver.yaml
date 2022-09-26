@@ -78,7 +78,7 @@ services:
       ofelia.job-exec.nc_preview.command:  php -f /var/www/html/occ preview:pre-generate
       ofelia.job-exec.nc_preview.user:     www-data
 
-  container_name: samba
+  samba:
     image: dperson/samba
     restart: unless-stopped
     ports:
