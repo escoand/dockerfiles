@@ -94,7 +94,7 @@ services:
     labels:
       caddy: ${DOMAIN_HOMEASSISTANT}
       #caddy.reverse_proxy: "{{upstreams 8123}}"
-      caddy.reverse_proxy: 172.17.0.1:8123
+      caddy.reverse_proxy: host.docker.internal:8123
 
   mariadb:
     image: docker.io/yobasystems/alpine-mariadb
