@@ -11,16 +11,12 @@ services:
     networks:
       - frontend
     environment:
-      - DOMAIN_GROCY
       - DOMAIN_HOMEASSISTANT
       - DOMAIN_NEXTCLOUD
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - caddy:/data/caddy
     volumes_from:
       - nextcloud:ro
-    labels:
-      caddy.log: ""
 
   nextcloud:
     image: docker.io/library/nextcloud:24.0.5-fpm-alpine
@@ -36,14 +32,10 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_USER
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
-      #- OVERWRITEPROTOCOL=https
       - REDIS_HOST=redis
-      - TRUSTED_PROXIES=172.17.0.0/16 172.18.0.0/16
     volumes:
-      - nextcloud:/var/www/html
-      #- ${DATA_DIR}/nextcloud/apps:/var/www/html/custom_apps
-      #- ${DATA_DIR}/nextcloud/config:/var/www/html/config
-      #- ${DATA_DIR}/nextcloud/data:/var/www/html/data
+      - nextcloud_config:/var/www/html/config
+      - nextcloud_data:/var/www/html/data
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       caddy: "${DOMAIN_NEXTCLOUD}, :80"
@@ -95,7 +87,7 @@ services:
     privileged: true
     volumes:
       - /etc/hosts:/host:ro
-      - ./homeassistant:/config
+      - homeassistant:/config
       - /var/run/docker.sock:/var/run/docker.sock
       - /run/dbus:/run/dbus:ro
     labels:
@@ -150,6 +142,11 @@ networks:
     driver: bridge
 
 volumes:
-  caddy:
+  homeassistant:
+    external: true
   mariadb:
-  nextcloud:
+    external: true
+  nextcloud_config:
+    external: true
+  nextcloud_data:
+    external: true
