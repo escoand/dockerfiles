@@ -34,6 +34,7 @@ services:
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
       - REDIS_HOST=redis
     volumes:
+      - nextcloud_apps:/var/www/html/custom_apps
       - nextcloud_config:/var/www/html/config
       - nextcloud_data:/var/www/html/data
       #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
@@ -157,6 +158,7 @@ networks:
 volumes:
   mariadb:
     external: true
+  nextcloud_apps:
   nextcloud_config:
     external: true
   nextcloud_data:
