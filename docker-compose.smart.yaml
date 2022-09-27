@@ -19,6 +19,7 @@ services:
     image: esphome/esphome
     restart: unless-stopped
     network_mode: host
+    privileged: true
     ports:
       - 6052:6052
     volumes:
