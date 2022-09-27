@@ -159,6 +159,7 @@ volumes:
   mariadb:
     external: true
   nextcloud_apps:
+    external: true
   nextcloud_config:
     external: true
   nextcloud_data:
