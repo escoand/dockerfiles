@@ -15,7 +15,7 @@ services:
       caddy: ${DOMAIN_HOMEASSISTANT}
       caddy.reverse_proxy: host.docker.internal:8123
       caddy.handle_path: /esphome/*
-      caddy.handle_path.basicauth.admin: ${ESPHOME_PASSWORD}
+      caddy.handle_path.basicauth.admin: "${ESPHOME_PASSWORD}"
       caddy.handle_path.reverse_proxy: host.docker.internal:6052
 
   esphome:
