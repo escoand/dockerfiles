@@ -150,6 +150,15 @@ services:
       ofelia.smtp-user: ${MAIL_USER}
       ofelia.smtp-password: ${MAIL_PASSWORD}
 
+  dyndns:
+    container_name: dyndns
+    image: qmcgaw/ddns-updater
+    restart: unless-stopped
+    environment:
+      - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
+      - LOG_LEVEL=debug
+      - TZ
+
 networks:
   backend:
   frontend:
