@@ -89,6 +89,7 @@ services:
       - 445:445
     networks:
       - frontend
+    hostname: ${HOSTNAME}
     environment:
       - GROUPID=82
       - NMBD=1
