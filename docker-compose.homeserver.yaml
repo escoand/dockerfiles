@@ -13,7 +13,7 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     volumes_from:
       - nextcloud:ro
 
@@ -78,30 +78,6 @@ services:
       ofelia.job-exec.nc_preview.command:  php -f /var/www/html/occ preview:pre-generate
       ofelia.job-exec.nc_preview.user:     www-data
 
-  samba:
-    image: dperson/samba
-    restart: unless-stopped
-    ports:
-      - 137:137/udp
-      - 138:138/udp
-      - 139:139
-      - 445:445
-    networks:
-      - frontend
-    hostname: ${HOSTNAME}
-    environment:
-      - GROUPID=82
-      - NMBD=1
-      - RECYCLE=1
-      - SHARE1
-      - SHARE2
-      - SHARE3
-      - SMB=1
-      - TZ
-      - USERID=82
-    volumes:
-      - nextcloud_data:/data:ro
-
   mariadb:
     image: yobasystems/alpine-mariadb
     restart: unless-stopped
@@ -131,6 +107,52 @@ services:
     command: redis-server --appendonly no --save ""
     networks:
       - backend
+
+  samba:
+    image: dperson/samba
+    restart: unless-stopped
+    ports:
+      - 137:137/udp
+      - 138:138/udp
+      - 139:139
+      - 445:445
+    networks:
+      - frontend
+    hostname: ${HOSTNAME}
+    environment:
+      - GROUPID=82
+      - NMBD=1
+      - RECYCLE=1
+      - SHARE1
+      - SHARE2
+      - SHARE3
+      - SMB=1
+      - TZ
+      - USERID=82
+    volumes:
+      - nextcloud_data:/data:ro
+
+  minidlna:
+    image: vladgh/minidlna
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - GUID=82
+      - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
+      - MINIDLNA_INOTIFY=yes
+      - MINIDLNA_MEDIA_DIR_1
+      - MINIDLNA_MEDIA_DIR_2
+      - MINIDLNA_MEDIA_DIR_3
+      - MINIDLNA_MEDIA_DIR_4
+      - MINIDLNA_MEDIA_DIR_5
+      - MINIDLNA_MEDIA_DIR_6
+      - MINIDLNA_MEDIA_DIR_7
+      - MINIDLNA_MEDIA_DIR_8
+      - MINIDLNA_MEDIA_DIR_9
+      - MINIDLNA_ROOT_CONTAINER
+      - PUID=82
+    volumes:
+      - nextcloud_data:/data:ro
 
   ofelia:
     image: mcuadros/ofelia
