@@ -37,7 +37,6 @@ services:
       - nextcloud_apps:/var/www/html/custom_apps
       - nextcloud_config:/var/www/html/config
       - nextcloud_data:/var/www/html/data
-      #- ./www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
     labels:
       caddy: "${DOMAIN_NEXTCLOUD}, :80"
       caddy.root: "* /var/www/html"
@@ -113,6 +112,7 @@ services:
       - MYSQL_USER
     command: >-
       --binlog-format=ROW
+      --default-time-zone=${TZ}
       --transaction-isolation=READ-COMMITTED
     ports:
       - 3306:3306
@@ -121,7 +121,7 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     labels:
-      ofelia.enabled: "true"
+      ofelia.enabled: "false"
       ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
       ofelia.job-exec.db_backup.command: sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
 
@@ -137,6 +137,7 @@ services:
     restart: unless-stopped
     command: daemon --docker
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       ofelia.enabled: "true"
