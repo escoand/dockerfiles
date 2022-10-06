@@ -36,7 +36,7 @@ services:
       - 23750-23759:23750-23759
     command: sh -c '
         adduser -DH satellite;
-        apk --no-cache add dropbear openssh-client &&
+        apk --no-cache add dropbear &&
         mkdir -p /etc/dropbear &&
         dropbear -aEFjmRsw -c /bin/false
       '
