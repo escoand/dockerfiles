@@ -180,6 +180,24 @@ services:
       - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
       - TZ
 
+  ssh_satellite:
+    image: alpine
+    restart: unless-stopped
+    command: |
+      sh -c '
+        apk add --no-cache openssh-client-default &&
+        ssh -vvvNg "satellite@${REMOTE_SSH_HOST}" \
+          -p "${REMOTE_SSH_PORT}" \
+          -R "0.0.0.0:${REMOTE_SSH_FORWARD}:/var/run/docker.sock" \
+          -i /data/id_rsa \
+          -o ExitOnForwardFailure=yes \
+          -o StrictHostKeyChecking=no \
+          -o UserKnownHostsFile=/dev/null
+      '
+    volumes:
+      - ssh_config:/data:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
 networks:
   backend:
   frontend:
