@@ -186,7 +186,7 @@ services:
     command: |
       sh -c '
         apk add --no-cache openssh-client-default &&
-        ssh -vvvNg "satellite@${SSH_MASTER_HOST}" \
+        ssh -gN "satellite@${SSH_MASTER_HOST}" \
           -p "${SSH_MASTER_PORT}" \
           -R "0.0.0.0:${SSH_TUNNEL_PORT}:/var/run/docker.sock" \
           -i /data/id_rsa \
