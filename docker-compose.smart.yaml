@@ -33,6 +33,7 @@ services:
     restart: unless-stopped
     ports:
       - 8022:22
+      - 23750-23759:23750-23759
     command: sh -c '
         adduser -DH satellite;
         apk --no-cache add dropbear openssh-client &&
