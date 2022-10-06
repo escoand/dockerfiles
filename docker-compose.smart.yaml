@@ -38,6 +38,7 @@ services:
         apk --no-cache add dropbear openssh-client &&
         mkdir -p /etc/dropbear &&
         dropbear -aEFjmRsw -c /bin/false
+      '
     volumes:
       - ssh_config:/home/satellite/.ssh:ro
 
