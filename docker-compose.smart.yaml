@@ -28,8 +28,23 @@ services:
     volumes:
       - esphome:/config
 
+  ssh_master:
+    image: alpine
+    restart: unless-stopped
+    ports:
+      - 8022:22
+    command: sh -c '
+        adduser -DH satellite;
+        apk --no-cache add dropbear openssh-client &&
+        mkdir -p /etc/dropbear &&
+        dropbear -aEFjmRsw -c /bin/false
+    volumes:
+      - authorized_keys:/home/satellite/.ssh/authorized_keys:ro
+
 volumes:
   esphome:
     external: true
   homeassistant:
+    external: true
+  authorized_keys:
     external: true
