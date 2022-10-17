@@ -154,17 +154,18 @@ services:
       - nextcloud_data:/data:ro
 
   ofelia:
-    image: mcuadros/ofelia
+    #image: mcuadros/ofelia
+    build: https://github.com/BTLzdravtech/ofelia.git
     restart: unless-stopped
     command: daemon --docker
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.reload_config.command: killall -HUP ofelia
-      ofelia.job-exec.reload_config.container: ofelia
-      ofelia.job-exec.reload_config.schedule: "@daily"
+      #ofelia.enabled: "true"
+      #ofelia.job-exec.reload_config.command: killall -HUP ofelia
+      #ofelia.job-exec.reload_config.container: ofelia
+      #ofelia.job-exec.reload_config.schedule: "@daily"
       ofelia.email-from: ${MAIL_RECEIVER}
       ofelia.email-to: ${MAIL_RECEIVER}
       ofelia.mail-only-on-error: "true"
