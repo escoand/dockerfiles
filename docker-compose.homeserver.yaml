@@ -157,7 +157,7 @@ services:
     #image: mcuadros/ofelia
     build: https://github.com/BTLzdravtech/ofelia.git
     restart: unless-stopped
-    command: daemon --docker
+    #command: daemon --docker
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
