@@ -39,8 +39,8 @@ services:
       - nextcloud_config:/var/www/html/config
       - nextcloud_data:/var/www/html/data
     labels:
-      caddy: "{$DOMAIN_NEXTCLOUD}, :80"
-      caddy.@blocked.1_not: host {$DOMAIN_NEXTCLOUD}
+      caddy: "${DOMAIN_NEXTCLOUD}, :80"
+      caddy.@blocked.1_not: host ${DOMAIN_NEXTCLOUD}
       caddy.@blocked.2_not: remote_ip private_ranges
       caddy.abort: @blocked
       caddy.root: "* /var/www/html"
