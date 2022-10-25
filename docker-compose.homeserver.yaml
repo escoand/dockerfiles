@@ -43,6 +43,7 @@ services:
       caddy.@blocked.1_not: host ${DOMAIN_NEXTCLOUD}
       caddy.@blocked.2_not: remote_ip private_ranges
       caddy.abort: "@blocked"
+      caddy.encode: zstd gzip
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{upstreams 9000}}"
