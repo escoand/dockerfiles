@@ -35,6 +35,8 @@ services:
       - mariadb
     networks:
       - backend
+    ports:
+      - 9001:80
     environment:
       - MYSQL_ROOT_PASSWORD
       - PMA_ARBITRARY=1
