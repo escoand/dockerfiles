@@ -28,6 +28,18 @@ services:
     volumes:
       - esphome:/config
 
+  phpmyadmin:
+    image: phpmyadmin:fpm-alpine
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - PMA_ARBITRARY=1
+      - PMA_HOST=host.docker.internal
+      - PMA_PORT=3306
+    labels:
+      caddy: ":9001"
+      caddy.php_fastcgi: "{{upstreams 9000}}"
+
   ssh_master:
     image: alpine
     restart: unless-stopped
