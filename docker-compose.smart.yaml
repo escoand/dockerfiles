@@ -29,12 +29,17 @@ services:
       - esphome:/config
 
   phpmyadmin:
-    image: phpmyadmin:fpm-alpine
+    image: phpmyadmin/phpmyadmin:fpm-alpine
     restart: unless-stopped
+    links:
+      - mariadb
+    networks:
+      - frontend
+      - backend
     environment:
       - MYSQL_ROOT_PASSWORD
       - PMA_ARBITRARY=1
-      - PMA_HOST=host.docker.internal
+      - PMA_HOST=mariadb
       - PMA_PORT=3306
     labels:
       caddy: ":9001"
