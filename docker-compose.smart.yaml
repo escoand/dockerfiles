@@ -29,21 +29,17 @@ services:
       - esphome:/config
 
   phpmyadmin:
-    image: phpmyadmin:fpm-alpine
+    image: phpmyadmin
     restart: unless-stopped
     links:
       - mariadb
     networks:
-      - frontend
       - backend
     environment:
       - MYSQL_ROOT_PASSWORD
       - PMA_ARBITRARY=1
       - PMA_HOST=mariadb
       - PMA_PORT=3306
-    labels:
-      caddy: ":9001"
-      caddy.php_fastcgi: "{{upstreams 9000}}"
 
   ssh_master:
     image: alpine
