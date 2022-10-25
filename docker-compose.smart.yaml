@@ -28,21 +28,6 @@ services:
     volumes:
       - esphome:/config
 
-  phpmyadmin:
-    image: phpmyadmin
-    restart: unless-stopped
-    links:
-      - mariadb
-    networks:
-      - backend
-    ports:
-      - 9001:80
-    environment:
-      - MYSQL_ROOT_PASSWORD
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mariadb
-      - PMA_PORT=3306
-
   ssh_master:
     image: alpine
     restart: unless-stopped
