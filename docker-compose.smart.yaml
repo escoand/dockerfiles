@@ -29,7 +29,7 @@ services:
       - esphome:/config
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:fpm-alpine
+    image: phpmyadmin:fpm-alpine
     restart: unless-stopped
     links:
       - mariadb
