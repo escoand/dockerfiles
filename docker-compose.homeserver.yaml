@@ -218,3 +218,5 @@ volumes:
     external: true
   nextcloud_data:
     external: true
+  ssh_config:
+    external: true
