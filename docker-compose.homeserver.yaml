@@ -20,6 +20,7 @@ services:
   nextcloud:
     image: library/nextcloud:fpm-alpine
     restart: unless-stopped
+    mem_limit: 2gb
     links:
       - mariadb
       - redis
