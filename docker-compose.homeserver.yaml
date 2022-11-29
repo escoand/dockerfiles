@@ -77,12 +77,14 @@ services:
       caddy.13_respond: /templates/* 404
       caddy.14_respond: /test/*      404
       ofelia.enabled: "true"
-      ofelia.job-exec.nc_cron.schedule:    "@every 5m"
-      ofelia.job-exec.nc_cron.command:     php -f /var/www/html/cron.php
-      ofelia.job-exec.nc_cron.user:        www-data
-      ofelia.job-exec.nc_preview.schedule: "@every 30m"
-      ofelia.job-exec.nc_preview.command:  php -f /var/www/html/occ preview:pre-generate
-      ofelia.job-exec.nc_preview.user:     www-data
+      ofelia.job-exec.nc_cron.schedule:      "@every 5m"
+      ofelia.job-exec.nc_cron.command:       php -f /var/www/html/cron.php
+      ofelia.job-exec.nc_cron.user:          www-data
+      ofelia.job-exec.nc_cron.no-overlap:    "true"
+      ofelia.job-exec.nc_preview.schedule:   "@every 30m"
+      ofelia.job-exec.nc_preview.command:    php -f /var/www/html/occ preview:pre-generate
+      ofelia.job-exec.nc_preview.user:       www-data
+      ofelia.job-exec.nc_preview.no-overlap: "true"
 
   mariadb:
     image: yobasystems/alpine-mariadb
@@ -103,8 +105,9 @@ services:
       - mariadb:/var/lib/mysql
     labels:
       ofelia.enabled: "false"
-      ofelia.job-exec.db_backup.schedule: 0 0 1 * * *
-      ofelia.job-exec.db_backup.command: sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
+      ofelia.job-exec.db_backup.schedule:   0 0 1 * * *
+      ofelia.job-exec.db_backup.command:    sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
+      ofelia.job-exec.db_backup.no-overlap: "true"
 
   redis:
     image: library/redis:alpine
