@@ -2,7 +2,7 @@ version: "2.4"
 services:
 
   homeassistant:
-    image: homeassistant/home-assistant:stable
+    image: homeassistant/home-assistant:2022.11.5
     restart: unless-stopped
     network_mode: host
     privileged: true
@@ -19,7 +19,7 @@ services:
       caddy.handle_path.reverse_proxy: host.docker.internal:6052
 
   esphome:
-    image: esphome/esphome
+    image: esphome/esphome:2022.11.2
     restart: unless-stopped
     network_mode: host
     privileged: true
@@ -29,7 +29,7 @@ services:
       - esphome:/config
 
   ssh_master:
-    image: alpine
+    image: alpine:3.17.0
     restart: unless-stopped
     ports:
       - 8022:22
