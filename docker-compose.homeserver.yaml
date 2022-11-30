@@ -1,0 +1,225 @@
+version: "2.4"
+services:
+      
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:alpine
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+    networks:
+      - frontend
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nextcloud:ro
+
+  nextcloud:
+    image: library/nextcloud:fpm-alpine
+    restart: unless-stopped
+    mem_limit: 2gb
+    links:
+      - mariadb
+      - redis
+    networks:
+      - frontend
+      - backend
+    environment:
+      - DOMAIN_NEXTCLOUD
+      - MYSQL_DATABASE
+      - MYSQL_HOST=mariadb
+      - MYSQL_PASSWORD
+      - MYSQL_USER
+      - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
+      - REDIS_HOST=redis
+    volumes:
+      - nextcloud_apps:/var/www/html/custom_apps
+      - nextcloud_config:/var/www/html/config
+      - nextcloud_data:/var/www/html/data
+    labels:
+      caddy: "${DOMAIN_NEXTCLOUD}, :80"
+      caddy.@blocked.1_not: host ${DOMAIN_NEXTCLOUD}
+      caddy.@blocked.2_not: remote_ip private_ranges
+      caddy.abort: "@blocked"
+      caddy.encode: zstd gzip
+      caddy.root: "* /var/www/html"
+      caddy.file_server: ""
+      caddy.php_fastcgi: "{{upstreams 9000}}"
+      caddy.php_fastcgi.1_header_down: Referrer-Policy                   no-referrer
+      caddy.php_fastcgi.2_header_down: Strict-Transport-Security         "max-age=15768000;"
+      caddy.php_fastcgi.3_header_down: X-Content-Type-Options            nosniff
+      caddy.php_fastcgi.4_header_down: X-Download-Options                noopen
+      caddy.php_fastcgi.5_header_down: X-Frame-Options                   SAMEORIGIN
+      caddy.php_fastcgi.6_header_down: X-Permitted-Cross-Domain-Policies none
+      caddy.php_fastcgi.7_header_down: X-Robots-Tag                      none
+      caddy.php_fastcgi.8_header_down: X-XSS-Protection                  "1; mode=block"
+      caddy.@davclnt.header:           User-agent DavClnt
+      caddy.@davclnt.path:             /
+      caddy.1_redir: "@davclnt            /remote.php/webdav/ 302"
+      caddy.2_redir: /.well-known/carddav /remote.php/dav/    301
+      caddy.3_redir: /.well-known/caldav  /remote.php/dav/    301
+      caddy.rewrite: /remote/*            /remote.php/{path}
+      caddy.01_respond: /.htaccess   404
+      caddy.02_respond: /3rdparty/*  404
+      caddy.03_respond: /autotest*   404
+      caddy.04_respond: /build/*     404
+      caddy.05_respond: /config/*    404
+      caddy.06_respond: /console*    404
+      caddy.07_respond: /data*       404
+      caddy.08_respond: /db_*        404
+      caddy.09_respond: /indie*      404
+      caddy.10_respond: /issue*      404
+      caddy.11_respond: /lib/*       404
+      caddy.12_respond: /occ         404
+      caddy.13_respond: /templates/* 404
+      caddy.14_respond: /test/*      404
+      ofelia.enabled: "true"
+      ofelia.job-exec.nc_cron.schedule:      "@every 5m"
+      ofelia.job-exec.nc_cron.command:       php -f /var/www/html/cron.php
+      ofelia.job-exec.nc_cron.user:          www-data
+      ofelia.job-exec.nc_cron.no-overlap:    "true"
+      ofelia.job-exec.nc_preview.schedule:   "@every 30m"
+      ofelia.job-exec.nc_preview.command:    php -f /var/www/html/occ preview:pre-generate
+      ofelia.job-exec.nc_preview.user:       www-data
+      ofelia.job-exec.nc_preview.no-overlap: "true"
+
+  mariadb:
+    image: yobasystems/alpine-mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+    command: >-
+      --binlog-format=ROW
+      --transaction-isolation=READ-COMMITTED
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+    volumes:
+      - mariadb:/var/lib/mysql
+    labels:
+      ofelia.enabled: "false"
+      ofelia.job-exec.db_backup.schedule:   0 0 1 * * *
+      ofelia.job-exec.db_backup.command:    sh -c "mysqldump -A | gzip > /backup/mariadb.sql.gz"
+      ofelia.job-exec.db_backup.no-overlap: "true"
+
+  redis:
+    image: library/redis:alpine
+    restart: unless-stopped
+    command: redis-server --appendonly no --save ""
+    networks:
+      - backend
+
+  samba:
+    image: dperson/samba
+    restart: unless-stopped
+    ports:
+      - 137:137/udp
+      - 138:138/udp
+      - 139:139
+      - 445:445
+    networks:
+      - frontend
+    hostname: ${HOSTNAME}
+    environment:
+      - GROUPID=82
+      - NMBD=1
+      - RECYCLE=1
+      - SHARE1
+      - SHARE2
+      - SHARE3
+      - SMB=1
+      - TZ
+      - USERID=82
+    volumes:
+      - nextcloud_data:/data:ro
+
+  minidlna:
+    image: vladgh/minidlna
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - GUID=82
+      - MINIDLNA_FRIENDLY_NAME=${HOSTNAME}
+      - MINIDLNA_INOTIFY=yes
+      - MINIDLNA_MEDIA_DIR_1
+      - MINIDLNA_MEDIA_DIR_2
+      - MINIDLNA_MEDIA_DIR_3
+      - MINIDLNA_MEDIA_DIR_4
+      - MINIDLNA_MEDIA_DIR_5
+      - MINIDLNA_MEDIA_DIR_6
+      - MINIDLNA_MEDIA_DIR_7
+      - MINIDLNA_MEDIA_DIR_8
+      - MINIDLNA_MEDIA_DIR_9
+      - MINIDLNA_ROOT_CONTAINER
+      - PUID=82
+    volumes:
+      - nextcloud_data:/data:ro
+
+  ofelia:
+    image: mcuadros/ofelia
+    #build: https://github.com/BTLzdravtech/ofelia.git
+    restart: unless-stopped
+    command: daemon --docker
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-local.reload_config.command: killall -HUP ofelia
+      ofelia.job-local.reload_config.schedule: "@daily"
+      ofelia.email-from: ${MAIL_RECEIVER}
+      ofelia.email-to: ${MAIL_RECEIVER}
+      ofelia.mail-only-on-error: "true"
+      ofelia.smtp-host: ${MAIL_HOST}
+      ofelia.smtp-port: ${MAIL_PORT}
+      ofelia.smtp-user: ${MAIL_USER}
+      ofelia.smtp-password: ${MAIL_PASSWORD}
+
+  dyndns:
+    image: qmcgaw/ddns-updater
+    restart: unless-stopped
+    environment:
+      - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
+      - TZ
+
+  ssh_satellite:
+    image: alpine
+    restart: unless-stopped
+    command: |
+      sh -c '
+        apk add --no-cache openssh-client-default &&
+        ssh -gN "satellite@${SSH_MASTER_HOST}" \
+          -p "${SSH_MASTER_PORT}" \
+          -R "0.0.0.0:${SSH_TUNNEL_PORT}:/var/run/docker.sock" \
+          -i /data/id_rsa \
+          -o ExitOnForwardFailure=yes \
+          -o StrictHostKeyChecking=no \
+          -o UserKnownHostsFile=/dev/null
+      '
+    volumes:
+      - ssh_config:/data:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  backend:
+  frontend:
+    driver: bridge
+
+volumes:
+  mariadb:
+    external: true
+  nextcloud_apps:
+    external: true
+  nextcloud_config:
+    external: true
+  nextcloud_data:
+    external: true
+  ssh_config:
+    external: true

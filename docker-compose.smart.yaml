@@ -1,0 +1,52 @@
+version: "2.4"
+services:
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /etc/hosts:/host:ro
+      - homeassistant:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/dbus:/run/dbus:ro
+    labels:
+      caddy: ${DOMAIN_HOMEASSISTANT}
+      caddy.reverse_proxy: host.docker.internal:8123
+      caddy.handle_path: /esphome/*
+      caddy.handle_path.basicauth.admin: "${ESPHOME_PASSWORD}"
+      caddy.handle_path.reverse_proxy: host.docker.internal:6052
+
+  esphome:
+    image: esphome/esphome
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    ports:
+      - 6052:6052
+    volumes:
+      - esphome:/config
+
+  ssh_master:
+    image: alpine
+    restart: unless-stopped
+    ports:
+      - 8022:22
+      - 23750-23759:23750-23759
+    command: sh -c '
+        adduser -DH satellite;
+        apk --no-cache add dropbear &&
+        mkdir -p /etc/dropbear &&
+        dropbear -aEFjmRsw -c /bin/false
+      '
+    volumes:
+      - ssh_config:/home/satellite/.ssh:ro
+
+volumes:
+  esphome:
+    external: true
+  homeassistant:
+    external: true
+  ssh_config:
+    external: true
