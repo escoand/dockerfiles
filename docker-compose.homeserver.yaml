@@ -163,8 +163,8 @@ services:
       - nextcloud_data:/data:ro
 
   ofelia:
-    image: mcuadros/ofelia:v0.3.6
-    #build: https://github.com/BTLzdravtech/ofelia.git
+    #image: mcuadros/ofelia:v0.3.6
+    build: https://github.com/mcuadros/ofelia.git#pull/137/head
     restart: unless-stopped
     command: daemon --docker
     volumes:
