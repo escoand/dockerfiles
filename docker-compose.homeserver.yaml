@@ -171,9 +171,9 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-local.reload_config.command: killall -HUP ofelia
-      ofelia.job-local.reload_config.schedule: "@daily"
+      #ofelia.enabled: "true"
+      #ofelia.job-local.reload_config.command: killall -HUP ofelia
+      #ofelia.job-local.reload_config.schedule: "@daily"
       ofelia.email-from: ${MAIL_RECEIVER}
       ofelia.email-to: ${MAIL_RECEIVER}
       ofelia.mail-only-on-error: "true"
