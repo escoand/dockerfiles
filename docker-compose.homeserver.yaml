@@ -2,7 +2,7 @@ version: "2.4"
 services:
       
   caddy:
-    image: lucaslorentz/caddy-docker-proxy:alpine
+    image: lucaslorentz/caddy-docker-proxy:2.8.1-alpine
     restart: always
     ports:
       - 80:80
@@ -18,7 +18,7 @@ services:
       - nextcloud:ro
 
   nextcloud:
-    image: library/nextcloud:fpm-alpine
+    image: library/nextcloud:25.0.1-fpm-alpine
     restart: unless-stopped
     mem_limit: 2gb
     links:
@@ -87,7 +87,7 @@ services:
       ofelia.job-exec.nc_preview.no-overlap: "true"
 
   mariadb:
-    image: yobasystems/alpine-mariadb
+    image: yobasystems/alpine-mariadb:10.6.9
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE
@@ -110,14 +110,14 @@ services:
       ofelia.job-exec.db_backup.no-overlap: "true"
 
   redis:
-    image: library/redis:alpine
+    image: library/redis:7.0.5-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --save ""
     networks:
       - backend
 
   samba:
-    image: dperson/samba
+    image: dperson/samba:latest
     restart: unless-stopped
     ports:
       - 137:137/udp
@@ -141,7 +141,7 @@ services:
       - nextcloud_data:/data:ro
 
   minidlna:
-    image: vladgh/minidlna
+    image: vladgh/minidlna:1.3.0
     restart: unless-stopped
     network_mode: host
     environment:
@@ -163,17 +163,17 @@ services:
       - nextcloud_data:/data:ro
 
   ofelia:
-    image: mcuadros/ofelia
-    #build: https://github.com/BTLzdravtech/ofelia.git
+    #image: mcuadros/ofelia:v0.3.6
+    build: https://github.com/mcuadros/ofelia.git#pull/137/head
     restart: unless-stopped
-    command: daemon --docker
+    #command: daemon --docker
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      ofelia.enabled: "true"
-      ofelia.job-local.reload_config.command: killall -HUP ofelia
-      ofelia.job-local.reload_config.schedule: "@daily"
+      #ofelia.enabled: "true"
+      #ofelia.job-local.reload_config.command: killall -HUP ofelia
+      #ofelia.job-local.reload_config.schedule: "@daily"
       ofelia.email-from: ${MAIL_RECEIVER}
       ofelia.email-to: ${MAIL_RECEIVER}
       ofelia.mail-only-on-error: "true"
@@ -183,14 +183,14 @@ services:
       ofelia.smtp-password: ${MAIL_PASSWORD}
 
   dyndns:
-    image: qmcgaw/ddns-updater
+    image: qmcgaw/ddns-updater:v2.4.1
     restart: unless-stopped
     environment:
       - CONFIG={"settings":[{"provider":"${DYNDNS_PROVIDER}","domain":"${DYNDNS_DOMAIN}","host":"${DYNDNS_HOST}","password":"${DYNDNS_PASSWORD}"}]}
       - TZ
 
   ssh_satellite:
-    image: alpine
+    image: alpine:3.17.0
     restart: unless-stopped
     command: |
       sh -c '
