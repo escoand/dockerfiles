@@ -18,7 +18,7 @@ services:
       - nextcloud:ro
 
   nextcloud:
-    image: library/nextcloud:25.0.1-fpm-alpine
+    image: library/nextcloud:25.0.2-fpm-alpine
     restart: unless-stopped
     mem_limit: 2gb
     links:
