@@ -78,7 +78,7 @@ services:
       caddy.14_respond: /test/*      404
       ofelia.enabled: "true"
       ofelia.job-exec.nc_cron.schedule:      "@every 5m"
-      ofelia.job-exec.nc_cron.command:       php -f /var/www/html/cron.php
+      ofelia.job-exec.nc_cron.command:       timeout 300 php -f /var/www/html/cron.php
       ofelia.job-exec.nc_cron.user:          www-data
       ofelia.job-exec.nc_cron.no-overlap:    "true"
       ofelia.job-exec.nc_preview.schedule:   "@every 30m"
