@@ -141,7 +141,7 @@ services:
       - nextcloud_data:/data:ro
 
   minidlna:
-    image: vladgh/minidlna:1.3.0
+    image: vladgh/minidlna:1.3.1
     restart: unless-stopped
     network_mode: host
     environment:
