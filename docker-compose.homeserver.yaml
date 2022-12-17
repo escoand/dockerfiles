@@ -110,7 +110,7 @@ services:
       ofelia.job-exec.db_backup.no-overlap: "true"
 
   redis:
-    image: library/redis:7.0.6-alpine
+    image: library/redis:7.0.7-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --save ""
     networks:
