@@ -29,7 +29,7 @@ services:
       - esphome:/config
 
   ssh_master:
-    image: alpine:3.17.0
+    image: alpine:3.17.1
     restart: unless-stopped
     ports:
       - 8022:22
