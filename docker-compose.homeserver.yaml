@@ -134,8 +134,12 @@ services:
       - SHARE1
       - SHARE2
       - SHARE3
+      - SHARE4
+      - SHARE5
+      - SHARE6
       - SMB=1
       - TZ
+      - USER1
       - USERID=82
     volumes:
       - nextcloud_data:/data
