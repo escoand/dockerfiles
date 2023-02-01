@@ -190,7 +190,7 @@ services:
       - TZ
 
   ssh_satellite:
-    image: alpine:3.17.0
+    image: alpine:3.17.1
     restart: unless-stopped
     command: |
       sh -c '
