@@ -2,7 +2,7 @@ version: "2.4"
 services:
 
   homeassistant:
-    image: homeassistant/home-assistant:2023.4.0
+    image: homeassistant/home-assistant:2023.4.5
     restart: unless-stopped
     network_mode: host
     privileged: true
