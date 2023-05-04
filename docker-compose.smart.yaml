@@ -19,7 +19,7 @@ services:
       caddy.handle_path.reverse_proxy: host.docker.internal:6052
 
   esphome:
-    image: esphome/esphome:2023.4.0
+    image: esphome/esphome:2023.4.4
     restart: unless-stopped
     network_mode: host
     privileged: true
