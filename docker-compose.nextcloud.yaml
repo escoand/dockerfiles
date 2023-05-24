@@ -51,7 +51,7 @@ services:
       caddy.php_fastcgi.4_header_down: X-Download-Options                noopen
       caddy.php_fastcgi.5_header_down: X-Frame-Options                   SAMEORIGIN
       caddy.php_fastcgi.6_header_down: X-Permitted-Cross-Domain-Policies none
-      caddy.php_fastcgi.7_header_down: X-Robots-Tag                      noindex, nofollow
+      caddy.php_fastcgi.7_header_down: X-Robots-Tag                      "noindex, nofollow"
       caddy.php_fastcgi.8_header_down: X-XSS-Protection                  "1; mode=block"
       caddy.@davclnt.header:           User-agent DavClnt
       caddy.@davclnt.path:             /
