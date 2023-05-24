@@ -2,7 +2,7 @@ version: "2.4"
 services:
       
   caddy:
-    name: caddy
+    container_name: caddy
     image: lucaslorentz/caddy-docker-proxy:2.8.1
     restart: always
     ports:
@@ -17,7 +17,7 @@ services:
       - nextcloud:ro
 
   nextcloud:
-    name: nextcloud
+    container_name: nextcloud
     image: library/nextcloud:26.0.1-fpm-alpine
     restart: unless-stopped
     mem_limit: 2gb
@@ -51,7 +51,7 @@ services:
       caddy.php_fastcgi.4_header_down: X-Download-Options                noopen
       caddy.php_fastcgi.5_header_down: X-Frame-Options                   SAMEORIGIN
       caddy.php_fastcgi.6_header_down: X-Permitted-Cross-Domain-Policies none
-      caddy.php_fastcgi.7_header_down: X-Robots-Tag                      none
+      caddy.php_fastcgi.7_header_down: X-Robots-Tag                      noindex, nofollow
       caddy.php_fastcgi.8_header_down: X-XSS-Protection                  "1; mode=block"
       caddy.@davclnt.header:           User-agent DavClnt
       caddy.@davclnt.path:             /
@@ -84,7 +84,7 @@ services:
       ofelia.job-exec.nc_preview.no-overlap: "true"
 
   mariadb:
-    name: mariadb
+    container_name: mariadb
     image: library/mariadb:10.11.3
     restart: unless-stopped
     environment:
@@ -104,13 +104,13 @@ services:
       ofelia.job-exec.db_backup.no-overlap: "true"
 
   redis:
-    name: redis
+    container_name: redis
     image: library/redis:7.0.11-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --protected-mode no --save ""
 
   ofelia:
-    name: ofelia
+    container_name: ofelia
     #image: mcuadros/ofelia:v0.3.6
     build: https://github.com/mcuadros/ofelia.git#pull/137/head
     restart: unless-stopped
