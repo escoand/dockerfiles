@@ -45,6 +45,7 @@ services:
       caddy.root: "* /var/www/html"
       caddy.file_server: ""
       caddy.php_fastcgi: "{{upstreams 9000}}"
+      caddy.php_fastcgi.env: front_controller_active true
       caddy.php_fastcgi.1_header_down: Referrer-Policy                   no-referrer
       caddy.php_fastcgi.2_header_down: Strict-Transport-Security         "max-age=15768000;"
       caddy.php_fastcgi.3_header_down: X-Content-Type-Options            nosniff
