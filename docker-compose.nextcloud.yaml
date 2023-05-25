@@ -36,7 +36,17 @@ services:
       - nextcloud_apps:/var/www/html/custom_apps
       - nextcloud_config:/var/www/html/config
       - nextcloud_data:/var/www/html/data
-    command: php-fpm -d pm=dynamic -d pm.max_children=120 -d pm.start_servers=12 -d pm.min_spare_servers=6 -d pm.max_spare_servers=18
+    command: >-
+      sh -c '
+        {
+          echo pm=dynamic;
+          echo pm.max_children=120;
+          echo pm.start_servers=12;
+          echo pm.min_spare_servers=6;
+          echo pm.max_spare_servers=18;
+        } >> /usr/local/etc/php-fpm.d/www.conf;
+        exec php-fpm
+      '
     labels:
       caddy: "${DOMAIN_NEXTCLOUD}, :80"
       caddy.@blocked.1_not: host ${DOMAIN_NEXTCLOUD}
