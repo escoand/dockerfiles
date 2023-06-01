@@ -87,7 +87,7 @@ services:
       ofelia.job-exec.nc_preview.no-overlap: "true"
 
   mariadb:
-    image: yobasystems/alpine-mariadb:10.6.11
+    image: yobasystems/alpine-mariadb:10.11.2
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE
