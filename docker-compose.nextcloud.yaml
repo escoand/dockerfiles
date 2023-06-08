@@ -31,6 +31,7 @@ services:
       - MYSQL_PASSWORD
       - MYSQL_USER
       - NEXTCLOUD_TRUSTED_DOMAINS=${DOMAIN_NEXTCLOUD}
+      - NEXTCLOUD_UPDATE=1
       - REDIS_HOST=redis
     volumes:
       - nextcloud_apps:/var/www/html/custom_apps
