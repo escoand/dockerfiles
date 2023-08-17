@@ -118,7 +118,7 @@ services:
 
   redis:
     container_name: redis
-    image: library/redis:7.0.12-alpine
+    image: library/redis:7.2.0-alpine
     restart: unless-stopped
     command: redis-server --appendonly no --protected-mode no --save ""
 
