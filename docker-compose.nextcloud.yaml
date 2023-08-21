@@ -46,7 +46,7 @@ services:
           echo pm.min_spare_servers=6;
           echo pm.max_spare_servers=18;
         } >> /usr/local/etc/php-fpm.d/www.conf;
-        exec php-fpm
+        exec /entrypoint.sh php-fpm
       '
     labels:
       caddy: "${DOMAIN_NEXTCLOUD}, :80"
