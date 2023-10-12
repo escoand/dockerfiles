@@ -3,7 +3,7 @@ services:
       
   caddy:
     container_name: caddy
-    image: lucaslorentz/caddy-docker-proxy:2.8.8
+    image: lucaslorentz/caddy-docker-proxy:2.8.9
     restart: always
     ports:
       - 80:80
