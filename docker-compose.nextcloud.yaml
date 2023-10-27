@@ -18,7 +18,7 @@ services:
 
   nextcloud:
     container_name: nextcloud
-    image: library/nextcloud:27.1.2-fpm-alpine
+    image: library/nextcloud:27.1.3-fpm-alpine
     restart: unless-stopped
     mem_limit: 2gb
     links:
