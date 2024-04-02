@@ -16,19 +16,10 @@ spec:
         - name: podman_sock
           mountPath: /run/podman/podman.sock
           readOnly: true
-        env:
-        - name: HTTP_PROXY
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: http_proxy
-              optional: true
-        - name: HTTPS_PROXY
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: http_proxy
-              optional: true
+        envFrom:
+        - secretRef:
+            name: proxy
+            optional: true
       volumes:
       - name: fetchit_config
         hostPath:

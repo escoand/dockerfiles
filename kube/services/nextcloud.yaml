@@ -43,6 +43,10 @@ spec:
           value: redis
         - name: TRUSTED_PROXIES
           value: 10.88.0.0/16
+        envFrom:
+        - secretRef:
+            name: proxy
+            optional: true
         volumeMounts:
         - name: nextcloud_apps
           mountPath: /var/www/html/custom_apps
