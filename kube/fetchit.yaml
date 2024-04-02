@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fetchit
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: fetchit
+        image: quay.io/fetchit/fetchit:latest
+        volumeMounts:
+        - name: fetchit
+          mountPath: /opt/mount/config.yaml
+          readOnly: true
+        - name: podman_sock
+          mountPath: /run/podman/podman.sock
+          readOnly: true
+      volumes:
+      - name: fetchit
+        hostPath:
+          path: ./kube/fetchit.config.yaml
+          type: File
+      - name: podman_sock
+        hostPath:
+          path: /run/user/1000/podman/podman.sock
+          type: Socket

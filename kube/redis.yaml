@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: redis
+        image: docker.io/library/redis:7.2.4-alpine
+        args:
+        - --appendonly no
+        - --protected-mode no
+        - --save ""
+        resources:
+          limits:
+            memory: 500Mi

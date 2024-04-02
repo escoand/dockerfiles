@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: mariadb
+        image: docker.io/library/mariadb:10.11.7
+        args:
+        - --binlog-format=ROW
+        - --transaction-isolation=READ-COMMITTED
+        resources:
+          limits:
+            memory: 2Gi
+        env:
+        - name: MARIADB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_name
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_password
+        - name: MARIADB_RANDOM_ROOT_PASSWORD
+          value: "TRUE"
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_user
+        volumeMounts:
+        - name: mariadb
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb
+        persistentVolumeClaim:
+          claimName: mariadb
