@@ -16,21 +16,16 @@ spec:
           protocol: UDP
         command:
           - /bin/sh
-        args:
           - -c
           - |-
             echo '{$NEXTCLOUD_DOMAIN} {
               reverse_proxy nextcloud:80
               redir /.well-known/caldav  /remote.php/dav/ 301
               redir /.well-known/carddav /remote.php/dav/ 301
-            }' | caddy run --config - --adapter caddyfile
+            }' | exec caddy run --config - --adapter caddyfile
         env:
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
             secretKeyRef:
               name: secrets
               key: nextcloud_domain
-        envFrom:
-        - secretRef:
-            name: proxy
-            optional: true
