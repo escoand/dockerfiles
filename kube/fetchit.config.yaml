@@ -6,6 +6,12 @@ targetConfigs:
     targetPath: kube/services
     schedule: "*/1 * * * *"
     pullImage: true
+  # workaround´for podman not using current dir
+  fileTransfer:
+  - name: fetchit-config
+    targetPath: kube
+    destinationDirectory: /home/user
+    schedule: "*/1 * * * *"
 prune:
   All: true
   Volumes: false

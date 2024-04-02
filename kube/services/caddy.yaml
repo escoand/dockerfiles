@@ -27,5 +27,5 @@ spec:
       volumes:
       - name: caddyfile
         hostPath:
-          path: ./config/Caddyfile
+          path: ./Caddyfile
           type: File
