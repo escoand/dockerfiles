@@ -27,5 +27,5 @@ spec:
       volumes:
       - name: caddyfile
         hostPath:
-          path: ./kube/Caddyfile
+          path: ./config/Caddyfile
           type: File
