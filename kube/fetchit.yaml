@@ -10,14 +10,27 @@ spec:
       - name: fetchit
         image: quay.io/fetchit/fetchit:latest
         volumeMounts:
-        - name: fetchit
+        - name: fetchit_config
           mountPath: /opt/mount/config.yaml
           readOnly: true
         - name: podman_sock
           mountPath: /run/podman/podman.sock
           readOnly: true
+        env:
+        - name: HTTP_PROXY
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: http_proxy
+              optional: true
+        - name: HTTPS_PROXY
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: http_proxy
+              optional: true
       volumes:
-      - name: fetchit
+      - name: fetchit_config
         hostPath:
           path: ./kube/fetchit.config.yaml
           type: File
