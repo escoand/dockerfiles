@@ -14,18 +14,14 @@ spec:
         - containerPort: 443
         - containerPort: 443
           protocol: UDP
-        volumeMounts:
-        - name: caddyfile
-          mountPath: /etc/caddy/Caddyfile
-          readOnly: true
+        command:
+          - /bin/sh
+        args:
+          - -c
+          - echo '{$NEXTCLOUD_DOMAIN} reverse_proxy nextcloud:80' | caddy run --config - --adapter caddyfile
         env:
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
             secretKeyRef:
               name: secrets
               key: nextcloud_domain
-      volumes:
-      - name: caddyfile
-        hostPath:
-          path: ./Caddyfile
-          type: File

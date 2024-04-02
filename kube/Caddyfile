@@ -1,3 +1,0 @@
-{$NEXTCLOUD_DOMAIN} {
-    reverse_proxy nextcloud:80
-}
