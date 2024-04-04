@@ -23,7 +23,7 @@ spec:
       volumes:
       - name: fetchit_config
         hostPath:
-          path: ./kube.cloud/fetchit/config.yaml
+          path: ./fetchit.cloud/config.yaml
           type: File
       - name: podman_sock
         hostPath:
