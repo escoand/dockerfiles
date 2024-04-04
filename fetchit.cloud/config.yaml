@@ -1,3 +1,6 @@
+configReload:
+  schedule: "*/5 * * * *"
+  configUrl: https://raw.githubusercontent.com/escoand/dockerfiles/fetchit.cloud/config.yaml
 targetConfigs:
 - url: https://github.com/escoand/dockerfiles.git
   branch: kube
