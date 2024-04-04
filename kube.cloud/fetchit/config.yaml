@@ -3,7 +3,7 @@ targetConfigs:
   branch: kube
   kube:
   - name: kube
-    targetPath: kube/services
+    targetPath: kube.cloud
     schedule: "*/1 * * * *"
     pullImage: true
 prune:
