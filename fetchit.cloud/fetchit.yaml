@@ -20,6 +20,9 @@ spec:
         - secretRef:
             name: proxy
             optional: true
+      securityContext:
+        seLinuxOptions:
+          type: spc_t
       volumes:
       - name: fetchit_config
         hostPath:
