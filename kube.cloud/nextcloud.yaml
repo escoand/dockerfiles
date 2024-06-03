@@ -6,9 +6,9 @@ spec:
   replicas: 1
   template:
     spec:
-    metadata:
-      annotations:
-        io.podman.annotations.userns: keep-id
+      metadata:
+        annotations:
+          io.podman.annotations.userns: keep-id
       containers:
       - name: nextcloud
         image: docker.io/library/nextcloud:28.0.4
