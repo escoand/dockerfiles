@@ -2,12 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb
+  # not working with Podman 4.9.4
+  #annotations:
+    #io.podman.annotations.userns: keep-id
 spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        io.podman.annotations.userns: keep-id
     spec:
       containers:
       - name: mariadb
