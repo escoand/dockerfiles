@@ -12,4 +12,4 @@ targetConfigs:
 prune:
   All: true
   Volumes: false
-  schedule: "*/1 * * * *"
+  schedule: "*/10 * * * *"
