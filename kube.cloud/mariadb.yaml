@@ -35,7 +35,7 @@ spec:
               key: nextcloud_db_user
         volumeMounts:
         - name: mariadb
-          mountPath: /var/lib/mysql:z
+          mountPath: /var/lib/mysql:Z
       volumes:
       - name: mariadb
         persistentVolumeClaim:
