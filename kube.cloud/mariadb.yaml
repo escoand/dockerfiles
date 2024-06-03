@@ -2,11 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb
-  annotations:
-    io.podman.annotations.userns: keep-id
 spec:
   replicas: 1
   template:
+    metadata:
+      annotations:
+        io.podman.annotations.userns: keep-id
     spec:
       containers:
       - name: mariadb
