@@ -1,0 +1,20 @@
+# install with this command:
+# PWD=/data envsubst < volumes.sample.yaml | podman kube play -
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.podman.io/device: $PWD/mariadb
+    volume.podman.io/driver: local
+    volume.podman.io/mount-options: bind
+  name: mariadb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.podman.io/device: $PWD/nextcloud
+    volume.podman.io/driver: local
+    volume.podman.io/mount-options: bind
+  name: nextcloud
