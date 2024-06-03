@@ -49,11 +49,11 @@ spec:
             optional: true
         volumeMounts:
         - name: nextcloud_apps
-          mountPath: /var/www/html/custom_apps:z
+          mountPath: /var/www/html/custom_apps:Z
         - name: nextcloud_config
-          mountPath: /var/www/html/config:z
+          mountPath: /var/www/html/config:Z
         - name: nextcloud_data
-          mountPath: /var/www/html/data:z
+          mountPath: /var/www/html/data:Z
       volumes:
       - name: nextcloud_apps
         persistentVolumeClaim:
