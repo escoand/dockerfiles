@@ -5,10 +5,10 @@ metadata:
 spec:
   replicas: 1
   template:
-    metadata:
-      annotations:
-        io.podman.annotations.userns: keep-id
     spec:
+      metadata:
+        annotations:
+          io.podman.annotations.userns: keep-id
       containers:
       - name: mariadb
         image: docker.io/library/mariadb:10.11.7
