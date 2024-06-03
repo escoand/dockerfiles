@@ -51,19 +51,16 @@ spec:
             name: proxy
             optional: true
         volumeMounts:
-        - name: nextcloud_apps
+        - name: nextcloud
           mountPath: /var/www/html/custom_apps:z
-        - name: nextcloud_config
+          subPath: apps
+        - name: nextcloud
           mountPath: /var/www/html/config:z
-        - name: nextcloud_data
+          subPath: config
+        - name: nextcloud
           mountPath: /var/www/html/data:z
+          subPath: data
       volumes:
-      - name: nextcloud_apps
+      - name: nextcloud
         persistentVolumeClaim:
-          claimName: nextcloud_apps
-      - name: nextcloud_config
-        persistentVolumeClaim:
-          claimName: nextcloud_config
-      - name: nextcloud_data
-        persistentVolumeClaim:
-          claimName: nextcloud_data
+          claimName: nextcloud
