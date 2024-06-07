@@ -16,6 +16,7 @@ sudo firewall-cmd --permanent \
   --add-rich-rule "rule family=ipv6 forward-port port=443 protocol=tcp to-port=8443" \
   --add-rich-rule "rule family=ipv4 forward-port port=443 protocol=udp to-port=8443" \
   --add-rich-rule "rule family=ipv6 forward-port port=443 protocol=udp to-port=8443"
+sudo firewall-cmd --reload
 
 # applications
 mkdir -p ~/.config/systemd/user ~/.fetchit
