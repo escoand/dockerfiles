@@ -19,7 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
-            echo php occ maintenance:update:htaccess > /docker-entrypoint-hooks.d/before-starting;
+            echo php occ maintenance:update:htaccess > /docker-entrypoint-hooks.d/before-starting/htaccess.sh;
             /entrypoint.sh apache2-foreground &
             /cron.sh
         env:
