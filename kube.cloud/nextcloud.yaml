@@ -19,6 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
+            sed -i 's|^RemoteIPHeader.*|RemoteIPHeader X-Forwarded-For|' /etc/apache2/conf-enabled/remoteip.conf;
             {
               echo "php occ maintenance:update:htaccess";
               echo "/cron.sh &";
