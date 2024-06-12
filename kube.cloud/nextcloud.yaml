@@ -50,6 +50,8 @@ spec:
             secretKeyRef:
               name: secrets
               key: nextcloud_domain
+        - name: NEXTCLOUD_TRUSTED_PROXIES
+          value: 10.88.0.0/16
         - name: NEXTCLOUD_UPDATE
           value: "1"
         - name: REDIS_HOST
