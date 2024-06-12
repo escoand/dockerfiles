@@ -19,7 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
-            /cron.sh & /entrypoint.sh apache2-foreground
+            /entrypoint.sh apache2-foreground & /cron.sh
         env:
         - name: MYSQL_DATABASE
           valueFrom:
