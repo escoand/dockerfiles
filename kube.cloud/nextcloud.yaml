@@ -19,7 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
-            php occ maintenance:update:htaccess;
+            php /var/www/html/occ maintenance:update:htaccess;
             /entrypoint.sh apache2-foreground &
             /cron.sh
         env:
