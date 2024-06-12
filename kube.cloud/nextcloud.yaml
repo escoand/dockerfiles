@@ -54,8 +54,6 @@ spec:
           value: "1"
         - name: REDIS_HOST
           value: redis
-        - name: TRUSTED_PROXIES
-          value: 10.88.0.0/16
         envFrom:
         - secretRef:
             name: proxy
