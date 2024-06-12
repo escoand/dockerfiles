@@ -19,6 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
+            sed -i 's|^.* 10.0.0.0/8|RemoteIPTrustedProxy 10.89.0.0/24|' /etc/apache2/conf-enabled/remoteip.conf;
             {
               echo "php occ maintenance:update:htaccess";
               echo "/cron.sh &";
