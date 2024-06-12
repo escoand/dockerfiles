@@ -21,10 +21,10 @@ spec:
           - |-
             sed -i 's|^.* 10.0.0.0/8|RemoteIPTrustedProxy 10.89.0.0/24|' /etc/apache2/conf-enabled/remoteip.conf;
             {
-              echo "php occ maintenance:update:htaccess";
-              echo "/cron.sh &";
+              echo php occ maintenance:update:htaccess;
             } > /docker-entrypoint-hooks.d/before-starting/start.sh;
             chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
+            /cron.sh &
             /entrypoint.sh apache2-foreground
         env:
         - name: MYSQL_DATABASE
