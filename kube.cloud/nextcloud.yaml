@@ -19,7 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
-            sed -i 's|^.* 10.0.0.0/8|RemoteIPTrustedProxy 10.89.0.0/24|' /etc/apache2/conf-enabled/remoteip.conf;
+            sed -i 's|%h|%a|g' /etc/apache2/apache2.conf;
             {
               echo php occ maintenance:update:htaccess;
             } > /docker-entrypoint-hooks.d/before-starting/start.sh;
