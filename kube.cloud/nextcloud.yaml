@@ -19,10 +19,12 @@ spec:
           - /bin/sh
           - -c
           - |-
-            echo php occ maintenance:update:htaccess > /docker-entrypoint-hooks.d/before-starting/htaccess.sh;
-            chmod +x /docker-entrypoint-hooks.d/before-starting/htaccess.sh;
-            /entrypoint.sh apache2-foreground &
-            /cron.sh
+            {
+              echo php occ maintenance:update:htaccess;
+              echo /cron.sh;
+            } > /docker-entrypoint-hooks.d/before-starting/start.sh;
+            chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
+            /entrypoint.sh apache2-foreground
         env:
         - name: MYSQL_DATABASE
           valueFrom:
