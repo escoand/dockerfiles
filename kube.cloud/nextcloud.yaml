@@ -19,7 +19,9 @@ spec:
           - /bin/sh
           - -c
           - |-
-            /entrypoint.sh apache2-foreground & /cron.sh
+            php occ maintenance:update:htaccess;
+            /entrypoint.sh apache2-foreground &
+            /cron.sh
         env:
         - name: MYSQL_DATABASE
           valueFrom:
