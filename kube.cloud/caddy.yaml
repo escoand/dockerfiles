@@ -22,9 +22,9 @@ spec:
           - -c
           - |-
             echo '{$NEXTCLOUD_DOMAIN} {
-              reverse_proxy nextcloud:80 {
-                header_up X-Real-IP {remote_host}
-              }
+              redir /.well-known/carddav /remote.php/dav/ 301
+              redir /.well-known/caldav  /remote.php/dav/ 301
+              reverse_proxy nextcloud:80
             }' | exec caddy run --config - --adapter caddyfile
         env:
         - name: NEXTCLOUD_DOMAIN
