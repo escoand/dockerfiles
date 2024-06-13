@@ -19,10 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |-
-            sed -i 's|%h|%a|g' /etc/apache2/apache2.conf;
-            {
-              echo php occ maintenance:update:htaccess;
-            } > /docker-entrypoint-hooks.d/before-starting/start.sh;
+            echo php occ maintenance:update:htaccess > /docker-entrypoint-hooks.d/before-starting/start.sh;
             chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
             /cron.sh &
             /entrypoint.sh apache2-foreground
