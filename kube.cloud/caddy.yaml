@@ -37,3 +37,13 @@ spec:
             secretKeyRef:
               name: secrets
               key: nextcloud_domain
+        - name: REDIR_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: redir_domain
+        - name: REDIR_TARGET
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: redir_target
