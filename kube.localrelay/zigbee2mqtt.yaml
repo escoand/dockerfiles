@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: zigbee2mqtt
-        image: docker.io/koenkk/zigbee2mqtt:1.36.1
+        image: docker.io/koenkk/zigbee2mqtt:1.38.0
         ports:
         - containerPort: 8080
           hostPort: 8080
