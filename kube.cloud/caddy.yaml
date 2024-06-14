@@ -10,8 +10,6 @@ spec:
       - name: caddy
         image: docker.io/library/caddy:2.7.6-alpine
         ports:
-        #- containerPort: 8081
-        #  hostPort: 8081
         - containerPort: 80
           hostPort: 8080
         - containerPort: 443
@@ -24,9 +22,9 @@ spec:
           - -c
           - |-
             echo '
-            #:8081 {
-            #  respond / 200
-            #}
+            :80 {
+              respond /health 200
+            }
             {$NEXTCLOUD_DOMAIN} {
               #log
               redir /.well-known/carddav /remote.php/dav/ 301
@@ -39,10 +37,10 @@ spec:
               redir {$REDIR_TARGET}
             }
             ' | exec caddy run --config - --adapter caddyfile
-        #livenessProbe:
-        #  httpGet:
-        #    path: /
-        #    port: 8081
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
         env:
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
