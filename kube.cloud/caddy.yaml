@@ -24,7 +24,7 @@ spec:
             echo '
             {$NEXTCLOUD_DOMAIN} {
               #log
-              /supervisor {
+              handle_path /dozzle {
                 reverse_proxy dozzle:8080
               }
               redir /.well-known/carddav /remote.php/dav/ 301
