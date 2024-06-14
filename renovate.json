@@ -8,5 +8,5 @@
     "kubernetes": {
       "fileMatch": ["^kube.*\\.yaml$"]
     }
-  }
+  ]
 }
