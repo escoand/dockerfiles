@@ -15,8 +15,6 @@ spec:
         securityContext:
           privileged: true
         env:
-        - name: DOZZLE_BASE
-          value: /dozzle/
         - name: DOZZLE_NO_ANALYTICS
           value: "true"
         - name: DOZZLE_ENABLE_ACTIONS
