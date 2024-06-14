@@ -27,7 +27,7 @@ spec:
               redir /.well-known/carddav /remote.php/dav/ 301
               redir /.well-known/caldav  /remote.php/dav/ 301
               reverse_proxy nextcloud:80
-	            handle_path /dozzle/* {
+              handle_path /dozzle/* {
                 reverse_proxy dozzle:8080
               }
             }
