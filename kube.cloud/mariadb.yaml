@@ -16,9 +16,12 @@ spec:
         args:
         - --binlog-format=ROW
         - --transaction-isolation=READ-COMMITTED
-        #livenessProbe:
-        #  tcpSocket:
-        #    port: 3306
+        livenessProbe:
+          exec:
+            command:
+            - healthcheck.sh
+            - --su-mysql
+            - --connect
         resources:
           limits:
             memory: 2Gi
