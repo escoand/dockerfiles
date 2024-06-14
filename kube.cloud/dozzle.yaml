@@ -12,8 +12,18 @@ spec:
         livenessProbe:
           exec:
             command: ["/dozzle", "healthcheck"]
+        securityContext:
+          privileged: true
         env:
         - name: DOZZLE_NO_ANALYTICS
           value: "true"
         - name: DOZZLE_ENABLE_ACTIONS
           value: "true"
+        volumeMounts:
+        - name: docker_sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker_sock
+        hostPath:
+          path: /run/user/1000/podman/podman.sock
+          type: Socket
