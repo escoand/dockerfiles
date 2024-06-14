@@ -13,7 +13,8 @@ spec:
           - sh
           - -c
           - |-
-            /dozzle generate "$DOZZLE_USER" --password "$DOZZLE_PASSWORD" > /data/users.yml &&
+            mkdir -p /data/;
+            /dozzle generate "$DOZZLE_USER" --password "$DOZZLE_PASSWORD" > /data/users.yml;
             /dozzleadmin
         livenessProbe:
           exec:
