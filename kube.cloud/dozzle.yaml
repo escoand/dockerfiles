@@ -15,7 +15,7 @@ spec:
           - |-
             mkdir -p /data/;
             /dozzle generate "$DOZZLE_USER" --password "$DOZZLE_PASSWORD" > /data/users.yml;
-            /dozzleadmin
+            /dozzle
         livenessProbe:
           exec:
             command: ["/dozzle", "healthcheck"]
