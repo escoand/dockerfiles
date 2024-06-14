@@ -37,10 +37,10 @@ spec:
               redir {$REDIR_TARGET}
             }
             ' | exec caddy run --config - --adapter caddyfile
-        livenessProbe_:
-          httpGet:
-            path: /
-            port: 8081
+        #livenessProbe:
+        #  httpGet:
+        #    path: /
+        #    port: 8081
         env:
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
