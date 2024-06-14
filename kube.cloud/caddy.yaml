@@ -32,9 +32,9 @@ spec:
               redir {$REDIR_TARGET}
             }
             {$DOZZLE_DOMAIN} {
-              basic_auth {
-                {$DOZZLE_USER} {$DOZZLE_PASSWORD}
-              }
+              #basic_auth {
+              #  {$DOZZLE_USER} {$DOZZLE_PASSWORD}
+              #}
               reverse_proxy dozzle:8080
             }
             ' | exec caddy run --config - --adapter caddyfile
