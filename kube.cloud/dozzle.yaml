@@ -22,8 +22,8 @@ spec:
         securityContext:
           privileged: true
         env:
-        - name: DOZZLE_AUTH_PROVIDER
-          value: simple
+        #- name: DOZZLE_AUTH_PROVIDER
+        #  value: simple
         - name: DOZZLE_BASE
           value: /dozzle
         - name: DOZZLE_ENABLE_ACTIONS
