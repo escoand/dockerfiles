@@ -18,10 +18,7 @@ spec:
         - --transaction-isolation=READ-COMMITTED
         livenessProbe:
           exec:
-            command:
-            - healthcheck.sh
-            - --su-mysql
-            - --connect
+            command: [ "healthcheck.sh", "--su-mysql", "--connect" ]
         resources:
           limits:
             memory: 2Gi
