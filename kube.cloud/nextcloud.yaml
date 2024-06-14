@@ -23,6 +23,15 @@ spec:
             chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
             /cron.sh &
             /entrypoint.sh apache2-foreground
+        livenessProbe:
+          initialDelaySeconds: 30
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - |-
+                curl -sS http://localhost/status.php |
+                grep -q '"installed":true'
         env:
         - name: MYSQL_DATABASE
           valueFrom:
