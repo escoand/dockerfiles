@@ -22,6 +22,7 @@ spec:
           - -c
           - |-
             echo '
+            :8081 { respond }
             {$NEXTCLOUD_DOMAIN} {
               log
               redir /.well-known/carddav /remote.php/dav/ 301
@@ -34,6 +35,10 @@ spec:
               redir {$REDIR_TARGET}
             }
             ' | exec caddy run --config - --adapter caddyfile
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8081
         env:
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
