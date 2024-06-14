@@ -31,9 +31,9 @@ spec:
               redir /.well-known/caldav  /remote.php/dav/ 301
               reverse_proxy nextcloud:80
             }
-            {$REDIR_DOMAIN} {
-              redir {$REDIR_TARGET}
-            }
+            #{$REDIR_DOMAIN} {
+            #  redir {$REDIR_TARGET}
+            #}
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
           # httpGet uses curl, which is not available
