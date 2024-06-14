@@ -15,11 +15,13 @@ spec:
         securityContext:
           privileged: true
         env:
+        - name: DOZZLE_AUTH_PROVIDER
+          value: forward-auth
         - name: DOZZLE_BASE
           value: /dozzle
-        - name: DOZZLE_NO_ANALYTICS
-          value: "true"
         - name: DOZZLE_ENABLE_ACTIONS
+          value: "true"
+        - name: DOZZLE_NO_ANALYTICS
           value: "true"
         volumeMounts:
         - name: docker_sock
