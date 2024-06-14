@@ -3,5 +3,10 @@
   "extends": [
     "config:base"
   ],
-  "baseBranches": ["master", "kube"]
+  "baseBranches": ["master", "kube"],
+  "regexManagers": [
+    "kubernetes": {
+      "fileMatch": ["^kube.*\\.yaml$"]
+    }
+  }
 }
