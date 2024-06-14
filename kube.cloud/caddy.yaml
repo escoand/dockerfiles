@@ -65,3 +65,10 @@ spec:
             secretKeyRef:
               name: secrets
               key: redir_target
+        volumeMounts:
+        - name: caddy
+          mountPath: /data
+      volumes:
+      - name: caddy
+        persistentVolumeClaim:
+          claimName: caddy
