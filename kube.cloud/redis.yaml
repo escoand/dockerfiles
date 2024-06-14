@@ -13,6 +13,9 @@ spec:
         - --appendonly no
         - --protected-mode no
         - --save ""
+        livenessProbe:
+          tcpSocket:
+            port: 6379
         resources:
           limits:
             memory: 500Mi
