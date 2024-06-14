@@ -4,9 +4,7 @@
     "config:base"
   ],
   "baseBranches": ["master", "kube"],
-  "regexManagers": [
-    "kubernetes": {
-      "fileMatch": ["^kube.*\\.yaml$"]
-    }
-  ]
+  "kubernetes": {
+    "fileMatch": ["^kube.*\\.yaml$"]
+  }
 }
