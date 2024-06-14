@@ -35,7 +35,7 @@ spec:
               redir {$REDIR_TARGET}
             }
             ' | exec caddy run --config - --adapter caddyfile
-        livenessProbe:
+        livenessProbe_:
           httpGet:
             path: /
             port: 8081
