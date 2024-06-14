@@ -14,8 +14,12 @@ spec:
         - --protected-mode no
         - --save ""
         livenessProbe:
-          tcpSocket:
-            port: 6379
+          exec:
+            command:
+            - redis-cli
+            - --raw
+            - incr
+            - ping
         resources:
           limits:
             memory: 500Mi
