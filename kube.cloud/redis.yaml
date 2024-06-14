@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: redis
-        image: docker.io/library/redis:7.2.4-alpine
+        image: docker.io/library/redis:7.2.5-alpine
         args:
         - --appendonly no
         - --protected-mode no
