@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dozzle
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: dozzle
+        image: docker.io/amir20/dozzle:v7.0.6
+        livenessProbe:
+          exec:
+            command: ["/dozzle", "healthcheck"]
+        env:
+        - name: DOZZLE_NO_ANALYTICS
+          value: "true"
+        - name: DOZZLE_ENABLE_ACTIONS
+          value: "true"
