@@ -16,9 +16,9 @@ spec:
         args:
         - --binlog-format=ROW
         - --transaction-isolation=READ-COMMITTED
-        livenessProbe:
-          tcpSocket:
-            port: 3306
+        #livenessProbe:
+        #  tcpSocket:
+        #    port: 3306
         resources:
           limits:
             memory: 2Gi
