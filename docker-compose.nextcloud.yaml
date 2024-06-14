@@ -98,7 +98,7 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: library/mariadb:10.11.8
+    image: library/mariadb:11.4.2
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE
