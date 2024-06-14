@@ -38,8 +38,8 @@ spec:
             }
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
-          tcpSocket:
-            #path: /health
+          httpGet:
+            path: /health
             port: 80
         env:
         - name: NEXTCLOUD_DOMAIN
