@@ -15,11 +15,7 @@ spec:
         - --save ""
         livenessProbe:
           exec:
-            command:
-            - redis-cli
-            - --raw
-            - incr
-            - ping
+            command: [ "redis-cli", "--raw", "incr", "ping" ]
         resources:
           limits:
             memory: 500Mi
