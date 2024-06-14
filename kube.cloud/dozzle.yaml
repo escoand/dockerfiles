@@ -10,8 +10,8 @@ spec:
       - name: dozzle
         image: docker.io/amir20/dozzle:v7.0.6
         command:
-          - sh
-          - -c
+          - /bin/sh
+          - -exc
           - |-
             mkdir -p /data/;
             /dozzle generate "$DOZZLE_USER" --password "$DOZZLE_PASSWORD" > /data/users.yml;
