@@ -22,9 +22,9 @@ spec:
           - -c
           - |-
             echo '
-            :8081 {
-              respond / 200
-            }
+            #:8081 {
+            #  respond / 200
+            #}
             {$NEXTCLOUD_DOMAIN} {
               log
               redir /.well-known/carddav /remote.php/dav/ 301
