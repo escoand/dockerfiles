@@ -24,6 +24,9 @@ spec:
             echo '
             {$NEXTCLOUD_DOMAIN} {
               #log
+              /supervisor {
+                reverse_proxy dozzle:8080
+              }
               redir /.well-known/carddav /remote.php/dav/ 301
               redir /.well-known/caldav  /remote.php/dav/ 301
               reverse_proxy nextcloud:80
@@ -31,23 +34,12 @@ spec:
             {$REDIR_DOMAIN} {
               redir {$REDIR_TARGET}
             }
-            {$DOZZLE_DOMAIN} {
-              #basic_auth {
-              #  {$DOZZLE_USER} {$DOZZLE_PASSWORD}
-              #}
-              reverse_proxy dozzle:8080
-            }
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
           # httpGet uses curl, which is not available
           tcpSocket:
             port: 80
         env:
-        - name: DOZZLE_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: dozzle_domain
         - name: DOZZLE_PASSWORD
           valueFrom:
             secretKeyRef:
