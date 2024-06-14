@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: mariadb
-        image: docker.io/library/mariadb:10.11.7
+        image: docker.io/library/mariadb:10.11.8
         args:
         - --binlog-format=ROW
         - --transaction-isolation=READ-COMMITTED
