@@ -9,21 +9,12 @@ spec:
       containers:
       - name: dozzle
         image: docker.io/amir20/dozzle:v7.0.6
-        command2:
-          - /bin/sh
-          - -exc
-          - |-
-            mkdir -p /data/;
-            /dozzle generate "$DOZZLE_USER" --password "$DOZZLE_PASSWORD" > /data/users.yml;
-            /dozzle
         livenessProbe:
           exec:
             command: ["/dozzle", "healthcheck"]
         securityContext:
           privileged: true
         env:
-        #- name: DOZZLE_AUTH_PROVIDER
-        #  value: simple
         - name: DOZZLE_BASE
           value: /dozzle
         - name: DOZZLE_ENABLE_ACTIONS
