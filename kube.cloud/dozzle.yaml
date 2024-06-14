@@ -16,7 +16,7 @@ spec:
           privileged: true
         env:
         - name: DOZZLE_AUTH_PROVIDER
-          value: forward-auth
+          value: forward-proxy
         - name: DOZZLE_BASE
           value: /dozzle
         - name: DOZZLE_ENABLE_ACTIONS
