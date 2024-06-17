@@ -5,7 +5,6 @@ targetConfigs:
 - url: https://github.com/escoand/dockerfiles.git
   kube:
   - name: kube
-    targetPath: kube
     schedule: "*/1 * * * *"
     pullImage: true
 prune:
