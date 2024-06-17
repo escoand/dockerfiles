@@ -65,7 +65,6 @@ sed -i \
 
 echo "# create pods"
 find secrets.sample.yaml "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
-podman run --rm -q -v nextcloud:/data:z alpine mkdir -p /data/apps /data/config /data/data
 
 echo "# create databases"
 podman pod start mariadb-pod >/dev/null
