@@ -3,6 +3,7 @@ configReload:
   configUrl: https://raw.githubusercontent.com/escoand/dockerfiles/master/fetchit.yaml
 targetConfigs:
 - url: https://github.com/escoand/dockerfiles.git
+  branch: master
   kube:
   - name: kube
     schedule: "*/1 * * * *"
