@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  # not working with Podman 4.9.4
+  #annotations:
+    #io.podman.annotations.userns: keep-id
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: nextcloud
+        image: docker.io/library/nextcloud:29.0.1
+        resources:
+          limits:
+            memory: 2Gi
+        command:
+          - /bin/bash
+          - -c
+          - |-
+            trap "" WINCH
+            echo "php occ maintenance:update:htaccess || true" > /docker-entrypoint-hooks.d/before-starting/start.sh;
+            chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
+            /entrypoint.sh apache2-foreground &
+            exec /cron.sh
+        livenessProbe:
+          initialDelaySeconds: 30
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - |-
+                curl -sS http://localhost/status.php |
+                grep -q '"installed":true'
+        env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_name
+        - name: MYSQL_HOST
+          value: mariadb
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_password
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_db_user
+        - name: NEXTCLOUD_INIT_HTACCESS
+          value: "TRUE"
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: nextcloud_domain
+        - name: NEXTCLOUD_TRUSTED_PROXIES
+          value: 10.89.0.0/24
+        - name: NEXTCLOUD_UPDATE
+          value: "1"
+        - name: REDIS_HOST
+          value: redis
+        envFrom:
+        - secretRef:
+            name: proxy
+            optional: true
+        volumeMounts:
+        - name: nextcloud
+          mountPath: /var/www/html/custom_apps:z
+          subPath: apps
+        - name: nextcloud
+          mountPath: /var/www/html/config:z
+          subPath: config
+        - name: nextcloud
+          mountPath: /var/www/html/data:z
+          subPath: data
+      volumes:
+      - name: nextcloud
+        persistentVolumeClaim:
+          claimName: nextcloud

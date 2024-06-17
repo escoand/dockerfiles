@@ -1,0 +1,27 @@
+#!/bin/sh
+
+getsecret() {
+  podman secret inspect secrets --showsecret --format '{{.SecretData}}' |
+  sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//p" |
+  base64 -d
+}
+
+PREFIX=$1
+NAME=$(getsecret "${PREFIX}_db_name")
+PASS=$(getsecret "${PREFIX}_db_password")
+USR=$(getsecret "${PREFIX}_db_user")
+
+if [ -z "$PREFIX" ] || [ -z "$NAME" ] || [ -z "$PASS" ] || [ -z "$USR" ]; then
+  echo prefix not set or secrets not found >&2
+  exit 1
+fi
+
+cat << END |
+CREATE DATABASE IF NOT EXISTS $NAME;
+CREATE USER IF NOT EXISTS "$USR"@"%";
+SET PASSWORD FOR "$USR"@"%" = PASSWORD("$PASS");
+GRANT ALL PRIVILEGES ON $NAME.* TO "$USR"@"%";
+FLUSH PRIVILEGES;
+END
+podman exec -i mariadb-pod-mariadb \
+  sh -c 'mariadb --password="$MARIADB_ROOT_PASSWORD"'

@@ -1,0 +1,14 @@
+configReload:
+  schedule: "*/5 * * * *"
+  configUrl: https://raw.githubusercontent.com/escoand/dockerfiles/master/fetchit.yaml
+targetConfigs:
+- url: https://github.com/escoand/dockerfiles.git
+  kube:
+  - name: kube
+    targetPath: kube
+    schedule: "*/1 * * * *"
+    pullImage: true
+prune:
+  All: true
+  Volumes: false
+  schedule: "*/10 * * * *"

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dozzle
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: dozzle
+        image: docker.io/amir20/dozzle:v7.0.6
+        livenessProbe:
+          exec:
+            command: ["/dozzle", "healthcheck"]
+        securityContext:
+          privileged: true
+        env:
+        - name: DOZZLE_BASE
+          value: /dozzle
+        - name: DOZZLE_ENABLE_ACTIONS
+          value: "true"
+        - name: DOZZLE_NO_ANALYTICS
+          value: "true"
+        - name: DOZZLE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: dozzle_password
+        - name: DOZZLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: dozzle_user
+        volumeMounts:
+        - name: docker_sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker_sock
+        hostPath:
+          path: /run/user/1000/podman/podman.sock
+          type: Socket

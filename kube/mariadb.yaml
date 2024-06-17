@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  # not working with Podman 4.9.4
+  #annotations:
+    #io.podman.annotations.userns: keep-id
+spec:
+  replicas: 1
+  template:
+    metadata:
+    spec:
+      containers:
+      - name: mariadb
+        image: docker.io/library/mariadb:11.4.2
+        args:
+        - --binlog-format=ROW
+        - --transaction-isolation=READ-COMMITTED
+        livenessProbe:
+          exec:
+            command: [ "healthcheck.sh", "--su-mysql", "--connect" ]
+        resources:
+          limits:
+            memory: 2Gi
+        env:
+        - name: MARIADB_AUTO_UPGRADE
+          value: "TRUE"
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: mariadb_root_password
+        volumeMounts:
+        - name: mariadb
+          mountPath: /var/lib/mysql:z
+      volumes:
+      - name: mariadb
+        persistentVolumeClaim:
+          claimName: mariadb
