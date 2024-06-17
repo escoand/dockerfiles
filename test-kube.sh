@@ -5,18 +5,18 @@ set -euo pipefail
 trap teardown EXIT TERM INT
 
 KUBEDIR=kube
-TMP1=$(mktemp)
-TMP2=$(mktemp)
+TMP=$(mktemp -d)
+echo $TMP
 
 # shellcheck disable=SC2317
 teardown() {
-  [ -s "$TMP1" ] && return
-  date >"$TMP1"
+  [ -f "$TMP/teardown" ] && return
+  touch "$TMP/teardown"
   echo "# tear down"
   find "$KUBEDIR" secrets.sample.yaml -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
   sed -n 's/^[[:blank:]]*claimName:[[:blank:]]*//p' "$KUBEDIR"/*.yaml |
     xargs podman volume rm -f >/dev/null
-  rm -f "$TMP1" "$TMP2"
+  rm -fr "$TMP"
 }
 
 getsecret() {
@@ -29,19 +29,27 @@ endtoend() {
   DOMAIN=$1
   PAGE=$2
   RESULT=$3
+  RC=0
   shift 3
-  if curl -ikLsS --noproxy "*" -o "$TMP2" "$@" \
-    --connect-to "$DOMAIN:80:127.0.0.1:8080" \
-    --connect-to "$DOMAIN:443:127.0.0.1:8443" \
-    "http://$DOMAIN/$PAGE" ||
-    # ignore max redir error
-    [ $? = 47 ]; then
-    grep -Fq "$RESULT" "$TMP2"
-  else
-    echo "#   -> failed"
-    cat "$TMP2"
-    return 1
+  {
+    set -x
+    # shellcheck disable=SC2015
+    {
+      curl -ikLsS --noproxy "*" -o "$TMP/output" "$@" \
+        --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+        --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+        "http://$DOMAIN/$PAGE" ||
+        [ $? = 47 ] # ignore max redirect
+    } && grep -iq "$RESULT" "$TMP/output" || RC=$?
+    set +x
+  } >"$TMP/endtoend" 2>&1
+  if [ $RC != 0 ]; then
+    echo "#   -> failed:"
+    cat "$TMP/endtoend"
+    echo "#   -> output:"
+    cat "$TMP/output"
   fi
+  return $RC
 }
 
 echo "# patch pods for testing"
@@ -80,8 +88,8 @@ endtoend "$DOMAIN" status.php '"installed":true'
 echo "# test Redir end-to-end"
 DOMAIN=$(getsecret redir_domain)
 TARGET=$(getsecret redir_target)
-endtoend "$DOMAIN" test.php "Location: $TARGET" --max-redirs 1 --no-show-error
+endtoend "$DOMAIN" test.php "Location: $TARGET" --max-redirs 1
 
 echo "# test Wordpress end-to-end"
 DOMAIN=$(getsecret wordpress_domain)
-endtoend "$DOMAIN" wp-admin/install.php "HTTP/1.1 200"
+endtoend "$DOMAIN" wp-admin/install.php "^HTTP/[1-9\.]* 200"
