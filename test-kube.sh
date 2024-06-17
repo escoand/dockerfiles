@@ -108,7 +108,7 @@ DOMAIN=$(getsecret wordpress_domain)
 endtoend "$DOMAIN" wp-admin/install.php "^HTTP/[1-9\.]* 200"
 
 log "test signal stability"
-podman kill -a -s WINCH
+podman kill -a -s WINCH >/dev/null
 healthy
 
 log "show final state"
