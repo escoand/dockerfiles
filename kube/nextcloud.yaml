@@ -67,7 +67,7 @@ spec:
           subPath: data
       - name: nextcloud-cron
         image: docker.io/library/nextcloud:29.0.1
-        command: /cron.sh
+        command: [ "/cron.sh" ]
         volumeMounts:
         - name: nextcloud
           mountPath: /var/www/html/custom_apps:z
