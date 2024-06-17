@@ -81,6 +81,12 @@ find "$KUBEDIR" -name '*.yaml' |
   sed 's|^.*/\(.*\)\.yaml|\1-pod-\1|' |
   xargs podman wait --condition healthy >/dev/null
 
+echo "# test Dozzle end-to-end"
+#PWD=$(getsecret dozzle_password)
+USR=$(getsecret dozzle_user)
+DOMAIN=$(getsecret nextcloud_domain)
+endtoend "$DOMAIN" dozzle/ "^HTTP/[1-9\.]* 200" --location-trusted --user "$USR:$USR"
+
 echo "# test Nextcloud end-to-end"
 DOMAIN=$(getsecret nextcloud_domain)
 endtoend "$DOMAIN" status.php '"installed":true'
