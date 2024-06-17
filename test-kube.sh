@@ -98,3 +98,6 @@ endtoend "$DOMAIN" test.php "Location: $TARGET" --max-redirs 1
 echo "# test Wordpress end-to-end"
 DOMAIN=$(getsecret wordpress_domain)
 endtoend "$DOMAIN" wp-admin/install.php "^HTTP/[1-9\.]* 200"
+
+echo "# show final state"
+podman ps -a
