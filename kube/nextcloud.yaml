@@ -15,15 +15,6 @@ spec:
         resources:
           limits:
             memory: 2Gi
-        command:
-          - /bin/bash
-          - -c
-          - |-
-            trap "" WINCH
-            echo "php occ maintenance:update:htaccess || true" > /docker-entrypoint-hooks.d/before-starting/start.sh;
-            chmod +x /docker-entrypoint-hooks.d/before-starting/start.sh;
-            /entrypoint.sh apache2-foreground &
-            exec /cron.sh
         livenessProbe:
           initialDelaySeconds: 30
           exec:
@@ -64,10 +55,22 @@ spec:
           value: "1"
         - name: REDIS_HOST
           value: redis
-        envFrom:
-        - secretRef:
-            name: proxy
-            optional: true
+        volumeMounts:
+        - name: nextcloud
+          mountPath: /var/www/html/custom_apps:z
+          subPath: apps
+        - name: nextcloud
+          mountPath: /var/www/html/config:z
+          subPath: config
+        - name: nextcloud
+          mountPath: /var/www/html/data:z
+          subPath: data
+      - name: nextcloud-cron
+        image: docker.io/library/nextcloud:29.0.1
+        resources:
+          limits:
+            memory: 2Gi
+        command: /cron.sh
         volumeMounts:
         - name: nextcloud
           mountPath: /var/www/html/custom_apps:z
