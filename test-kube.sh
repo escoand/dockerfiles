@@ -109,6 +109,7 @@ endtoend "$DOMAIN" wp-admin/install.php "^HTTP/[1-9\.]* 200"
 
 log "test signal stability"
 podman kill -a -s WINCH >/dev/null
+sleep 5
 healthy
 
 log "show final state"
