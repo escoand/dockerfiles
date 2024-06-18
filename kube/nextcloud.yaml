@@ -80,12 +80,7 @@ spec:
           subPath: data
       initContainers:
       - image: docker.io/library/alpine
-        command:
-        - mkdir
-        - -p
-        - /data/apps
-        - /data/config
-        - /data/data
+        command: [ "mkdir", "-p", "/data/apps", "/data/config", "/data/data" ]
         volumeMounts:
         - name: nextcloud
           mountPath: /data:z
