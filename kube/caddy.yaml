@@ -27,6 +27,7 @@ spec:
               email {$ACME_MAIL}
             }
             {$NEXTCLOUD_DOMAIN} {
+              log
               handle /dozzle/* {
                 basic_auth {
                   {$DOZZLE_USER} {$DOZZLE_PASSWORD}
