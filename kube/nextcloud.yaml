@@ -57,6 +57,9 @@ spec:
           value: redis
         volumeMounts:
         - name: nextcloud
+          mountPath: /var/www/html:z
+          subPath: app
+        - name: nextcloud
           mountPath: /var/www/html/custom_apps:z
           subPath: apps
         - name: nextcloud
@@ -70,6 +73,9 @@ spec:
         command: [ "/cron.sh" ]
         volumeMounts:
         - name: nextcloud
+          mountPath: /var/www/html:z
+          subPath: app
+        - name: nextcloud
           mountPath: /var/www/html/custom_apps:z
           subPath: apps
         - name: nextcloud
@@ -79,8 +85,8 @@ spec:
           mountPath: /var/www/html/data:z
           subPath: data
       initContainers:
-      - image: docker.io/library/alpine
-        command: [ "mkdir", "-p", "/data/apps", "/data/config", "/data/data" ]
+      - image: docker.io/library/nextcloud:29.0.2
+        command: [ "mkdir", "-p", "/data/app", "/data/apps", "/data/config", "/data/data" ]
         volumeMounts:
         - name: nextcloud
           mountPath: /data:z
