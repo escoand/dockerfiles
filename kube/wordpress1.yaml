@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress1
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: wordpress1
+        image: docker.io/library/wordpress:6.5.4-apache
+        livenessProbe:
+          httpGet:
+            port: 80
+        envFrom:
+        - secretRef:
+            name: wordpress1
+        volumeMounts:
+        - name: wordpress1
+          mountPath: /var/www/html/wp-content:z
+      volumes:
+      - name: wordpress1
+        persistentVolumeClaim:
+          claimName: wordpress1
