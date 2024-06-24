@@ -42,7 +42,7 @@ spec:
               redir {$REDIR_TARGET}
             }
             {$WORDPRESS_DOMAIN} {
-             reverse_proxy wordpress:80
+             reverse_proxy wordpress1:80
             }
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
