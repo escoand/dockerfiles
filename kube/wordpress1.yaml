@@ -12,6 +12,9 @@ spec:
         livenessProbe:
           httpGet:
             port: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mariadb
         envFrom:
         - secretRef:
             name: wordpress1
