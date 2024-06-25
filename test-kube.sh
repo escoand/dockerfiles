@@ -12,8 +12,6 @@ echo $TMP
 teardown() {
   [ -f "$TMP/teardown" ] && return
   touch "$TMP/teardown"
-  echo "# final state"
-  podman ps
   echo "# tear down"
   find "$KUBEDIR" secrets*.sample.yaml -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
   sed -n 's/^[[:blank:]]*claimName:[[:blank:]]*//p' "$KUBEDIR"/*.yaml |
