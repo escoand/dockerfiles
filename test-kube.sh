@@ -81,6 +81,7 @@ podman pod start mariadb-pod >/dev/null
 podman wait --condition healthy mariadb-pod-mariadb >/dev/null
 sed -n 's/^[[:blank:]]*key:[[:blank:]][[:blank:]]*\(.*\)_db_name.*/\1/p' "$KUBEDIR"/*.yaml |
   xargs -n1 ./db_usr_pwd.sh
+./db_usr_pwd.sh wordpress wordpress1
 
 log "start pods"
 podman pod start -a >/dev/null
