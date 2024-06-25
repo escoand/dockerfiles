@@ -18,3 +18,7 @@ jobs:
       - name: Test kube config
         run: ./test-kube.sh
         timeout-minutes: 2
+      # final state
+      - name: Final state
+        run: podman ps
+        if: ${{ always() }}

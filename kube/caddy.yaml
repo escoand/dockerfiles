@@ -41,8 +41,8 @@ spec:
             {$REDIR_DOMAIN} {
               redir {$REDIR_TARGET}
             }
-            {$WORDPRESS_DOMAIN} {
-             reverse_proxy wordpress:80
+            {$WORDPRESS1_DOMAIN} {
+              reverse_proxy wordpress1:80
             }
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
@@ -80,11 +80,11 @@ spec:
             secretKeyRef:
               name: secrets
               key: redir_target
-        - name: WORDPRESS_DOMAIN
+        - name: WORDPRESS1_DOMAIN
           valueFrom:
             secretKeyRef:
               name: secrets
-              key: wordpress_domain
+              key: wordpress1_domain
         volumeMounts:
         - name: caddy
           mountPath: /data

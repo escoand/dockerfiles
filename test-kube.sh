@@ -13,7 +13,7 @@ teardown() {
   [ -f "$TMP/teardown" ] && return
   touch "$TMP/teardown"
   echo "# tear down"
-  find "$KUBEDIR" secrets.sample.yaml -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
+  find "$KUBEDIR" secrets*.sample.yaml -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
   sed -n 's/^[[:blank:]]*claimName:[[:blank:]]*//p' "$KUBEDIR"/*.yaml |
     xargs podman volume rm -f >/dev/null
   rm -fr "$TMP"
@@ -30,7 +30,7 @@ healthy() {
 }
 
 getsecret() {
-  podman secret inspect secrets --showsecret --format '{{.SecretData}}' |
+  podman secret inspect "${2:-secrets}" --showsecret --format '{{.SecretData}}' |
     sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//p" |
     base64 -d
 }
@@ -74,13 +74,14 @@ sed -i \
   "$KUBEDIR/dozzle.yaml"
 
 log "create pods"
-find secrets.sample.yaml "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
+find secrets*.sample.yaml "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
 
 log "create databases"
 podman pod start mariadb-pod >/dev/null
 podman wait --condition healthy mariadb-pod-mariadb >/dev/null
 sed -n 's/^[[:blank:]]*key:[[:blank:]][[:blank:]]*\(.*\)_db_name.*/\1/p' "$KUBEDIR"/*.yaml |
   xargs -n1 ./db_usr_pwd.sh
+./db_usr_pwd.sh wordpress wordpress1
 
 log "start pods"
 podman pod start -a >/dev/null
@@ -104,7 +105,7 @@ TARGET=$(getsecret redir_target)
 endtoend "$DOMAIN" test.php "Location: $TARGET" --max-redirs 1
 
 log "test Wordpress end-to-end"
-DOMAIN=$(getsecret wordpress_domain)
+DOMAIN=$(getsecret wordpress1_domain)
 endtoend "$DOMAIN" wp-admin/install.php "^HTTP/[1-9\.]* 200"
 
 log "test signal stability"

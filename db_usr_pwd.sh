@@ -1,15 +1,15 @@
 #!/bin/sh
 
 getsecret() {
-  podman secret inspect secrets --showsecret --format '{{.SecretData}}' |
-  sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//p" |
+  podman secret inspect "${2:-secrets}" --showsecret --format '{{.SecretData}}' |
+  sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//Ip" |
   base64 -d
 }
 
 PREFIX=$1
-NAME=$(getsecret "${PREFIX}_db_name")
-PASS=$(getsecret "${PREFIX}_db_password")
-USR=$(getsecret "${PREFIX}_db_user")
+NAME=$(getsecret "${PREFIX}_db_name" "$2")
+PASS=$(getsecret "${PREFIX}_db_password" "$2")
+USR=$(getsecret "${PREFIX}_db_user" "$2")
 
 if [ -z "$PREFIX" ] || [ -z "$NAME" ] || [ -z "$PASS" ] || [ -z "$USR" ]; then
   echo prefix not set or secrets not found >&2
