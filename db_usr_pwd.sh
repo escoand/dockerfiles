@@ -2,7 +2,7 @@
 
 getsecret() {
   podman secret inspect "${2:-secrets}" --showsecret --format '{{.SecretData}}' |
-  sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//p" |
+  sed -n "s/^[[:blank:]]*$1:[[:blank:]][[:blank:]]*//Ip" |
   base64 -d
 }
 
