@@ -88,6 +88,11 @@ spec:
             secretKeyRef:
               name: secrets
               key: wordpress1_domain
+        - name: WORDPRESS2_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: wordpress2_domain
         volumeMounts:
         - name: caddy
           mountPath: /data
