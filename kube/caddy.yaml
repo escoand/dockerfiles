@@ -44,6 +44,9 @@ spec:
             {$WORDPRESS1_DOMAIN} {
               reverse_proxy wordpress1:80
             }
+            {$WORDPRESS2_DOMAIN} {
+              reverse_proxy wordpress2:80
+            }
             ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
           # httpGet uses curl, which is not available
