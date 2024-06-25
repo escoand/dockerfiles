@@ -18,3 +18,21 @@ metadata:
     volume.podman.io/driver: local
     volume.podman.io/mount-options: bind
   name: nextcloud
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.podman.io/device: $PWD/wordpress1
+    volume.podman.io/driver: local
+    volume.podman.io/mount-options: bind
+  name: wordpress1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    volume.podman.io/device: $PWD/wordpress2
+    volume.podman.io/driver: local
+    volume.podman.io/mount-options: bind
+  name: wordpress2
