@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress2
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: wordpress2
+        image: docker.io/library/wordpress:6.5.5-apache
+        livenessProbe:
+          httpGet:
+            port: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mariadb
+        envFrom:
+        - secretRef:
+            name: wordpress2
+        volumeMounts:
+        - name: wordpress2
+          mountPath: /var/www/html/wp-content:z
+      volumes:
+      - name: wordpress2
+        persistentVolumeClaim:
+          claimName: wordpress2
