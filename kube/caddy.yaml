@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: caddy
-        image: docker.io/library/caddy:2.8.4-alpine
+        image: docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
         ports:
         - containerPort: 80
           hostPort: 8080
@@ -17,47 +17,11 @@ spec:
         - containerPort: 443
           hostPort: 8443
           protocol: UDP
-        command:
-          - /bin/sh
-          - -c
-          - |-
-            echo '
-            {
-              acme_ca https://acme.zerossl.com/v2/DV90
-              email {$ACME_MAIL}
-            }
-            {$NEXTCLOUD_DOMAIN} {
-              #log
-              handle /dozzle/* {
-                basic_auth {
-                  {$DOZZLE_USER} {$DOZZLE_PASSWORD}
-                }
-                reverse_proxy dozzle:8080
-              }
-              redir /.well-known/carddav /remote.php/dav/ 301
-              redir /.well-known/caldav  /remote.php/dav/ 301
-              reverse_proxy nextcloud:80
-            }
-            {$REDIR_DOMAIN} {
-              redir {$REDIR_TARGET}
-            }
-            {$WORDPRESS1_DOMAIN} {
-              reverse_proxy wordpress1:80
-            }
-            {$WORDPRESS2_DOMAIN} {
-              reverse_proxy wordpress2:80
-            }
-            ' | exec caddy run --config - --adapter caddyfile
         livenessProbe:
           # httpGet uses curl, which is not available
           tcpSocket:
             port: 80
         env:
-        - name: ACME_MAIL
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: acme_mail
         - name: DOZZLE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -96,7 +60,13 @@ spec:
         volumeMounts:
         - name: caddy
           mountPath: /data
+        - name: docker_sock
+          mountPath: /var/run/docker.sock
       volumes:
       - name: caddy
         persistentVolumeClaim:
           claimName: caddy
+      - name: docker_sock
+        hostPath:
+          path: /run/user/1000/podman/podman.sock
+          type: Socket
