@@ -8,7 +8,8 @@ spec:
       labels:
         caddy: "{$NEXTCLOUD_DOMAIN}"
         caddy.handle: "/dozzle/*"
-        "caddy.handle.basic_auth.{$DOZZLE_USER}": "{$DOZZLE_PASSWORD}"
+        caddy.handle.basic_auth.{$DOZZLE_USER}: "{$DOZZLE_PASSWORD}"
+        caddy.handle.reverse_proxy: "{{upstreams}}"
     spec:
       containers:
       - name: dozzle
