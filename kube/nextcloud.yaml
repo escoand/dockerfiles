@@ -10,8 +10,8 @@ spec:
   template:
     metatdata:
       labels:
-        caddy: {$NEXTCLOUD_DOMAIN}
-        caddy.reverse_proxy: {{upstreams}}
+        caddy: "{$NEXTCLOUD_DOMAIN}"
+        caddy.reverse_proxy: "{{upstreams}}"
     spec:
       containers:
       - name: nextcloud
