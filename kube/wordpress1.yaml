@@ -8,7 +8,7 @@ spec:
     metatdata:
       labels:
         caddy: {$WORDPRESS1_DOMAIN}
-        caddy.reverse_proxy: wordpress1:80
+        caddy.reverse_proxy: {{upstreams}}
     spec:
       containers:
       - name: wordpress1
