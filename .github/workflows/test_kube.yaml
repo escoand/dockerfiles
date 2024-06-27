@@ -6,8 +6,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Install deps
-        run: |
-          sudo apt-get update -qy &&
+        run: |-
+          set -euo pipefail
+          sudo apt-get update -qy
           sudo apt-get install -qy podman>=4.4
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -15,30 +16,34 @@ jobs:
         run: systemctl --user start podman.socket
       - name: Patch pods for testing
         run: |-
+          set -euo pipefail
           sed -i \
               -e '/^[[:blank:]]*env:/ {' \
               -e 'a\        - { name: NEXTCLOUD_ADMIN_USER, value: admin }' \
               -e 'a\        - { name: NEXTCLOUD_ADMIN_PASSWORD, value: admin }' \
               -e '}' \
-              kube/nextcloud.yaml &&
+              kube/nextcloud.yaml
           sed -i \
               -e "s|/run/user/1000/|${XDG_RUNTIME_DIR:-/run/user/1000}/|" \
               kube/*.yaml
       - name: Create pods
         run: |-
-          find init/ -name 'secrets.*.yaml' -exec podman kube play {} \; &&
+          set -euo pipefail
+          find init/ -name 'secrets.*.yaml' -exec podman kube play {} \;
           find kube/ -name '*.yaml' -exec podman kube play --quiet --start=false {} \;
       - name: Create databases
         run: |-
-          podman pod start mariadb-pod &&
-          podman wait --condition healthy mariadb-pod-mariadb &&
-          ./db_usr_pwd.sh MYSQL nextcloud &&
-          ./db_usr_pwd.sh WORDPRESS_DB wordpress1 &&
-          ./db_usr_pwd.sh WORDPRESS_DB wordpress2 &&
+          set -euo pipefail
+          podman pod start mariadb-pod
+          podman wait --condition healthy mariadb-pod-mariadb
+          ./db_usr_pwd.sh MYSQL nextcloud
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress1
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress2
       - name: Start pods
         run: podman pod start -a
       - name: Wait for healthy state
         run: |-
+          set -euo pipefail
           find kube/ -name '*.yaml' |
           sed 's|^.*/\(.*\)\.yaml|\1-pod-\1|' |
           xargs -t podman wait --condition healthy
