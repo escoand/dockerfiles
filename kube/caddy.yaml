@@ -25,43 +25,43 @@ spec:
         - name: DOZZLE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: dozzle_password
         - name: DOZZLE_USER
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: dozzle_user
         - name: NEXTCLOUD_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: nextcloud_domain
         - name: REDIR_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: redir_domain
         - name: REDIR_TARGET
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: redir_target
         - name: WORDPRESS1_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: wordpress1_domain
         - name: WORDPRESS2_DOMAIN
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: caddy
               key: wordpress2_domain
         volumeMounts:
         - name: caddy
           mountPath: /data
         - name: docker_sock
-          mountPath: /var/run/docker.sock
+          mountPath: /var/run/docker.sock:ro
       volumes:
       - name: caddy
         persistentVolumeClaim:
