@@ -16,13 +16,14 @@ jobs:
         run: systemctl --user start podman.socket
       - name: Patch pods for testing
         run: |-
-          set -euo pipefail
+          set -euxo pipefail
           sed -i \
               -e '/^[[:blank:]]*env:/ {' \
               -e 'a\        - { name: NEXTCLOUD_ADMIN_USER, value: admin }' \
               -e 'a\        - { name: NEXTCLOUD_ADMIN_PASSWORD, value: admin }' \
               -e '}' \
               kube/nextcloud.yaml
+          cat kube/nextcloud.yaml
           sed -i \
               -e "s|/run/user/1000/|${XDG_RUNTIME_DIR:-/run/user/1000}/|" \
               kube/*.yaml
