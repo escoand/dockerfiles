@@ -75,7 +75,8 @@ sed -i \
   "$KUBEDIR"/*.yaml
 
 log "create pods"
-find "$INITDIR" "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
+find "$INITDIR" -name 'secrets.*.yaml' -exec podman kube play {} \; >/dev/null
+find "$KUBEDIR" -name '*.yaml' -exec podman kube play --quiet --start=false {} \; >/dev/null
 
 log "create databases"
 podman pod start mariadb-pod >/dev/null
