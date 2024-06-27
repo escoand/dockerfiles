@@ -4,6 +4,7 @@ set -euo pipefail
 
 #trap teardown EXIT TERM INT
 
+INITDIR=init
 KUBEDIR=kube
 TMP=$(mktemp -d)
 echo $TMP
@@ -13,7 +14,7 @@ teardown() {
   [ -f "$TMP/teardown" ] && return
   touch "$TMP/teardown"
   echo "# tear down"
-  find "$KUBEDIR" secrets*.sample.yaml -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
+  find "$KUBEDIR" "$INITDIR" -name '*.yaml' -exec podman kube play --down --force {} \; >/dev/null
   sed -n 's/^[[:blank:]]*claimName:[[:blank:]]*//p' "$KUBEDIR"/*.yaml |
     xargs podman volume rm -f >/dev/null
   rm -fr "$TMP"
@@ -74,7 +75,7 @@ sed -i \
   "$KUBEDIR"/*.yaml
 
 log "create pods"
-find secrets*.sample.yaml "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
+find "$INITDIR" "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
 
 log "create databases"
 podman pod start mariadb-pod >/dev/null
