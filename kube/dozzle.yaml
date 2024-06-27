@@ -26,16 +26,6 @@ spec:
           value: "true"
         - name: DOZZLE_NO_ANALYTICS
           value: "true"
-        - name: DOZZLE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: dozzle_password
-        - name: DOZZLE_USER
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: dozzle_user
         volumeMounts:
         - name: docker_sock
           mountPath: /var/run/docker.sock
