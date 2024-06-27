@@ -5,6 +5,10 @@ metadata:
 spec:
   replicas: 1
   template:
+    metatdata:
+      labels:
+        caddy: {$REDIR_DOMAIN}
+        caddy.redir: {$REDIR_TARGET}
     spec:
       containers:
       - name: redis
