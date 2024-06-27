@@ -28,7 +28,7 @@ spec:
         - name: MARIADB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: mariadb
               key: mariadb_root_password
         volumeMounts:
         - name: mariadb
