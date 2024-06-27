@@ -32,12 +32,9 @@ jobs:
         run: |-
           podman pod start mariadb-pod &&
           podman wait --condition healthy mariadb-pod-mariadb &&
-          podman secret ls --format '{{.Name}}' |
-          while read -r SECRET; do
-            podman secret inspect "$SECRET" --showsecret --format '{{.SecretData}}' |
-            sed -n 's/_db_name:.*//Ip' |
-            xargs -ti ./db_usr_pwd.sh {} "$SECRET"
-          done
+          ./db_usr_pwd.sh MYSQL nextcloud &&
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress1 &&
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress2 &&
       - name: Start pods
         run: podman pod start -a
       - name: Wait for healthy state
