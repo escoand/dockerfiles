@@ -31,23 +31,8 @@ spec:
                 curl -sS http://localhost/status.php |
                 grep -q '"installed":true'
         env:
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: nextcloud
-              key: nextcloud_db_name
         - name: MYSQL_HOST
           value: mariadb
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: nextcloud
-              key: nextcloud_db_password
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: nextcloud
-              key: nextcloud_db_user
         - name: NEXTCLOUD_INIT_HTACCESS
           value: "TRUE"
         - name: NEXTCLOUD_TRUSTED_PROXIES
@@ -56,6 +41,9 @@ spec:
           value: "1"
         - name: REDIS_HOST
           value: redis
+        envFrom:
+        - secretRef:
+            name: nextcloud
         volumeMounts:
         - name: nextcloud
           mountPath: /var/www/html:z
