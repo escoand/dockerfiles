@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-trap teardown EXIT TERM INT
+#trap teardown EXIT TERM INT
 
 KUBEDIR=kube
 TMP=$(mktemp -d)
