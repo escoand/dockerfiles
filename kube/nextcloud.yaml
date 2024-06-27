@@ -8,6 +8,10 @@ metadata:
 spec:
   replicas: 1
   template:
+    metatdata:
+      labels:
+        caddy: {$NEXTCLOUD_DOMAIN}
+        caddy.reverse_proxy: nextcloud:80
     spec:
       containers:
       - name: nextcloud
