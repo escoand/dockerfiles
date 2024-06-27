@@ -47,3 +47,7 @@ jobs:
           find kube/ -name '*.yaml' |
           sed 's|^.*/\(.*\)\.yaml|\1-pod-\1|' |
           xargs -t podman wait --condition healthy
+        timeout-minutes: 2
+      - name: State
+        run: podman ps
+        if: ${{ always() }}
