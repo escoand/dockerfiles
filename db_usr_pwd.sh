@@ -7,9 +7,9 @@ getsecret() {
 }
 
 PREFIX=$1
-NAME=$(getsecret "${PREFIX}_db_name" "$2")
-PASS=$(getsecret "${PREFIX}_db_password" "$2")
-USR=$(getsecret "${PREFIX}_db_user" "$2")
+NAME=$(getsecret "${PREFIX}_name" "$2")
+PASS=$(getsecret "${PREFIX}_password" "$2")
+USR=$(getsecret "${PREFIX}_user" "$2")
 
 if [ -z "$PREFIX" ] || [ -z "$NAME" ] || [ -z "$PASS" ] || [ -z "$USR" ]; then
   echo prefix not set or secrets not found >&2
