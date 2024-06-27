@@ -9,7 +9,7 @@ spec:
         caddy: "{$NEXTCLOUD_DOMAIN}"
         caddy.handle: "/dozzle/*"
         caddy.handle.basic_auth.{$DOZZLE_USER}: "{$DOZZLE_PASSWORD}"
-        caddy.handle.reverse_proxy: "{{upstreams}}"
+        caddy.handle.reverse_proxy: "{{upstreams 8080}}"
     spec:
       containers:
       - name: dozzle
