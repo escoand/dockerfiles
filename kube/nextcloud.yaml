@@ -34,27 +34,22 @@ spec:
         - name: MYSQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: nextcloud
               key: nextcloud_db_name
         - name: MYSQL_HOST
           value: mariadb
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: nextcloud
               key: nextcloud_db_password
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: secrets
+              name: nextcloud
               key: nextcloud_db_user
         - name: NEXTCLOUD_INIT_HTACCESS
           value: "TRUE"
-        - name: NEXTCLOUD_TRUSTED_DOMAINS
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: nextcloud_domain
         - name: NEXTCLOUD_TRUSTED_PROXIES
           value: 10.89.0.0/24
         - name: NEXTCLOUD_UPDATE
