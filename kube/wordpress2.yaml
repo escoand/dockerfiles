@@ -5,6 +5,10 @@ metadata:
 spec:
   replicas: 1
   template:
+    metatdata:
+      labels:
+        caddy: {$WORDPRESS2_DOMAIN}
+        caddy.reverse_proxy: {{upstreams}}
     spec:
       containers:
       - name: wordpress2
