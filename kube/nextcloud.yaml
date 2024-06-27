@@ -10,8 +10,10 @@ spec:
   template:
     metadata:
       labels:
-        caddy: "{$NEXTCLOUD_DOMAIN}"
-        caddy.reverse_proxy: "{{upstreams}}"
+        caddy_0: "{$NEXTCLOUD_DOMAIN}"
+        caddy_0.reverse_proxy: "{{upstreams}}"
+        caddy_1: "{$REDIR_DOMAIN}"
+        caddy_1.redir: "{$REDIR_TARGET}"
     spec:
       containers:
       - name: nextcloud
