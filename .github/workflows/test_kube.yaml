@@ -19,6 +19,9 @@ jobs:
         run: ./test-kube.sh
         timeout-minutes: 2
       # final state
+      - name: Proxy logs
+        run: podman logs caddy-pod-caddy
+        if: ${{ always() }}
       - name: Final state
         run: podman ps
         if: ${{ always() }}
