@@ -18,13 +18,3 @@ jobs:
       - name: Test kube config
         run: ./test-kube.sh
         timeout-minutes: 2
-      # final state
-      - name: Nexcloud inspect
-        run: podman inspect nextcloud-pod-nextcloud
-        if: ${{ always() }}
-      - name: Proxy logs
-        run: podman logs caddy-pod-caddy
-        if: ${{ always() }}
-      - name: Final state
-        run: podman ps
-        if: ${{ always() }}
