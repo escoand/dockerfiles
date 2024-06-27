@@ -11,7 +11,7 @@ spec:
     metatdata:
       labels:
         caddy: {$NEXTCLOUD_DOMAIN}
-        caddy.reverse_proxy: nextcloud:80
+        caddy.reverse_proxy: {{upstreams}}
     spec:
       containers:
       - name: nextcloud
