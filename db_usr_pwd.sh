@@ -8,6 +8,7 @@ getsecret() {
 
 PREFIX=$1
 NAME=$(getsecret "${PREFIX}_name" "$2")
+[ -z "$NAME" ] && NAME=$(getsecret "${PREFIX}_database" "$2")
 PASS=$(getsecret "${PREFIX}_password" "$2")
 USR=$(getsecret "${PREFIX}_user" "$2")
 
