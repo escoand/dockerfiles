@@ -71,7 +71,7 @@ sed -i \
   "$KUBEDIR/nextcloud.yaml"
 sed -i \
   -e "s|/run/user/1000/|${XDG_RUNTIME_DIR:-/run/user/1000}/|" \
-  "$KUBEDIR/*.yaml"
+  "$KUBEDIR"/*.yaml
 
 log "create pods"
 find secrets*.sample.yaml "$KUBEDIR" -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \; >/dev/null
