@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: wordpress1
-        image: docker.io/library/wordpress:6.6.0-apache
+        image: docker.io/library/wordpress:6.6.1-apache
         livenessProbe:
           httpGet:
             port: 80
