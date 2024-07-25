@@ -7,7 +7,7 @@ metadata:
     caddy.reverse_proxy: "{{upstreams}}"
 spec:
   containers:
-    - name: wordpress2
+    - name: app
       image: docker.io/library/wordpress:6.6.1-apache
       livenessProbe:
         httpGet:

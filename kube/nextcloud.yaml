@@ -12,7 +12,7 @@ metadata:
     #io.podman.annotations.userns: keep-id
 spec:
   containers:
-    - name: nextcloud
+    - name: app
       image: docker.io/library/nextcloud:29.0.4
       resources:
         limits:
@@ -58,7 +58,7 @@ spec:
         - name: nextcloud
           mountPath: /var/www/html/data:z
           subPath: data
-    - name: nextcloud-cron
+    - name: cron
       image: docker.io/library/nextcloud:29.0.4
       command: ["/cron.sh"]
       volumeMounts:
