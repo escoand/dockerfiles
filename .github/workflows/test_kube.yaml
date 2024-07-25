@@ -44,8 +44,10 @@ jobs:
       - name: Wait for healthy state
         run: |-
           set -euo pipefail
-          find kube/ -name '*.yaml' |
-          sed 's|^.*/\(.*\)\.yaml|\1-\1|' |
+          yq -ot '. as $parent | (
+            .spec.containers[] | $parent.metadata.name + "-" + .name,
+            .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
+          )' kube/*.yaml |
           xargs -t podman wait --condition healthy
         timeout-minutes: 2
       - name: Pods
