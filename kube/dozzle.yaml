@@ -28,7 +28,7 @@ spec:
               value: "true"
           volumeMounts:
             - name: docker_sock
-              mountPath: /var/run/docker.sock
+              mountPath: /var/run/docker.sock:ro
       volumes:
         - name: docker_sock
           hostPath:
