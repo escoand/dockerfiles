@@ -7,6 +7,6 @@
     "fileMatch": ["^kube.*\\.yaml$"]
   },
   "baseBranches": [
-    "main", "caddy-docker-proxy"
+    "master", "caddy-docker-proxy"
   ]
 }
