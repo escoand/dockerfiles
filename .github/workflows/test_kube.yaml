@@ -55,7 +55,7 @@ jobs:
       - name: Test Dozzle
         run: |-
           set -euxo pipefail
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.NEXTCLOUD_DOMAIN | base64 -d | sed 's/,.*//')
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.NEXTCLOUD_DOMAIN | base64 -d | sed 's/ *,.*//')
           USER_=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.DOZZLE_USER | base64 -d)
           curl -ikLsS --location-trusted --user "$USER_:$USER_" \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
