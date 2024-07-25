@@ -69,7 +69,8 @@ jobs:
           podman secret inspect caddy --showsecret --format "{{.SecretData}}" |
           yq -ot .data.NEXTCLOUD_DOMAIN |
           base64 -d |
-          tr ', ' ' \n' |
+          tr -d ' ' |
+          tr ',' '\n' |
           while read -r DOMAIN; do
             curl -ikLsS \
               --connect-to "$DOMAIN:80:127.0.0.1:8080" \
