@@ -1,27 +1,27 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: wordpress1
+  labels:
+    caddy: "{$WORDPRESS1_DOMAIN}"
+    caddy.reverse_proxy: "{{upstreams}}"
 spec:
-  replicas: 1
-  template:
-    spec:
-      containers:
-      - name: wordpress1
-        image: docker.io/library/wordpress:6.6.1-apache
-        livenessProbe:
-          httpGet:
-            port: 80
-        env:
+  containers:
+    - name: wordpress1
+      image: docker.io/library/wordpress:6.6.1-apache
+      livenessProbe:
+        httpGet:
+          port: 80
+      env:
         - name: WORDPRESS_DB_HOST
           value: mariadb
-        envFrom:
+      envFrom:
         - secretRef:
             name: wordpress1
-        volumeMounts:
+      volumeMounts:
         - name: wordpress1
           mountPath: /var/www/html/wp-content:z
-      volumes:
-      - name: wordpress1
-        persistentVolumeClaim:
-          claimName: wordpress1
+  volumes:
+    - name: wordpress1
+      persistentVolumeClaim:
+        claimName: wordpress1

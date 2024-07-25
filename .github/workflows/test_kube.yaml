@@ -1,5 +1,4 @@
 on: push
-
 jobs:
   test-commit:
     name: Test commit
@@ -7,18 +6,115 @@ jobs:
     steps:
       # setup
       - name: Install deps
-        run: |
-          sudo apt-get update -qy &&
-          sudo apt-get install -qy podman>=4.4
+        run: |-
+          set -euo pipefail
+          sudo apt-get update -qy
+          sudo apt-get install -y podman>=4.4
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Podman socket
         run: systemctl --user start podman.socket
-      # test kube config
-      - name: Test kube config
-        run: ./test-kube.sh
+      - name: Patch pods for testing
+        run: |-
+          set -euxo pipefail
+          sed -i \
+              -e '/^[[:blank:]]*env:/ {' \
+              -e 'a\        - { name: NEXTCLOUD_ADMIN_USER, value: admin }' \
+              -e 'a\        - { name: NEXTCLOUD_ADMIN_PASSWORD, value: admin }' \
+              -e '}' \
+              kube/nextcloud.yaml
+          sed -i \
+              -e "s|/run/user/1000/|${XDG_RUNTIME_DIR:-/run/user/1000}/|" \
+              kube/*.yaml
+      # startup
+      - name: Create pods
+        run: |-
+          set -euo pipefail
+          find init/ -name 'secrets.*.yaml' -exec podman kube play {} \;
+          find kube/ -name '*.yaml' -exec podman kube play --quiet --start=false {} \;
+      - name: Create databases
+        run: |-
+          set -euo pipefail
+          podman pod start mariadb
+          podman wait --condition healthy mariadb-mariadb
+          ./db_usr_pwd.sh MYSQL nextcloud
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress1
+          ./db_usr_pwd.sh WORDPRESS_DB wordpress2
+      - name: Start pods
+        run: podman pod start -a
+      - name: Wait for healthy state
+        run: |-
+          set -euo pipefail
+          yq -ot '. as $parent | (
+            .spec.containers[] | select(.livenessProbe) | $parent.metadata.name + "-" + .name,
+            .spec.template.spec.containers[] | select(.livenessProbe) | $parent.metadata.name + "-pod-" + .name
+          )' kube/*.yaml |
+          xargs -t podman wait --condition healthy
         timeout-minutes: 2
-      # final state
-      - name: Final state
-        run: podman ps
-        if: ${{ always() }}
+      # testing
+      - name: Test Dozzle
+        run: |-
+          set -euxo pipefail
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.NEXTCLOUD_DOMAIN | base64 -d | sed 's/ *,.*//')
+          USER_=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.DOZZLE_USER | base64 -d)
+          curl -ikLsS --location-trusted --user "$USER_:$USER_" \
+            --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+            --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+            "http://$DOMAIN/dozzle/" |
+            tee /dev/stderr |
+            grep -q "^HTTP/[1-9\.]* 200"
+      - name: Test Nextcloud
+        run: |-
+          set -euxo pipefail
+          podman secret inspect caddy --showsecret --format "{{.SecretData}}" |
+          yq -ot .data.NEXTCLOUD_DOMAIN |
+          base64 -d |
+          tr -d ' ' |
+          tr ',' '\n' |
+          while read -r DOMAIN; do
+            curl -ikLsS \
+              --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+              --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+              "http://$DOMAIN/status.php" |
+              tee /dev/stderr |
+              grep -q '"installed":true'
+          done
+      - name: Test Redirection
+        run: |-
+          set -euxo pipefail
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.REDIR_DOMAIN | base64 -d)
+          TARGET=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.REDIR_TARGET | base64 -d)
+          {
+            curl -ikLsS --max-redirs 1 \
+            --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+            --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+            "http://$DOMAIN/test.php" || [ $? = 47 ]
+          } |
+            tee /dev/stderr |
+            grep -iq "location: $TARGET"
+      - name: Test Wordpress
+        run: |-
+          set -euxo pipefail
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.WORDPRESS1_DOMAIN | base64 -d)
+          curl -ikLsS \
+            --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+            --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+            "http://$DOMAIN/wp-admin/install.php" |
+            tee /dev/stderr |
+            grep -q "^HTTP/[1-9\.]* 200"
+      # state if failed
+      - name: State pods
+        if: ${{ failure() }}
+        run: podman pod ls
+      - name: State containers
+        if: ${{ failure() }}
+        run: podman ps -a
+      - name: Container logs
+        if: ${{ failure() }}
+        run: |-
+          set -euo pipefail
+          yq -ot '. as $parent | (
+            .spec.containers[] | $parent.metadata.name + "-" + .name,
+            .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
+          )' kube/*.yaml |
+          xargs -t podman logs -n

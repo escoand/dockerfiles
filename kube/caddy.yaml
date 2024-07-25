@@ -1,15 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: caddy
 spec:
-  replicas: 1
-  template:
-    spec:
-      containers:
-      - name: caddy
-        image: docker.io/library/caddy:2.8.4-alpine
-        ports:
+  containers:
+    - name: caddy
+      image: docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
+      ports:
         - containerPort: 80
           hostPort: 8080
         - containerPort: 443
@@ -17,86 +14,23 @@ spec:
         - containerPort: 443
           hostPort: 8443
           protocol: UDP
-        command:
-          - /bin/sh
-          - -c
-          - |-
-            echo '
-            {
-              acme_ca https://acme.zerossl.com/v2/DV90
-              email {$ACME_MAIL}
-            }
-            {$NEXTCLOUD_DOMAIN} {
-              #log
-              handle /dozzle/* {
-                basic_auth {
-                  {$DOZZLE_USER} {$DOZZLE_PASSWORD}
-                }
-                reverse_proxy dozzle:8080
-              }
-              redir /.well-known/carddav /remote.php/dav/ 301
-              redir /.well-known/caldav  /remote.php/dav/ 301
-              reverse_proxy nextcloud:80
-            }
-            {$REDIR_DOMAIN} {
-              redir {$REDIR_TARGET}
-            }
-            {$WORDPRESS1_DOMAIN} {
-              reverse_proxy wordpress1:80
-            }
-            {$WORDPRESS2_DOMAIN} {
-              reverse_proxy wordpress2:80
-            }
-            ' | exec caddy run --config - --adapter caddyfile
-        livenessProbe:
-          # httpGet uses curl, which is not available
-          tcpSocket:
-            port: 80
-        env:
-        - name: ACME_MAIL
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: acme_mail
-        - name: DOZZLE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: dozzle_password
-        - name: DOZZLE_USER
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: dozzle_user
-        - name: NEXTCLOUD_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: nextcloud_domain
-        - name: REDIR_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: redir_domain
-        - name: REDIR_TARGET
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: redir_target
-        - name: WORDPRESS1_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: wordpress1_domain
-        - name: WORDPRESS2_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: wordpress2_domain
-        volumeMounts:
+      livenessProbe:
+        # httpGet uses curl, which is not available
+        tcpSocket:
+          port: 80
+      envFrom:
+        - secretRef:
+            name: caddy
+      volumeMounts:
         - name: caddy
           mountPath: /data
-      volumes:
-      - name: caddy
-        persistentVolumeClaim:
-          claimName: caddy
+        - name: docker_sock
+          mountPath: /var/run/docker.sock:ro
+  volumes:
+    - name: caddy
+      persistentVolumeClaim:
+        claimName: caddy
+    - name: docker_sock
+      hostPath:
+        path: /run/user/1000/podman/podman.sock
+        type: Socket

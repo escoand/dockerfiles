@@ -7,9 +7,10 @@ getsecret() {
 }
 
 PREFIX=$1
-NAME=$(getsecret "${PREFIX}_db_name" "$2")
-PASS=$(getsecret "${PREFIX}_db_password" "$2")
-USR=$(getsecret "${PREFIX}_db_user" "$2")
+NAME=$(getsecret "${PREFIX}_name" "$2")
+[ -z "$NAME" ] && NAME=$(getsecret "${PREFIX}_database" "$2")
+PASS=$(getsecret "${PREFIX}_password" "$2")
+USR=$(getsecret "${PREFIX}_user" "$2")
 
 if [ -z "$PREFIX" ] || [ -z "$NAME" ] || [ -z "$PASS" ] || [ -z "$USR" ]; then
   echo prefix not set or secrets not found >&2
@@ -23,5 +24,5 @@ SET PASSWORD FOR "$USR"@"%" = PASSWORD("$PASS");
 GRANT ALL PRIVILEGES ON $NAME.* TO "$USR"@"%";
 FLUSH PRIVILEGES;
 END
-podman exec -i mariadb-pod-mariadb \
+podman exec -i mariadb-mariadb \
   sh -c 'mariadb --password="$MARIADB_ROOT_PASSWORD"'

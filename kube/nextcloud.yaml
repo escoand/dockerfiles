@@ -1,61 +1,51 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: nextcloud
+  labels:
+    caddy_0: "{$NEXTCLOUD_DOMAIN}"
+    caddy_0.reverse_proxy: "{{upstreams}}"
+    caddy_1: "{$REDIR_DOMAIN}"
+    caddy_1.redir: "{$REDIR_TARGET}"
   # not working with Podman 4.9.4
   #annotations:
     #io.podman.annotations.userns: keep-id
 spec:
-  replicas: 1
-  template:
-    spec:
-      containers:
-      - name: nextcloud
-        image: docker.io/library/nextcloud:29.0.4
-        resources:
-          limits:
-            memory: 2Gi
-        livenessProbe:
-          initialDelaySeconds: 30
-          exec:
-            command:
-              - /bin/sh
-              - -c
-              - |-
-                curl -sS http://localhost/status.php |
-                grep -q '"installed":true'
-        env:
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: nextcloud_db_name
+  containers:
+    - name: nextcloud
+      image: docker.io/library/nextcloud:29.0.4
+      resources:
+        limits:
+          memory: 2Gi
+      livenessProbe:
+        initialDelaySeconds: 30
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - |-
+              curl -sS http://localhost/status.php |
+              grep -q '"installed":true'
+      env:
         - name: MYSQL_HOST
           value: mariadb
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: nextcloud_db_password
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: nextcloud_db_user
         - name: NEXTCLOUD_INIT_HTACCESS
           value: "TRUE"
         - name: NEXTCLOUD_TRUSTED_DOMAINS
           valueFrom:
             secretKeyRef:
-              name: secrets
-              key: nextcloud_domain
+              name: caddy
+              key: NEXTCLOUD_DOMAIN
         - name: NEXTCLOUD_TRUSTED_PROXIES
           value: 10.89.0.0/24
         - name: NEXTCLOUD_UPDATE
           value: "1"
         - name: REDIS_HOST
           value: redis
-        volumeMounts:
+      envFrom:
+        - secretRef:
+            name: nextcloud
+      volumeMounts:
         - name: nextcloud
           mountPath: /var/www/html:z
           subPath: app
@@ -68,10 +58,10 @@ spec:
         - name: nextcloud
           mountPath: /var/www/html/data:z
           subPath: data
-      - name: nextcloud-cron
-        image: docker.io/library/nextcloud:29.0.4
-        command: [ "/cron.sh" ]
-        volumeMounts:
+    - name: nextcloud-cron
+      image: docker.io/library/nextcloud:29.0.4
+      command: ["/cron.sh"]
+      volumeMounts:
         - name: nextcloud
           mountPath: /var/www/html:z
           subPath: app
@@ -84,13 +74,13 @@ spec:
         - name: nextcloud
           mountPath: /var/www/html/data:z
           subPath: data
-      initContainers:
-      - image: docker.io/library/nextcloud:29.0.4
-        command: [ "mkdir", "-p", "/data/app", "/data/apps", "/data/config", "/data/data" ]
-        volumeMounts:
+  initContainers:
+    - image: docker.io/library/nextcloud:29.0.4
+      command: ["mkdir", "-p", "/data/app", "/data/apps", "/data/config", "/data/data"]
+      volumeMounts:
         - name: nextcloud
           mountPath: /data:z
-      volumes:
-      - name: nextcloud
-        persistentVolumeClaim:
-          claimName: nextcloud
+  volumes:
+    - name: nextcloud
+      persistentVolumeClaim:
+        claimName: nextcloud
