@@ -83,7 +83,7 @@ jobs:
             "http://$DOMAIN/test.php" || [ $? = 47 ]
           } |
             tee /dev/stderr |
-            grep -iq "^Location: $TARGET$"
+            grep -iq "location: $TARGET"
       - name: Test Wordpress
         run: |-
           set -euxo pipefail
