@@ -9,7 +9,7 @@ jobs:
         run: |-
           set -euo pipefail
           sudo apt-get update -qy
-          sudo apt-get install -qy podman>=4.4 yq
+          sudo apt-get install -y podman>=4.4 yq
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Podman socket
@@ -44,7 +44,7 @@ jobs:
       - name: Wait for healthy state
         run: |-
           set -euo pipefail
-          yq -ot '. as $parent | (
+          yq -N '. as $parent | (
             .spec.containers[] | $parent.metadata.name + "-" + .name,
             .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
           )' kube/*.yaml |
