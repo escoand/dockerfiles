@@ -24,5 +24,5 @@ SET PASSWORD FOR "$USR"@"%" = PASSWORD("$PASS");
 GRANT ALL PRIVILEGES ON $NAME.* TO "$USR"@"%";
 FLUSH PRIVILEGES;
 END
-podman exec -i mariadb-pod-mariadb \
+podman exec -i mariadb-mariadb \
   sh -c 'mariadb --password="$MARIADB_ROOT_PASSWORD"'
