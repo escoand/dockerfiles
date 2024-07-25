@@ -49,5 +49,5 @@ jobs:
           xargs -t podman wait --condition healthy
         timeout-minutes: 2
       - name: State
-        run: podman ps && podman inspect nextcloud-pod-nextcloud && podman logs nextcloud-pod-nextcloud
+        run: podman ps -a && podman inspect nextcloud-pod-nextcloud && podman logs nextcloud-pod-nextcloud
         if: ${{ always() }}
