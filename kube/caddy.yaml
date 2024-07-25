@@ -4,7 +4,7 @@ metadata:
   name: caddy
 spec:
   containers:
-    - name: caddy
+    - name: app
       image: docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
       ports:
         - containerPort: 80
