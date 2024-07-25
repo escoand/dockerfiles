@@ -31,8 +31,6 @@ spec:
                 curl -sS http://localhost/status.php |
                 grep -q '"installed":true'
         env:
-        - { name: NEXTCLOUD_ADMIN_USER, value: admin }
-        - { name: NEXTCLOUD_ADMIN_PASSWORD, value: admin }
         - name: MYSQL_HOST
           value: mariadb
         - name: NEXTCLOUD_INIT_HTACCESS
