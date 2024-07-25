@@ -44,6 +44,7 @@ jobs:
       - name: Wait for healthy state
         run: |-
           set -euo pipefail
+          yq -V
           yq -N '. as $parent | (
             .spec.containers[] | $parent.metadata.name + "-" + .name,
             .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
