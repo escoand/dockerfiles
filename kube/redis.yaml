@@ -1,21 +1,18 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: redis
 spec:
-  replicas: 1
-  template:
-    spec:
-      containers:
-      - name: redis
-        image: docker.io/library/redis:7.2.5-alpine
-        args:
-        - --appendonly no
-        - --protected-mode no
-        - --save ""
-        livenessProbe:
-          exec:
-            command: [ "redis-cli", "--raw", "incr", "ping" ]
-        resources:
-          limits:
-            memory: 500Mi
+  containers:
+  - name: redis
+    image: docker.io/library/redis:7.2.5-alpine
+    args:
+    - --appendonly no
+    - --protected-mode no
+    - --save ""
+    livenessProbe:
+      exec:
+        command: [ "redis-cli", "--raw", "incr", "ping" ]
+    resources:
+      limits:
+        memory: 500Mi
