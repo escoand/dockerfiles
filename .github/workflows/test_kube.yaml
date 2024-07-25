@@ -82,8 +82,7 @@ jobs:
             --connect-to "$DOMAIN:443:127.0.0.1:8443" \
             "http://$DOMAIN/test.php" || [ $? = 47 ]
           } |
-            tee /dev/stderr |
-            grep -iq "location: $TARGET"
+            grep -iqx "location: $TARGET"
       - name: Test Wordpress
         run: |-
           set -euxo pipefail
