@@ -18,42 +18,9 @@ spec:
         # httpGet uses curl, which is not available
         tcpSocket:
           port: 80
-      env:
-        - name: DOZZLE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: dozzle_password
-        - name: DOZZLE_USER
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: dozzle_user
-        - name: NEXTCLOUD_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: nextcloud_domain
-        - name: REDIR_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: redir_domain
-        - name: REDIR_TARGET
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: redir_target
-        - name: WORDPRESS1_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: wordpress1_domain
-        - name: WORDPRESS2_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: wordpress2_domain
+      envFrom:
+        - secretRef:
+            name: caddy
       volumeMounts:
         - name: caddy
           mountPath: /data

@@ -55,9 +55,10 @@ jobs:
       - name: Test Dozzle
         run: |-
           set -euxo pipefail
-          USER_=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.dozzle_user | base64 -d)
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.nextcloud_domain | base64 -d)
-          curl -ikLsS --location-trusted --user "$USER_:$USER_" \
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.NEXTCLOUD_DOMAIN | base64 -d)
+          USER_=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.DOZZLE_USER | base64 -d)
+          PASSWD=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.DOZZLE_PASSWORD | base64 -d)
+          curl -ikLsS --location-trusted --user "$USER_:$PASSWD" \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
             --connect-to "$DOMAIN:443:127.0.0.1:8443" \
             "http://$DOMAIN/dozzle/" |
@@ -65,17 +66,23 @@ jobs:
       - name: Test Nextcloud
         run: |-
           set -euxo pipefail
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.nextcloud_domain | base64 -d)
-          curl -ikLsS \
-            --connect-to "$DOMAIN:80:127.0.0.1:8080" \
-            --connect-to "$DOMAIN:443:127.0.0.1:8443" \
-            "http://$DOMAIN/status.php" |
-            grep -q '"installed":true'
+          podman secret inspect caddy --showsecret --format "{{.SecretData}}" |
+          yq -ot .data.NEXTCLOUD_DOMAIN |
+          base64 -d |
+          tr ', ' ' \n' |
+          while read -r DOMAIN; do
+            curl -ikLsS \
+              --connect-to "$DOMAIN:80:127.0.0.1:8080" \
+              --connect-to "$DOMAIN:443:127.0.0.1:8443" \
+              "http://$DOMAIN/status.php" |
+              tee /dev/stderr |
+              grep -q '"installed":true'
+          done
       - name: Test Redirection
         run: |-
           set -euxo pipefail
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.redir_domain | base64 -d)
-          TARGET=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.redir_target | base64 -d)
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.REDIR_DOMAIN | base64 -d)
+          TARGET=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.REDIR_TARGET | base64 -d)
           {
             curl -ikLsS --max-redirs 1 \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
@@ -86,7 +93,7 @@ jobs:
       - name: Test Wordpress
         run: |-
           set -euxo pipefail
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.wordpress1_domain | base64 -d)
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.WORDPRESS1_DOMAIN | base64 -d)
           curl -ikLsS \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
             --connect-to "$DOMAIN:443:127.0.0.1:8443" \

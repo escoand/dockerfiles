@@ -35,7 +35,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: caddy
-              key: nextcloud_domain
+              key: NEXTCLOUD_DOMAIN
         - name: NEXTCLOUD_TRUSTED_PROXIES
           value: 10.89.0.0/24
         - name: NEXTCLOUD_UPDATE

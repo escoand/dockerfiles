@@ -21,11 +21,9 @@ spec:
       env:
         - name: MARIADB_AUTO_UPGRADE
           value: "TRUE"
-        - name: MARIADB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mariadb
-              key: mariadb_root_password
+      envFrom:
+        - secretRef:
+            name: mariadb
       volumeMounts:
         - name: mariadb
           mountPath: /var/lib/mysql:z
