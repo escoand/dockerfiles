@@ -12,25 +12,25 @@ spec:
         caddy.handle.reverse_proxy: "{{upstreams 8080}}"
     spec:
       containers:
-      - name: dozzle
-        image: docker.io/amir20/dozzle:v7.0.7
-        livenessProbe:
-          exec:
-            command: ["/dozzle", "healthcheck"]
-        securityContext:
-          privileged: true
-        env:
-        - name: DOZZLE_BASE
-          value: /dozzle
-        - name: DOZZLE_ENABLE_ACTIONS
-          value: "true"
-        - name: DOZZLE_NO_ANALYTICS
-          value: "true"
-        volumeMounts:
-        - name: docker_sock
-          mountPath: /var/run/docker.sock
+        - name: dozzle
+          image: docker.io/amir20/dozzle:v7.0.7
+          livenessProbe:
+            exec:
+              command: ["/dozzle", "healthcheck"]
+          securityContext:
+            privileged: true
+          env:
+            - name: DOZZLE_BASE
+              value: /dozzle
+            - name: DOZZLE_ENABLE_ACTIONS
+              value: "true"
+            - name: DOZZLE_NO_ANALYTICS
+              value: "true"
+          volumeMounts:
+            - name: docker_sock
+              mountPath: /var/run/docker.sock
       volumes:
-      - name: docker_sock
-        hostPath:
-          path: /run/user/1000/podman/podman.sock
-          type: Socket
+        - name: docker_sock
+          hostPath:
+            path: /run/user/1000/podman/podman.sock
+            type: Socket

@@ -4,66 +4,66 @@ metadata:
   name: caddy
 spec:
   containers:
-  - name: caddy
-    image: docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
-    ports:
-    - containerPort: 80
-      hostPort: 8080
-    - containerPort: 443
-      hostPort: 8443
-    - containerPort: 443
-      hostPort: 8443
-      protocol: UDP
-    livenessProbe:
-      # httpGet uses curl, which is not available
-      tcpSocket:
-        port: 80
-    env:
-    - name: DOZZLE_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: dozzle_password
-    - name: DOZZLE_USER
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: dozzle_user
-    - name: NEXTCLOUD_DOMAIN
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: nextcloud_domain
-    - name: REDIR_DOMAIN
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: redir_domain
-    - name: REDIR_TARGET
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: redir_target
-    - name: WORDPRESS1_DOMAIN
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: wordpress1_domain
-    - name: WORDPRESS2_DOMAIN
-      valueFrom:
-        secretKeyRef:
-          name: caddy
-          key: wordpress2_domain
-    volumeMounts:
     - name: caddy
-      mountPath: /data
-    - name: docker_sock
-      mountPath: /var/run/docker.sock:ro
+      image: docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
+      ports:
+        - containerPort: 80
+          hostPort: 8080
+        - containerPort: 443
+          hostPort: 8443
+        - containerPort: 443
+          hostPort: 8443
+          protocol: UDP
+      livenessProbe:
+        # httpGet uses curl, which is not available
+        tcpSocket:
+          port: 80
+      env:
+        - name: DOZZLE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: dozzle_password
+        - name: DOZZLE_USER
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: dozzle_user
+        - name: NEXTCLOUD_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: nextcloud_domain
+        - name: REDIR_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: redir_domain
+        - name: REDIR_TARGET
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: redir_target
+        - name: WORDPRESS1_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: wordpress1_domain
+        - name: WORDPRESS2_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: wordpress2_domain
+      volumeMounts:
+        - name: caddy
+          mountPath: /data
+        - name: docker_sock
+          mountPath: /var/run/docker.sock:ro
   volumes:
-  - name: caddy
-    persistentVolumeClaim:
-      claimName: caddy
-  - name: docker_sock
-    hostPath:
-      path: /run/user/1000/podman/podman.sock
-      type: Socket
+    - name: caddy
+      persistentVolumeClaim:
+        claimName: caddy
+    - name: docker_sock
+      hostPath:
+        path: /run/user/1000/podman/podman.sock
+        type: Socket

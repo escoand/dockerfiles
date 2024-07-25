@@ -4,15 +4,15 @@ metadata:
   name: redis
 spec:
   containers:
-  - name: redis
-    image: docker.io/library/redis:7.2.5-alpine
-    args:
-    - --appendonly no
-    - --protected-mode no
-    - --save ""
-    livenessProbe:
-      exec:
-        command: [ "redis-cli", "--raw", "incr", "ping" ]
-    resources:
-      limits:
-        memory: 500Mi
+    - name: redis
+      image: docker.io/library/redis:7.2.5-alpine
+      args:
+        - --appendonly no
+        - --protected-mode no
+        - --save ""
+      livenessProbe:
+        exec:
+          command: ["redis-cli", "--raw", "incr", "ping"]
+      resources:
+        limits:
+          memory: 500Mi
