@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nextcloud
-  # not working with Podman 4.9.4
-  #annotations:
-    #io.podman.annotations.userns: keep-id
   labels:
     caddy_0: "{$NEXTCLOUD_DOMAIN}"
     caddy_0.reverse_proxy: "{{upstreams}}"
     caddy_1: "{$REDIR_DOMAIN}"
     caddy_1.redir: "{$REDIR_TARGET}"
+  # not working with Podman 4.9.4
+  #annotations:
+    #io.podman.annotations.userns: keep-id
 spec:
   containers:
   - name: nextcloud
