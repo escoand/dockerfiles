@@ -48,6 +48,9 @@ jobs:
           sed 's|^.*/\(.*\)\.yaml|\1-pod-\1|' |
           xargs -t podman wait --condition healthy
         timeout-minutes: 2
-      - name: State
-        run: podman ps -a && podman inspect nextcloud-pod-nextcloud && podman logs nextcloud-pod-nextcloud
+      - name: Pods
+        run: podman pod ls
+        if: ${{ always() }}
+      - name: Containers
+        run: podman ps -a
         if: ${{ always() }}
