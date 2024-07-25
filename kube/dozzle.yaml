@@ -12,7 +12,7 @@ spec:
         caddy.handle.reverse_proxy: "{{upstreams 8080}}"
     spec:
       containers:
-        - name: dozzle
+        - name: app
           image: docker.io/amir20/dozzle:v7.0.7
           livenessProbe:
             exec:
