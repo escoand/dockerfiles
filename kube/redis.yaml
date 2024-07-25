@@ -4,7 +4,7 @@ metadata:
   name: redis
 spec:
   containers:
-    - name: redis
+    - name: app
       image: docker.io/library/redis:7.2.5-alpine
       args:
         - --appendonly no
