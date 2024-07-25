@@ -54,7 +54,7 @@ jobs:
       # testing
       - name: Test Dozzle
         run: |-
-          set -euo pipefail
+          set -euxo pipefail
           USER_=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.dozzle_user)
           DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.nextcloud_domain)
           curl -ikLsS --location-trusted --user "$USER_:$USER_" \
@@ -64,7 +64,7 @@ jobs:
             grep -q "^HTTP/[1-9\.]* 200"
       - name: Test Nextcloud
         run: |-
-          set -euo pipefail
+          set -euxo pipefail
           DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.nextcloud_domain)
           curl -ikLsS \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
@@ -73,7 +73,7 @@ jobs:
             grep -q '"installed":true'
       - name: Test Redirection
         run: |-
-          set -euo pipefail
+          set -euxo pipefail
           DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.redir_domain)
           TARGET=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.redir_target)
           {
@@ -85,7 +85,7 @@ jobs:
             grep -q "Location: $TARGET"
       - name: Test Wordpress
         run: |-
-          set -euo pipefail
+          set -euxo pipefail
           DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.wordpress1_domain)
           curl -ikLsS \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
@@ -94,8 +94,17 @@ jobs:
             grep -q "^HTTP/[1-9\.]* 200"
       # state if failed
       - name: State pods
+        if: ${{ failure() }}
         run: podman pod ls
-        if: ${{ failure() }}
       - name: State containers
-        run: podman ps -a
         if: ${{ failure() }}
+        run: podman ps -a
+      - name: Container logs
+        if: ${{ failure() }}
+        run: |-
+          set -euo pipefail
+          yq -ot '. as $parent | (
+            .spec.containers[] | $parent.metadata.name + "-" + .name,
+            .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
+          )' kube/*.yaml |
+          xargs -t podman logs -n
