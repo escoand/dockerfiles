@@ -5,5 +5,8 @@
   ],
   "kubernetes": {
     "fileMatch": ["^kube.*\\.yaml$"]
-  }
+  },
+  "baseBranches": [
+    "main", "caddy-docker-proxy"
+  ]
 }
