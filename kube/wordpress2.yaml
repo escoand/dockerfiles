@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: wordpress2
-      image: docker.io/library/wordpress:6.5.5-apache
+      image: docker.io/library/wordpress:6.6.1-apache
       livenessProbe:
         httpGet:
           port: 80
