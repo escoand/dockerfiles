@@ -36,7 +36,7 @@ jobs:
         run: |-
           set -euo pipefail
           podman pod start mariadb
-          podman wait --condition healthy mariadb-mariadb
+          podman wait --condition healthy mariadb-app
           ./db_usr_pwd.sh MYSQL nextcloud
           ./db_usr_pwd.sh WORDPRESS_DB wordpress1
           ./db_usr_pwd.sh WORDPRESS_DB wordpress2
