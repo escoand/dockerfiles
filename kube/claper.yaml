@@ -24,4 +24,4 @@ spec:
         - name: BASE_URL
           value: http://cloud.localhost
         - name: DATABASE_URL
-          value: postgres://postgres:claper@postgres:5432/claper
+          value: postgres://claper:claper@postgres:5432/claper
