@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
     - name: app
-      image: docker.io/library/redis:7.2.5-alpine
+      image: docker.io/library/redis:7.4.0-alpine
       args:
         - --appendonly no
         - --protected-mode no
