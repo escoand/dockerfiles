@@ -10,7 +10,9 @@ spec:
   containers:
     - name: app
       image: ghcr.io/claperco/claper:latest
-      #livenessProbe:
+      livenessProbe:
+        tcpSocket:
+          port: 4000
       #  httpGet:
       #    port: 4000
       #    httpHeaders:
