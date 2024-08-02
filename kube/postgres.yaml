@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+spec:
+  containers:
+    - name: app
+      image: postgres:15
+      livenessProbe:
+        exec:
+          command:
+            - pg_isready
+            - "-q"
+            - "-d"
+            - "claper"
+            - "-U"
+            - "claper"
+      envFrom:
+        - secretRef:
+            name: postgres
