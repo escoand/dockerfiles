@@ -30,8 +30,8 @@ jobs:
       - name: Create pods
         run: |-
           set -euo pipefail
-          find init/ -name 'secrets.*.yaml' -exec podman kube play {} \;
-          find kube/ -name '*.yaml' -exec podman kube play --quiet --start=false {} \;
+          find init/ -name 'secrets.*.yaml' -print -exec podman kube play {} \;
+          find kube/ -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \;
       - name: Create databases
         run: |-
           set -euo pipefail
