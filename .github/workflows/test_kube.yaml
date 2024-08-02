@@ -127,4 +127,4 @@ jobs:
             .spec.containers[] | $parent.metadata.name + "-" + .name,
             .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
           )' kube/*.yaml |
-          xargs -t podman logs -n
+          xargs -tn1 podman logs -n
