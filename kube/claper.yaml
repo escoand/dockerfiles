@@ -15,6 +15,7 @@ spec:
           httpHeaders:
           - name: Host
             value: claper.localhost
+        initialDelaySeconds: 20
       env:
         - name: CLAPER_DOMAIN
           valueFrom:
