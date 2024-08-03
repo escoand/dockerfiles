@@ -9,6 +9,10 @@ spec:
   containers:
     - name: app
       image: ghcr.io/claperco/claper:2.0.1
+      command:
+        - sh
+        - -c
+        - env
       livenessProbe:
         httpGet:
           port: 4000
