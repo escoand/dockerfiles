@@ -5,6 +5,7 @@ metadata:
   labels:
     caddy: "{$NEXTCLOUD_DOMAIN}"
     caddy.handle: "/claper/*"
+    caddy.handle.rewrite: "* /{uri}"
     caddy.handle.reverse_proxy: "{{upstreams 4000}}"
 spec:
   containers:
@@ -20,6 +21,6 @@ spec:
         - name: SECRET_KEY_BASE
           value: "1234567890123456789012345678901234567890123456789012345678901234"
         - name: BASE_URL
-          value: http://cloud.localhost/clapper
+          value: http://cloud.localhost
         - name: DATABASE_URL
           value: postgres://claper:claper@postgres:5432/claper
