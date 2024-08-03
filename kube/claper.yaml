@@ -43,6 +43,6 @@ spec:
         - name: DATABASE_URL
         #  value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
           value: postgres://clapper:claper@postgres:5432/claper
-      #envFrom:
-      #  - secretRef:
-      #      name: claper
+      envFrom:
+        - secretRef:
+            name: claper
