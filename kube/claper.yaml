@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: app
-      image: ghcr.io/claperco/claper:latest
+      image: ghcr.io/claperco/claper:2.0.1
       livenessProbe:
         httpGet:
           port: 4000
