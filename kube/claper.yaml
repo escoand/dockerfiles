@@ -24,18 +24,19 @@ spec:
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
-              name: caddy
+              name: postgres
               key: POSTGRES_DB
         - name: POSTRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: caddy
+              name: postgres
               key: POSTGRES_PASSWORD
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: caddy
+              name: postgres
               key: POSTGRES_USER
+        # assemble env vars
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
         - name: DATABASE_URL
