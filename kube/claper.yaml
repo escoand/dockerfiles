@@ -21,9 +21,25 @@ spec:
             secretKeyRef:
               name: caddy
               key: CLAPER_DOMAIN
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: POSTGRES_DB
+        - name: POSTRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: POSTGRES_USER
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
-        - name: SECRET_KEY_BASE
-          value: "1234567890123456789012345678901234567890123456789012345678901234"
         - name: DATABASE_URL
-          value: postgres://claper:claper@postgres:5432/claper
+          value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
+      envFrom:
+        - secretRef:
+            name: claper
