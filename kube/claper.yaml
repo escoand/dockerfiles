@@ -44,8 +44,8 @@ spec:
         # assemble env vars
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
-        - name: DATABASE_URL
-          value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
+        #- name: DATABASE_URL
+        #  value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
       envFrom:
         - secretRef:
             name: claper
