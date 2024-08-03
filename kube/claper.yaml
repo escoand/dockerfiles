@@ -11,13 +11,11 @@ spec:
     - name: app
       image: ghcr.io/claperco/claper:latest
       livenessProbe:
-        tcpSocket:
+        httpGet:
           port: 4000
-      #  httpGet:
-      #    port: 4000
-      #    httpHeaders:
-      #    - name: Host
-      #      value: clapper.localhost:8080
+          httpHeaders:
+          - name: Host
+            value: cloud.localhost
       env:
         - name: SECRET_KEY_BASE
           value: "1234567890123456789012345678901234567890123456789012345678901234"
