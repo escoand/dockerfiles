@@ -16,11 +16,13 @@ spec:
           - name: Host
             value: claper.localhost
       env:
-        - name: BASE_URL
+        - name: CLAPER_DOMAIN
           valueFrom:
             secretKeyRef:
               name: caddy
               key: CLAPER_DOMAIN
+        - name: BASE_URL
+          value: http://$(CLAPER_DOMAIN)
         - name: SECRET_KEY_BASE
           value: "1234567890123456789012345678901234567890123456789012345678901234"
         - name: DATABASE_URL
