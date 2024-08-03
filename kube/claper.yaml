@@ -16,9 +16,12 @@ spec:
           - name: Host
             value: claper.localhost
       env:
+        - name: BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: CLAPER_DOMAIN
         - name: SECRET_KEY_BASE
           value: "1234567890123456789012345678901234567890123456789012345678901234"
-        - name: BASE_URL
-          value: http://claper.localhost
         - name: DATABASE_URL
           value: postgres://claper:claper@postgres:5432/claper
