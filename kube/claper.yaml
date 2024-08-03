@@ -9,10 +9,6 @@ spec:
   containers:
     - name: app
       image: ghcr.io/claperco/claper:2.0.1
-      command:
-        - sh
-        - -c
-        - env
       livenessProbe:
         httpGet:
           port: 4000
@@ -44,8 +40,9 @@ spec:
         # assemble env vars
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
-        #- name: DATABASE_URL
+        - name: DATABASE_URL
         #  value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
+          value: postgres://clapper:claper@postgres:5432/claper
       #envFrom:
       #  - secretRef:
       #      name: claper
