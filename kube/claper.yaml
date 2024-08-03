@@ -4,9 +4,8 @@ metadata:
   name: claper
   labels:
     caddy: "{$NEXTCLOUD_DOMAIN}"
-    caddy.handle: "/claper/*"
-    caddy.handle.rewrite: "/clapper/* /{uri}"
-    caddy.handle.reverse_proxy: "{{upstreams 4000}}"
+    caddy.handle_path: "/claper/*"
+    caddy.handle_path.reverse_proxy: "{{upstreams 4000}}"
 spec:
   containers:
     - name: app
