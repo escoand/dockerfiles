@@ -55,11 +55,11 @@ jobs:
       - name: Test Claper
         run: |-
           set -euxo pipefail
-          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.NEXTCLOUD_DOMAIN | base64 -d | sed 's/ *,.*//')
+          DOMAIN=$(podman secret inspect caddy --showsecret --format "{{.SecretData}}" | yq -ot .data.CLAPER_DOMAIN | base64 -d | sed 's/ *,.*//')
           curl -ikLsS \
             --connect-to "$DOMAIN:80:127.0.0.1:8080" \
             --connect-to "$DOMAIN:443:127.0.0.1:8443" \
-            "http://$DOMAIN/claper/" |
+            "http://$DOMAIN/" |
             tee /dev/stderr |
             grep -q "^HTTP/[1-9\.]* 200"
       - name: Test Dozzle
