@@ -25,7 +25,8 @@ spec:
         # assemble env vars
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
-        - name: 
+        - name: ENABLE_ACCOUNT_CREATION
+          value: "false"
       envFrom:
         - secretRef:
             name: claper
