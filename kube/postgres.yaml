@@ -12,9 +12,9 @@ spec:
             - pg_isready
             - "-q"
             - "-d"
-            - "claper"
+            - "$POSTGRES_DB"
             - "-U"
-            - "claper"
+            - "$POSTGRES_USER"
       envFrom:
         - secretRef:
             name: postgres
