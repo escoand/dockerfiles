@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: claper
+  labels:
+    caddy: "{$CLAPER_DOMAIN}"
+    caddy.reverse_proxy: "{{upstreams 4000}}"
+spec:
+  containers:
+    - name: app
+      image: ghcr.io/claperco/claper:2.0.1
+      livenessProbe:
+        httpGet:
+          port: 4000
+          httpHeaders:
+          - name: Host
+            value: "$CLAPER_DOMAIN"
+        initialDelaySeconds: 20
+      env:
+        - name: CLAPER_DOMAIN
+          valueFrom:
+            secretKeyRef:
+              name: caddy
+              key: CLAPER_DOMAIN
+        # assemble env vars
+        - name: BASE_URL
+          value: http://$(CLAPER_DOMAIN)
+        - name: 
+      envFrom:
+        - secretRef:
+            name: claper
+      volumeMounts:
+        - name: claper
+          mountPath: /app/uploads
+  volumes:
+    - name: claper
+      persistentVolumeClaim:
+        claimName: claper
