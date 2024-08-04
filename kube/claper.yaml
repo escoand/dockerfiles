@@ -14,7 +14,7 @@ spec:
           port: 4000
           httpHeaders:
           - name: Host
-            value: claper.localhost
+            value: "$CLAPER_DOMAIN"
         initialDelaySeconds: 20
       env:
         - name: CLAPER_DOMAIN
@@ -22,27 +22,10 @@ spec:
             secretKeyRef:
               name: caddy
               key: CLAPER_DOMAIN
-        #- name: POSTGRES_DB
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: postgres
-        #      key: POSTGRES_DB
-        #- name: POSTGRES_PASSWORD
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: postgres
-        #      key: POSTGRES_PASSWORD
-        #- name: POSTGRES_USER
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: postgres
-        #      key: POSTGRES_USER
         # assemble env vars
         - name: BASE_URL
           value: http://$(CLAPER_DOMAIN)
-        - name: DATABASE_URL
-        #  value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)
-          value: postgres://claper:claper@postgres:5432/claper
+        - name: 
       envFrom:
         - secretRef:
             name: claper
