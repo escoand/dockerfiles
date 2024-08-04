@@ -29,3 +29,10 @@ spec:
       envFrom:
         - secretRef:
             name: claper
+      volumeMounts:
+        - name: claper
+          mountPath: /app/uploads
+  volumes:
+    - name: claper
+      persistentVolumeClaim:
+        claimName: claper
