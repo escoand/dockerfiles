@@ -10,23 +10,23 @@ spec:
     - name: app
       image: ghcr.io/claperco/claper:2.0.1
       livenessProbe:
+        exec:
+          command:
+            - sh
+            - -c
+            - >-
+              curl -isS -m1 --http1.1 \
+                -H "Connection: upgrade" \
+                -H "Origin: $BASE_URL" \
+                -H "Sec-WebSocket-Key: LQ==" \
+                -H "Sec-WebSocket-Version: 13" \
+                -H "Upgrade: websocket" \
+                "http://localhost:4000/live/websocket" 2>&1 |
+                grep -Fq "HTTP/1.1 101"
         httpGet:
           port: 4000
-          httpHeaders:
-          - name: Host
-            value: "$CLAPER_DOMAIN"
         initialDelaySeconds: 20
-      env:
-        - name: CLAPER_DOMAIN
-          valueFrom:
-            secretKeyRef:
-              name: caddy
-              key: CLAPER_DOMAIN
-        # assemble env vars
-        - name: BASE_URL
-          value: http://$(CLAPER_DOMAIN)
-        - name: ENABLE_ACCOUNT_CREATION
-          value: "false"
+        timeoutSeconds: 2
       envFrom:
         - secretRef:
             name: claper
