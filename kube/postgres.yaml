@@ -9,12 +9,9 @@ spec:
       livenessProbe:
         exec:
           command:
-            - pg_isready
-            - "-q"
-            - "-d"
-            - "$POSTGRES_DB"
-            - "-U"
-            - "$POSTGRES_USER"
+            - sh
+            - -c
+            - pg_isready -q -d "$POSTGRES_DB" -U "$POSTGRES_USER"
       envFrom:
         - secretRef:
             name: postgres
