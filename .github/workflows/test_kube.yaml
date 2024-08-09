@@ -112,15 +112,15 @@ jobs:
             "http://$DOMAIN/wp-admin/install.php" |
             tee /dev/stderr |
             grep -q "^HTTP/[1-9\.]* 200"
-      # state if failed
+      # debug info
       - name: State pods
-        if: ${{ failure() }}
+        if: ${{ always() }}
         run: podman pod ls
       - name: State containers
-        if: ${{ failure() }}
+        if: ${{ always() }}
         run: podman ps -a
       - name: Container logs
-        if: ${{ failure() }}
+        if: ${{ always() }}
         run: |-
           set -euo pipefail
           yq -ot '. as $parent | (
