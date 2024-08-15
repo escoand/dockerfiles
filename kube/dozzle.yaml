@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: docker.io/amir20/dozzle:v8.2.0
+          image: docker.io/amir20/dozzle:v8.2.1
           livenessProbe:
             exec:
               command: ["/dozzle", "healthcheck"]
