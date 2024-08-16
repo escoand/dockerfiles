@@ -64,7 +64,7 @@ jobs:
       - name: Replace pods
         run: |-
           set -euo pipefail
-          find kube/ -name '*.yaml' -print -exec podman kube play --quiet {} \;
+          find kube/ -name '*.yaml' -print -exec podman kube play --quiet --replace {} \;
       - name: Wait for healthy state
         run: |-
           set -euo pipefail
