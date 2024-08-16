@@ -21,6 +21,24 @@ spec:
       volumeMounts:
         - name: wordpress2
           mountPath: /var/www/html/wp-content:z
+  initContainers:
+    - name: init-db
+      image: docker.io/library/mariadb:11.4.3
+      command:
+        - sh
+        - -c
+        - |-
+          cat <<EOF | mariadb -h mariadb -p"$MARIADB_ROOT_PASSWORD"
+          CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;
+          CREATE USER IF NOT EXISTS '$WORDPRESS_DB_USER'@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';
+          GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO '$WORDPRESS_DB_USER'@'%';
+          FLUSH PRIVILEGES;
+          EOF
+      envFrom:
+        - secretRef:
+            name: mariadb
+        - secretRef:
+            name: wordpress2
   volumes:
     - name: wordpress2
       persistentVolumeClaim:

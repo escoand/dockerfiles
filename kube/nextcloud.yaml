@@ -75,11 +75,29 @@ spec:
           mountPath: /var/www/html/data:z
           subPath: data
   initContainers:
-    - image: docker.io/library/nextcloud:29.0.4
+    - name: init-dirs
+      image: docker.io/library/nextcloud:29.0.4
       command: ["mkdir", "-p", "/data/app", "/data/apps", "/data/config", "/data/data"]
       volumeMounts:
         - name: nextcloud
           mountPath: /data:z
+    - name: init-db
+      image: docker.io/library/mariadb:11.4.3
+      command:
+        - sh
+        - -c
+        - |-
+          cat <<EOF | mariadb -h mariadb -p"$MARIADB_ROOT_PASSWORD"
+          CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
+          CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+          GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
+          FLUSH PRIVILEGES;
+          EOF
+      envFrom:
+        - secretRef:
+            name: mariadb
+        - secretRef:
+            name: nextcloud
   volumes:
     - name: nextcloud
       persistentVolumeClaim:

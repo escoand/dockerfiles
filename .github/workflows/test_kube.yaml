@@ -32,14 +32,11 @@ jobs:
           set -euo pipefail
           find init/ -name 'secrets.*.yaml' -print -exec podman kube play {} \;
           find kube/ -name '*.yaml' -print -exec podman kube play --quiet --start=false {} \;
-      - name: Create databases
+      - name: Start databases
         run: |-
           set -euo pipefail
           podman pod start mariadb
           podman wait --condition healthy mariadb-app
-          ./db_usr_pwd.sh MYSQL nextcloud
-          ./db_usr_pwd.sh WORDPRESS_DB wordpress1
-          ./db_usr_pwd.sh WORDPRESS_DB wordpress2
       - name: Start pods
         run: podman pod start -a
       - name: Wait for healthy state
@@ -123,8 +120,5 @@ jobs:
         if: ${{ always() }}
         run: |-
           set -euo pipefail
-          yq -ot '. as $parent | (
-            .spec.containers[] | $parent.metadata.name + "-" + .name,
-            .spec.template.spec.containers[] | $parent.metadata.name + "-pod-" + .name
-          )' kube/*.yaml |
+          podman ps -aq |
           xargs -tn1 podman logs -n
