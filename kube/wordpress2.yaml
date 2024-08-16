@@ -23,7 +23,7 @@ spec:
           mountPath: /var/www/html/wp-content:z
   initContainers:
     - name: init-db
-      image: docker.io/library/mariadb:11.4.3
+      image: docker.io/library/mariadb:11.5.2
       command:
         - sh
         - -c
