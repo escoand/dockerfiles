@@ -40,6 +40,6 @@ spec:
         - secretRef:
             name: wordpress3
   volumes:
-    - name: wordpress2
+    - name: wordpress3
       persistentVolumeClaim:
         claimName: wordpress3
