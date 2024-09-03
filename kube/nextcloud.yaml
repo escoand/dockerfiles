@@ -3,10 +3,12 @@ kind: Pod
 metadata:
   name: nextcloud
   labels:
-    caddy_0: "nextcloud.internal {$NEXTCLOUD_DOMAIN}"
+    caddy_0: "{$NEXTCLOUD_DOMAIN}"
     caddy_0.reverse_proxy: "{{upstreams}}"
     caddy_1: "{$REDIR_DOMAIN}"
     caddy_1.redir: "{$REDIR_TARGET}"
+    caddy_2: "nextcloud.internal"
+    caddy_2.reverse_proxy: "{{upstreams}}"
   # not working with Podman 4.9.4
   #annotations:
     #io.podman.annotations.userns: keep-id
