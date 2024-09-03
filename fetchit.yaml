@@ -11,5 +11,5 @@ targetConfigs:
         pullImage: true
 prune:
   All: true
-  Volumes: false
-  schedule: "*/10 * * * *"
+  Volumes: true
+  schedule: "30 * * * *"
