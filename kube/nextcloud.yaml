@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: nextcloud
   labels:
-    caddy_0: "openid.internal {$NEXTCLOUD_DOMAIN}"
+    caddy_0: "nextcloud.internal {$NEXTCLOUD_DOMAIN}"
     caddy_0.reverse_proxy: "{{upstreams}}"
     caddy_1: "{$REDIR_DOMAIN}"
     caddy_1.redir: "{$REDIR_TARGET}"
