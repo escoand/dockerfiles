@@ -24,6 +24,8 @@ jobs:
               -e '}' \
               kube/nextcloud.yaml
           sed -i \
+              -e 's|hostPort:[[:blank:]]*80$|hostPort: 2080|' \
+              -e 's|hostPort:[[:blank:]]*443$|hostPort: 2443|' \
               -e "s|/run/user/1000/|${XDG_RUNTIME_DIR:-/run/user/1000}/|" \
               kube/*.yaml
       # startup
