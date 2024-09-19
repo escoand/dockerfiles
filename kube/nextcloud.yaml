@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
     - name: app
-      image: docker.io/library/nextcloud:29.0.6
+      image: docker.io/library/nextcloud:29.0.7
       resources:
         limits:
           memory: 2Gi
@@ -59,7 +59,7 @@ spec:
           mountPath: /var/www/html/data:z
           subPath: data
     - name: cron
-      image: docker.io/library/nextcloud:29.0.6
+      image: docker.io/library/nextcloud:29.0.7
       command: ["/cron.sh"]
       volumeMounts:
         - name: nextcloud
@@ -76,7 +76,7 @@ spec:
           subPath: data
   initContainers:
     - name: init-dirs
-      image: docker.io/library/nextcloud:29.0.6
+      image: docker.io/library/nextcloud:29.0.7
       command: ["mkdir", "-p", "/data/app", "/data/apps", "/data/config", "/data/data"]
       volumeMounts:
         - name: nextcloud
