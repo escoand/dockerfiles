@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: app
-      image: ghcr.io/claperco/claper:2.1.0
+      image: ghcr.io/claperco/claper:2.1.1
       livenessProbe:
         exec:
           command:
