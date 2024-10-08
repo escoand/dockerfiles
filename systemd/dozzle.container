@@ -12,8 +12,8 @@ Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle=/dozzle/*
 Label=caddy.handle.basic_auth.{$DOZZLE_USER}={$DOZZLE_PASSWORD}
 Label=caddy.handle.reverse_proxy={{upstreams 8080}}
+PodmanArgs=--privileged
 Volume=/run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
-#privileged
 
 [Install]
 WantedBy=multi-user.target default.target
