@@ -4,13 +4,13 @@ Description=Caddy
 [Container]
 ContainerName=caddy
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
+PodmanArgs=--privileged
 PublishPort=8080:80
 PublishPort=8443:443
 PublishPort=8443:443/udp
 Secret=caddy,type=env
 Volume=caddy:/data
 Volume=/run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
-#privileged
 #livenessProbe:
 #  tcpSocket:
 #    port: 80
