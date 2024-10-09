@@ -11,7 +11,7 @@ Image=docker.io/amir20/dozzle:v8.5.5
 Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle=/dozzle/*
 Label=caddy.handle.basic_auth.{$DOZZLE_USER}={$DOZZLE_PASSWORD}
-Label=caddy.handle.reverse_proxy={{upstreams 8080}}
+Label=caddy.handle.reverse_proxy="{{upstreams 8080}}"
 PodmanArgs=--privileged
 Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
 
