@@ -1,0 +1,11 @@
+[Unit]
+Description=postgres
+
+[Container]
+ContainerName=postgres
+HealthCmd=sh -c 'pg_isready -q -d "$POSTGRES_DB" -U "$POSTGRES_USER"'
+Image=docker.io/library/postgres:15.8-alpine
+Secret=POSTGRES_DB,type=env
+Secret=POSTGRES_PASSWORD,type=env
+Secret=POSTGRES_USER,type=env
+Volume=postgres:/var/lib/postgresql/data
