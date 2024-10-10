@@ -1,0 +1,22 @@
+[Unit]
+Description=Wordpress 1
+
+[Container]
+ContainerName=wordpress1
+Environment=WORDPRESS_DB_HOST=mariadb
+Environment=WORDPRESS1_DB_NAME,type=env,target=WORDPRESS_DB_NAME
+Environment=WORDPRESS1_DB_PASSWORD,type=env,target=WORDPRESS_DB_PASSWORD
+Environment=WORDPRESS1_DB_USER,type=env,target=WORDPRESS_DB_USER
+Environment=WORDPRESS1_TABLE_PREFIX=wp_
+Environment=WORDPRESS1_AUTH_KEY,type=env,target=WORDPRESS_AUTH_KEY
+Environment=WORDPRESS1_AUTH_SALT,type=env,target=WORDPRESS_AUTH_SALT
+Environment=WORDPRESS1_LOGGED_IN_KEY,type=env,target=WORDPRESS_LOGGED_IN_KEY
+Environment=WORDPRESS1_LOGGED_IN_SALT,type=env,target=WORDPRESS_LOGGED_IN_SALT
+Environment=WORDPRESS1_NONCE_KEY,type=env,target=WORDPRESS_NONCE_KEY
+Environment=WORDPRESS1_NONCE_SALT,type=env,target=WORDPRESS_NONCE_SALT
+Environment=WORDPRESS1_SECURE_AUTH_KEY,type=env,target=WORDPRESS_SECURE_AUTH_KEY
+Environment=WORDPRESS1_SECURE_AUTH_SALT,type=env,target=WORDPRESS_SECURE_AUTH_SALT
+Image=docker.io/library/wordpress:6.6.2-apache
+Label=caddy={$WORDPRESS1_DOMAIN}
+Label=caddy.reverse_proxy={{upstreams}}
+Volume=wordpress1:/var/www/html/wp-content:z
