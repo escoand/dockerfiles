@@ -1,0 +1,11 @@
+[Unit]
+Description=mariadb
+
+[Container]
+ContainerName=mariadb
+Environment=MARIADB_AUTO_UPGRADE=TRUE
+Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
+HealthCmd=healthcheck.sh --su-mysql --connect
+Image=docker.io/library/mariadb:11.5.2
+Secret=MARIADB_ROOT_PASSWORD,type=env
+Volume=mariadb:/var/lib/mysql:z
