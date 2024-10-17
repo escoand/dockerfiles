@@ -4,5 +4,5 @@ configReload:
 targetConfigs:
 - url: https://github.com/escoand/dockerfiles
   targetPath: systemd
-  branch: escoand-patch-1
-  schedule: "1/10 * * * * *"
+  branch: main
+  schedule: "0 1/10 * * * *"
