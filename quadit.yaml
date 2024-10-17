@@ -1,6 +1,6 @@
 configReload:
   configURL: https://raw.githubusercontent.com/escoand/dockerfiles/main/quadit.yaml
-  interval: 10000
+  interval: 600000
 targetConfigs:
 - url: https://github.com/escoand/dockerfiles
   targetPath: systemd
