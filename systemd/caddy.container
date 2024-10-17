@@ -1,0 +1,24 @@
+[Unit]
+Description=Caddy
+
+[Container]
+ContainerName=caddy
+Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
+PodmanArgs=--privileged
+PublishPort=8080:80
+PublishPort=8443:443
+PublishPort=8443:443/udp
+Secret=CLAPER_DOMAIN,type=env
+Secret=DOZZLE_PASSWORD,type=env
+Secret=DOZZLE_USER,type=env
+Secret=NEXTCLOUD_DOMAIN,type=env
+Secret=REDIR_DOMAIN,type=env
+Secret=REDIR_TARGET,type=env
+Secret=WORDPRESS1_DOMAIN,type=env
+Secret=WORDPRESS2_DOMAIN,type=env
+Secret=WORDPRESS3_DOMAIN,type=env
+Volume=caddy:/data
+Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
+#livenessProbe:
+#  tcpSocket:
+#    port: 80
