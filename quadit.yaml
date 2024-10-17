@@ -1,5 +1,5 @@
 configReload:
-  configURL: https://raw.githubusercontent.com/escoand/dockerfiles/escoand-patch-1/quadit.yaml
+  configURL: https://raw.githubusercontent.com/escoand/dockerfiles/main/quadit.yaml
   interval: 10000
 targetConfigs:
 - url: https://github.com/escoand/dockerfiles
