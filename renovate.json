@@ -1,9 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended",
+    "docker:enableMajor",
+    "group:allNonMajor",
+    ":separateMajorReleases"
   ],
-  "kubernetes": {
-    "fileMatch": ["^kube.*\\.yaml$"]
-  }
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "/.*\.container$"
+      ],
+      "matchStrings": [
+        "Image=(?<registry>\\S+/)(?<depName>\\S+):(?<currentValue>\\S+)"
+      ],
+      "packageNameTemplate": "{{{registry}}}{{{depName}}}",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ]
 }
