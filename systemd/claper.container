@@ -21,3 +21,6 @@ Secret=DATABASE_URL,type=env
 Secret=ENABLE_ACCOUNT_CREATION,type=env
 Secret=SECRET_KEY_BASE,type=env
 Volume=claper:/app/uploads
+
+[Install]
+WantedBy=multi-user.target default.target
