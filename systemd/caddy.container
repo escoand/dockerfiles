@@ -22,3 +22,6 @@ Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
 #livenessProbe:
 #  tcpSocket:
 #    port: 80
+
+[Install]
+WantedBy=multi-user.target default.target
