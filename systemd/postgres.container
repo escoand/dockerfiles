@@ -9,3 +9,6 @@ Secret=POSTGRES_DB,type=env
 Secret=POSTGRES_PASSWORD,type=env
 Secret=POSTGRES_USER,type=env
 Volume=postgres:/var/lib/postgresql/data
+
+[Install]
+WantedBy=multi-user.target default.target
