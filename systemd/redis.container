@@ -6,3 +6,6 @@ ContainerName=redis
 Exec=docker-entrypoint.sh --appendonly no  --protected-mode no --save ""
 Image=docker.io/library/redis:7.4.1-alpine
 HealthCmd=redis-cli --raw incr ping
+
+[Install]
+WantedBy=multi-user.target default.target
