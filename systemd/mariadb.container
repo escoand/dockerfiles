@@ -9,3 +9,6 @@ HealthCmd=healthcheck.sh --su-mysql --connect
 Image=docker.io/library/mariadb:11.5.2
 Secret=MARIADB_ROOT_PASSWORD,type=env
 Volume=mariadb:/var/lib/mysql:z
+
+[Install]
+WantedBy=multi-user.target default.target
