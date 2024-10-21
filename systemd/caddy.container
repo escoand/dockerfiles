@@ -3,6 +3,7 @@ Description=Caddy
 
 [Container]
 ContainerName=caddy
+Environment=CADDY_DOCKER_NO_SCOPE=true
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
 PodmanArgs=--privileged
 PublishPort=8080:80
