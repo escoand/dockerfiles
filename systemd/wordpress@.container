@@ -1,0 +1,28 @@
+[Unit]
+Description=Wordpress %i
+After=mariadb.container
+Wants=mariadb.container
+
+[Container]
+ContainerName=wordpress%i
+Environment=WORDPRESS_DB_HOST=mariadb
+Image=docker.io/library/wordpress:6.6.2-apache
+Label=caddy={$WORDPRESS%i_DOMAIN}
+Label=caddy.reverse_proxy={{upstreams}}
+Secret=WORDPRESS%i_DB_CHARSET,type=env,target=WORDPRESS_DB_CHARSET
+Secret=WORDPRESS%i_DB_NAME,type=env,target=WORDPRESS_DB_NAME
+Secret=WORDPRESS%i_DB_PASSWORD,type=env,target=WORDPRESS_DB_PASSWORD
+Secret=WORDPRESS%i_DB_USER,type=env,target=WORDPRESS_DB_USER
+Secret=WORDPRESS%i_TABLE_PREFIX,type=env,target=WORDPRESS_TABLE_PREFIX
+Secret=WORDPRESS%i_AUTH_KEY,type=env,target=WORDPRESS_AUTH_KEY
+Secret=WORDPRESS%i_AUTH_SALT,type=env,target=WORDPRESS_AUTH_SALT
+Secret=WORDPRESS%i_LOGGED_IN_KEY,type=env,target=WORDPRESS_LOGGED_IN_KEY
+Secret=WORDPRESS%i_LOGGED_IN_SALT,type=env,target=WORDPRESS_LOGGED_IN_SALT
+Secret=WORDPRESS%i_NONCE_KEY,type=env,target=WORDPRESS_NONCE_KEY
+Secret=WORDPRESS%i_NONCE_SALT,type=env,target=WORDPRESS_NONCE_SALT
+Secret=WORDPRESS%i_SECURE_AUTH_KEY,type=env,target=WORDPRESS_SECURE_AUTH_KEY
+Secret=WORDPRESS%i_SECURE_AUTH_SALT,type=env,target=WORDPRESS_SECURE_AUTH_SALT
+Volume=wordpress%i:/var/www/html/wp-content:z
+
+[Install]
+WantedBy=multi-user.target default.target
