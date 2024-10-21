@@ -9,7 +9,7 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "/.*\.container$"
+        "/.*\\.container$"
       ],
       "matchStrings": [
         "Image=(?<registry>\\S+/)(?<depName>\\S+):(?<currentValue>\\S+)"

@@ -1,6 +1,7 @@
 [Unit]
 Description=claper
 After=postgres.service
+Wants=postgres.service
 
 [Container]
 ContainerName=claper

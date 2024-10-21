@@ -1,7 +1,7 @@
 [Unit]
 Description=Wordpress %i
-After=mariadb.container
-Wants=mariadb.container
+After=mariadb.service
+Wants=mariadb.service
 
 [Container]
 ContainerName=wordpress%i
