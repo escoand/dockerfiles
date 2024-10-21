@@ -4,6 +4,7 @@ Description=Caddy
 [Container]
 ContainerName=caddy
 Environment=CADDY_DOCKER_NO_SCOPE=true
+HealthCmd=printf "GET / HTTP/1.0\n\n" | nc localhost:80 | grep -q "^HTTP/.* [23][0-9][0-9]"
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
 PodmanArgs=--privileged
 PublishPort=8080:80
@@ -20,9 +21,6 @@ Secret=WORDPRESS2_DOMAIN,type=env
 Secret=WORDPRESS3_DOMAIN,type=env
 Volume=caddy:/data
 Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
-#livenessProbe:
-#  tcpSocket:
-#    port: 80
 
 [Install]
 WantedBy=multi-user.target default.target
