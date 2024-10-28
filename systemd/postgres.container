@@ -5,6 +5,7 @@ Description=postgres
 ContainerName=postgres
 HealthCmd=sh -c 'pg_isready -q -d "$POSTGRES_DB" -U "$POSTGRES_USER"'
 Image=docker.io/library/postgres:15.8-alpine
+Network=podman
 PublishPort=5432:5432
 Secret=POSTGRES_DB,type=env
 Secret=POSTGRES_PASSWORD,type=env
