@@ -20,6 +20,8 @@ Secret=REDIR_TARGET,type=env
 Secret=WORDPRESS1_DOMAIN,type=env
 Secret=WORDPRESS2_DOMAIN,type=env
 Secret=WORDPRESS3_DOMAIN,type=env
+Secret=WORDPRESS4_DOMAIN,type=env
+Secret=WORDPRESS5_DOMAIN,type=env
 Volume=caddy:/data
 Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
 
