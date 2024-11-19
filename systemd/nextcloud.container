@@ -5,11 +5,11 @@ Wants=mariadb.service
 
 [Container]
 ContainerName=nextcloud
-Environment=MYSQL_HOST=host.containers.internal
+Environment=MYSQL_HOST=mariadb
 Environment=NEXTCLOUD_INIT_HTACCESS=TRUE
 Environment=NEXTCLOUD_TRUSTED_PROXIES=10.89.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
-Environment=REDIS_HOST=host.containers.internal
+Environment=REDIS_HOST=redis
 HealthCmd=/bin/sh -c "curl -sS http://localhost/status.php | grep -q '\"installed\":true'"
 Image=docker.io/library/nextcloud:30.0.2
 Label=caddy_0={$NEXTCLOUD_DOMAIN}
@@ -17,6 +17,7 @@ Label=caddy_0.reverse_proxy={{upstreams}}
 Label=caddy_1={$REDIR_DOMAIN}
 Label=caddy_1.redir={$REDIR_TARGET}
 Network=podman
+Network=systemd-backend
 Secret=NEXTCLOUD_DATABASE,type=env,target=MYSQL_DATABASE
 Secret=NEXTCLOUD_DATABASE_PASSWORD,type=env,target=MYSQL_PASSWORD
 Secret=NEXTCLOUD_DATABASE_USER,type=env,target=MYSQL_USER

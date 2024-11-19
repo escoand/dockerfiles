@@ -18,6 +18,7 @@ Image=ghcr.io/claperco/claper:2.1.1
 Label=caddy={$CLAPER_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 4000}}"
 Network=podman
+Network=systemd-backend
 Secret=BASE_URL,type=env
 Secret=DATABASE_URL,type=env
 Secret=ENABLE_ACCOUNT_CREATION,type=env
