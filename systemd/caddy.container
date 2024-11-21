@@ -11,6 +11,7 @@ PodmanArgs=--privileged
 PublishPort=8080:80
 PublishPort=8443:443
 PublishPort=8443:443/udp
+Secret=BLUDIT1_DOMAIN,type=env
 Secret=CLAPER_DOMAIN,type=env
 Secret=DOZZLE_PASSWORD,type=env
 Secret=DOZZLE_USER,type=env

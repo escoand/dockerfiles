@@ -1,0 +1,16 @@
+[Unit]
+Description=Bludit %i
+
+[Container]
+ContainerName=bludit%i
+HealthCmd=curl http://localhost
+Image=docker.io/bludit/docker:3.13.1
+Label=caddy={$BLUDIT%i_DOMAIN}
+Label=caddy.reverse_proxy={{upstreams}}
+Network=podman
+Volume=bludit%i_data:/usr/share/nginx/html/bl-content:z
+Volume=bludit%i_plugins:/usr/share/nginx/html/bl-plugins:z
+Volume=bludit%i_themes:/usr/share/nginx/html/bl-themes:z
+
+[Install]
+WantedBy=multi-user.target default.target
