@@ -4,7 +4,7 @@ Description=Caddy
 [Container]
 ContainerName=caddy
 Environment=CADDY_DOCKER_NO_SCOPE=true
-HealthCmd=printf "GET / HTTP/1.0\n\n" | nc localhost:80 | grep -q "^HTTP/.* [23][0-9][0-9]"
+HealthCmd=sh -c 'printf "GET / HTTP/1.0\n\n" | nc localhost:80 | grep -q "^HTTP/.* [23][0-9][0-9]"'
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.1-alpine
 Network=podman
 PodmanArgs=--privileged
