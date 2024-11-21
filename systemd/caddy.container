@@ -24,7 +24,7 @@ Secret=WORDPRESS3_DOMAIN,type=env
 Secret=WORDPRESS4_DOMAIN,type=env
 Secret=WORDPRESS5_DOMAIN,type=env
 Volume=caddy:/data
-Volume=/run/user/%U/podman/podman.sock:/var/run/docker.sock:ro
+Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
 [Install]
 WantedBy=multi-user.target default.target
