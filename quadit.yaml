@@ -1,0 +1,7 @@
+configURL: https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
+interval: 10000
+targetConfigs:
+- url: https://github.com/escoand/dockerfiles.git
+  targetPath: systemd
+  branch: master
+  schedule: "0 * * * * *"
