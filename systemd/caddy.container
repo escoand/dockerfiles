@@ -26,5 +26,8 @@ Secret=WORDPRESS5_DOMAIN,type=env
 Volume=caddy:/data
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

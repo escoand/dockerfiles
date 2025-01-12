@@ -27,5 +27,8 @@ Secret=WORDPRESS%i_SECURE_AUTH_KEY,type=env,target=WORDPRESS_SECURE_AUTH_KEY
 Secret=WORDPRESS%i_SECURE_AUTH_SALT,type=env,target=WORDPRESS_SECURE_AUTH_SALT
 Volume=wordpress%i:/var/www/html/wp-content:z
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

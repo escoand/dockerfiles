@@ -14,5 +14,8 @@ Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z
 Volume=nextcloud_data:/var/www/html/data:z
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

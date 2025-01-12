@@ -16,5 +16,8 @@ Network=podman
 PodmanArgs=--privileged
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

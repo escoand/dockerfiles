@@ -9,5 +9,8 @@ Volume=/etc/localtime:/etc/localtime:ro
 Volume=%E/docker-event-monitor.yaml:/config.yml:z
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

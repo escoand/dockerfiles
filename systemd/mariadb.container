@@ -11,5 +11,8 @@ Network=systemd-backend
 Secret=MARIADB_ROOT_PASSWORD,type=env
 Volume=mariadb:/var/lib/mysql:z
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target

@@ -12,5 +12,8 @@ Volume=bludit%i_content:/usr/share/nginx/html/bl-content:z
 Volume=bludit%i_plugins:/usr/share/nginx/html/bl-plugins:z
 Volume=bludit%i_themes:/usr/share/nginx/html/bl-themes:z
 
+[Service]
+Restart=always
+
 [Install]
 WantedBy=multi-user.target default.target
