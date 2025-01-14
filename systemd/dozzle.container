@@ -7,7 +7,7 @@ Environment=DOZZLE_BASE=/dozzle
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_NO_ANALYTICS=true
 HealthCmd=/dozzle healthcheck
-Image=docker.io/amir20/dozzle:v8.10.2
+Image=docker.io/amir20/dozzle:v8.10.4
 Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle=/dozzle/*
 Label=caddy.handle.basic_auth.{$DOZZLE_USER}={$DOZZLE_PASSWORD}
