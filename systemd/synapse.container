@@ -1,0 +1,21 @@
+[Unit]
+Description=synapse
+
+[Container]
+ContainerName=synapse
+Environment=UID=991
+Environment=GID=991
+HealthCmd=curl -fSs http://localhost:8008/health
+Image=docker.io/matrixdotorg/synapse:v1.122.0
+Label=caddy=wp2.lutherkirche-hasslau.de
+Label=caddy.reverse_proxy="{{upstreams 8008}}"
+Network=podman
+Network=systemd-backend
+Volume=synapse:/data:z
+
+[Service]
+ExecStartPre=podman run --rm --replace --name synapse --secret SYNAPSE_SERVER_NAME,type=env --env SYNAPSE_REPORT_STATS=no -v synapse:/data:z docker.io/matrixdotorg/synapse:v1.122.0 generate
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
