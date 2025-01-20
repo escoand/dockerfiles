@@ -6,8 +6,9 @@
     "group:allNonMajor",
     ":separateMajorReleases"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": [
         "/.*\\.container$"
       ],
