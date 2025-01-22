@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup
+
+[Timer]
+OnCalendar=03:00
+OnUnitActiveSec=24h
+Persistent=true
+Unit=backup.service
+
+[Install]
+WantedBy=timers.target
