@@ -71,7 +71,7 @@ mount
 # backup
 log "back up"
 # shellcheck disable=SC2046
-restic --json backup $(mountpoints | sed "s|$VOLUMEPATH|/data|")
+restic --json backup $(mountpoints | sed "s|^$VOLUMEPATH/|/data/|")
 
 # cleanup
 log "clean up"
