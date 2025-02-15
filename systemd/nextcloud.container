@@ -11,7 +11,7 @@ Environment=NEXTCLOUD_TRUSTED_PROXIES=10.89.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
 HealthCmd=/bin/sh -c "curl -sS http://localhost/status.php | grep -q '\"installed\":true'"
-Image=docker.io/library/nextcloud:30.0.5
+Image=docker.io/library/nextcloud:30.0.6
 Label=caddy_0={$NEXTCLOUD_DOMAIN}
 Label=caddy_0.reverse_proxy={{upstreams}}
 Label=caddy_1={$REDIR_DOMAIN}
