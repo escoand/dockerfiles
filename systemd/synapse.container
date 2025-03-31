@@ -7,7 +7,7 @@ Environment=UID=991
 Environment=GID=991
 HealthCmd=curl -fSs http://localhost:8008/health
 Image=docker.io/matrixdotorg/synapse:v1.127.1
-Label=caddy=wp2.lutherkirche-hasslau.de
+Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 8008}}"
 Network=podman
 Network=systemd-backend
