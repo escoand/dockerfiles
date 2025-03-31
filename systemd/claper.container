@@ -23,6 +23,7 @@ Secret=BASE_URL,type=env
 Secret=DATABASE_URL,type=env
 Secret=ENABLE_ACCOUNT_CREATION,type=env
 Secret=SECRET_KEY_BASE,type=env
+Volume=/etc/localtime:/etc/localtime:ro
 Volume=claper:/app/uploads
 
 [Service]
