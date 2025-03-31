@@ -5,7 +5,7 @@ Description=mautrix-whatsapp
 ContainerName=mautrix-whatsapp
 Environment=UID=991
 Environment=GID=991
-HealthCmd=curl -fSs http://localhost:29318/_matrix/mau/live
+HealthCmd=["curl", "-fsS", "http://localhost:29318/_matrix/mau/live"]
 Image=dock.mau.dev/mautrix/whatsapp:v0.11.4
 Network=systemd-backend
 Volume=mautrix-whatsapp:/data:z

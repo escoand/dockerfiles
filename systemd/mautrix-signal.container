@@ -5,7 +5,7 @@ Description=mautrix-signal
 ContainerName=mautrix-signal
 Environment=UID=991
 Environment=GID=991
-HealthCmd=curl -fSs http://localhost:29328/_matrix/mau/live
+HealthCmd=["curl", "-fsS", "http://localhost:29328/_matrix/mau/live"]
 Image=dock.mau.dev/mautrix/signal:v0.8.1
 Network=systemd-backend
 Volume=mautrix-signal:/data:z

@@ -5,7 +5,7 @@ Description=synapse
 ContainerName=synapse
 Environment=UID=991
 Environment=GID=991
-HealthCmd=curl -fSs http://localhost:8008/health
+HealthCmd=["curl", "-fsS", "http://localhost:8008/health"]
 Image=docker.io/matrixdotorg/synapse:v1.127.1
 Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 8008}}"
