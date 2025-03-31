@@ -6,6 +6,12 @@ ContainerName=monitor
 Image=localhost/monitor
 PodmanArgs=--privileged
 Pull=never
+Secret=MAIL_FROM,type=env
+Secret=MAIL_HOST,type=env
+Secret=MAIL_PASSWORD
+Secret=MAIL_PORT,type=env
+Secret=MAIL_TO,type=env
+Secret=MAIL_USER,type=env
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
 [Service]
