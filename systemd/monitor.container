@@ -1,0 +1,16 @@
+[Unit]
+Description=Monitor
+
+[Container]
+ContainerName=monitor
+Image=localhost/monitor
+PodmanArgs=--privileged
+Pull=never
+Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
+
+[Service]
+ExecStartPre=podman build --tag localhost/monitor https://github.com/escoand/dockerfiles.git#master:docker/monitor
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
