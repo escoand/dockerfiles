@@ -22,16 +22,13 @@ curl -fNsS --unix-socket /var/run/docker.sock http://localhost/events |
         {
             echo "Subject: Docker events"
             echo
-            echo "$LINE"
+            echo "$LINE" | tee /dev/stderr
             while read -r -t $REMAINING LINE; do
-                echo "$LINE"
+                echo "$LINE" | tee /dev/stderr
                 REMAINING=$((END - $(date +%s)))
                 [ $REMAINING -lt 0 ] && break
             done
         } |
-
-            # log
-            tee /dev/stderr |
 
             # send mail
             msmtp \
