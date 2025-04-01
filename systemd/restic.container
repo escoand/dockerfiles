@@ -4,13 +4,13 @@ Description=Restic
 [Container]
 ContainerName=restic
 Environment=BACKUP_CRON="00 00 03 * * *"
-Environment=RESTIC_BACKUP_ARGS="--host alma"
-Environment=RESTIC_FORGET_ARGS="--host alma --keep-daily 1 --keep-weekly 3 --keep-monthly 3 --prune"
+Environment=RESTIC_FORGET_ARGS="--keep-daily 1 --keep-weekly 3 --keep-monthly 3 --prune"
 Environment=RESTIC_PROGRESS_FPS=0.1
-#Environment=RUN_ON_STARTUP=true
+HostName=%H
 Image=docker.io/mazzolino/restic:1.7.2
 Secret=RESTIC_PASSWORD,type=env
 Secret=RESTIC_REPOSITORY,type=env
+Volume=/etc/localtime:/etc/localtime:ro
 Volume=%h/.ssh:/run/secrets/.ssh:ro
 Volume=%h/.local/share/containers/storage/volumes:/data:z
 
