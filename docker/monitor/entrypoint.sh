@@ -18,17 +18,19 @@ curl -fNsS --unix-socket /var/run/docker.sock http://localhost/events |
     # wait for input
     while read -r LINE; do
         END=$(($(date +%s) + WAIT))
-        LASTING=$WAIT
+        REMAINING=$WAIT
         {
+            echo "Subject: Docker events"
+            echo
             echo "$LINE"
-            while read -r -t $LASTING LINE; do
+            while read -r -t $REMAINING LINE; do
                 echo "$LINE"
-                LASTING=$((END - $(date +%s)))
-                [ $LASTING -lt 0 ] && break
+                REMAINING=$((END - $(date +%s)))
+                [ $REMAINING -lt 0 ] && break
             done
         } |
 
-            # debug
+            # log
             tee /dev/stderr |
 
             # send mail
