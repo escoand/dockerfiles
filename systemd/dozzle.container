@@ -5,6 +5,7 @@ Description=Dozzle
 ContainerName=dozzle
 Environment=DOZZLE_BASE=/dozzle
 Environment=DOZZLE_ENABLE_ACTIONS=true
+Environment=DOZZLE_ENABLE_SHELL=true
 Environment=DOZZLE_NO_ANALYTICS=true
 HealthCmd=["/dozzle", "healthcheck"]
 Image=docker.io/amir20/dozzle:v8.12.3
