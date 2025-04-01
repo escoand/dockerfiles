@@ -12,7 +12,7 @@ Image=docker.io/mazzolino/restic:1.7.2
 Secret=RESTIC_PASSWORD,type=env
 Secret=RESTIC_REPOSITORY,type=env
 Volume=%h/.ssh:/run/secrets/.ssh:ro
-Volume=%h/.local/share/containers/storage/volumes:/data:Z
+Volume=%h/.local/share/containers/storage/volumes:/data:z
 
 [Service]
 Restart=always
