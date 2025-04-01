@@ -21,7 +21,9 @@ Network=podman
 Network=systemd-backend
 Secret=BASE_URL,type=env
 Secret=DATABASE_URL,type=env
-Secret=ENABLE_ACCOUNT_CREATION,type=env
+Secret=OIDC_CLIENT_ID,type=env
+Secret=OIDC_CLIENT_SECRET,type=env
+Secret=OIDC_ISSUER,type=env
 Secret=SECRET_KEY_BASE,type=env
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=claper:/app/uploads
