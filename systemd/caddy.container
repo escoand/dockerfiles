@@ -8,9 +8,9 @@ HealthCmd=sh -c 'printf "GET / HTTP/1.0\n\n" | nc localhost:80 | grep -q "^HTTP/
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.2-alpine
 Network=podman
 PodmanArgs=--privileged
-PublishPort=8080:80
-PublishPort=8443:443
-PublishPort=8443:443/udp
+PublishPort=80:80
+PublishPort=443:443
+PublishPort=443:443/udp
 Secret=BLUDIT1_DOMAIN,type=env
 Secret=CLAPER_DOMAIN,type=env
 Secret=DOZZLE_PASSWORD,type=env
