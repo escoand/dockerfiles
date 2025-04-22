@@ -7,7 +7,7 @@ Environment=BACKUP_CRON="00 00 03 * * *"
 Environment=RESTIC_FORGET_ARGS="--keep-daily 1 --keep-weekly 3 --keep-monthly 3 --prune"
 Environment=RESTIC_PROGRESS_FPS=0.1
 HostName=%H
-Image=docker.io/mazzolino/restic:1.7.2
+Image=docker.io/mazzolino/restic:1.8.0
 Secret=RESTIC_PASSWORD,type=env
 Secret=RESTIC_REPOSITORY,type=env
 Volume=/etc/localtime:/etc/localtime:ro
