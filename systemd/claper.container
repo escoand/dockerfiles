@@ -2,6 +2,8 @@
 Description=claper
 After=postgres.service
 Wants=postgres.service
+StartLimitBurst=3
+StartLimitIntervalSec=120
 
 [Container]
 ContainerName=claper
