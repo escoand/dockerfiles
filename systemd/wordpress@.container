@@ -7,7 +7,7 @@ Wants=mariadb.service
 ContainerName=wordpress%i
 Environment=WORDPRESS_DB_HOST=mariadb
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=docker.io/library/wordpress:6.8.0-apache
+Image=docker.io/library/wordpress:6.8.1-apache
 Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
