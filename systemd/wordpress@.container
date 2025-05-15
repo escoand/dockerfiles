@@ -7,11 +7,12 @@ Wants=mariadb.service
 ContainerName=wordpress%i
 Environment=WORDPRESS_DB_HOST=mariadb
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=docker.io/library/wordpress:6.7.2-apache
+Image=localhost/wordpress
 Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
 Network=systemd-backend
+Pull=never
 Secret=WORDPRESS%i_DB_CHARSET,type=env,target=WORDPRESS_DB_CHARSET
 Secret=WORDPRESS%i_DB_NAME,type=env,target=WORDPRESS_DB_NAME
 Secret=WORDPRESS%i_DB_PASSWORD,type=env,target=WORDPRESS_DB_PASSWORD
@@ -28,6 +29,7 @@ Secret=WORDPRESS%i_SECURE_AUTH_SALT,type=env,target=WORDPRESS_SECURE_AUTH_SALT
 Volume=wordpress%i:/var/www/html/wp-content:z
 
 [Service]
+ExecStartPre=podman build --tag localhost/wordpress https://github.com/escoand/dockerfiles.git#master:docker/wordpress
 Restart=always
 
 [Install]
