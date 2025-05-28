@@ -8,7 +8,7 @@ Label=caddy_0={$TRACKER_DOMAIN}
 Label=caddy_0.reverse_proxy={{upstreams}}
 Network=podman
 Pull=never
-Volume=%h/.config/sms-tracker.json:/var/www/html/config.json:ro
+Volume=%h/.config/sms-tracker.json:/var/www/html/config.json:z
 
 [Service]
 ExecStartPre=podman build --tag localhost/sms-tracker -f Dockerfile.frontend https://github.com/escoand/sms-live-tracker.git
