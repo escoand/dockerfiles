@@ -1,0 +1,18 @@
+[Unit]
+Description=SMS Tracker
+
+[Container]
+ContainerName=sms-tracker
+Image=localhost/sms-tracker
+Label=caddy_0={$TRACKER_DOMAIN}
+Label=caddy_0.reverse_proxy={{upstreams}}
+Network=podman
+Pull=never
+Volume=%h/.config/sms-tracker.json:/var/www/html/config.json:ro
+
+[Service]
+ExecStartPre=podman build --tag localhost/sms-tracker -f Dockerfile.frontend https://github.com/escoand/sms-live-tracker.git
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

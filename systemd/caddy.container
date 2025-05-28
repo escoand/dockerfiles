@@ -18,6 +18,7 @@ Secret=DOZZLE_USER,type=env
 Secret=NEXTCLOUD_DOMAIN,type=env
 Secret=REDIR_DOMAIN,type=env
 Secret=REDIR_TARGET,type=env
+Secret=TRACKER_DOMAIN,type=env
 Secret=WORDPRESS1_DOMAIN,type=env
 Secret=WORDPRESS2_DOMAIN,type=env
 Secret=WORDPRESS3_DOMAIN,type=env
