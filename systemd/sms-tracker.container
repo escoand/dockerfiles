@@ -6,7 +6,8 @@ ContainerName=sms-tracker
 Image=localhost/sms-tracker
 Label=caddy={$TRACKER_DOMAIN}
 Label=caddy.@nonhook.not="path /api/receive"
-Label="caddy.basic_auth @nonhook.{$TRACKER_USER}={$TRACKER_PASSWORD}"
+Label=caddy.basic_auth=@nonhook
+Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 3000}}"
 Secret=TRACKER_AUTHENTICATION,type=env,target=API_AUTHENTICATION
 Secret=TRACKER_MESSAGE,type=env,target=API_MESSAGE
