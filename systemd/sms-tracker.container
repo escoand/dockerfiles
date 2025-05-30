@@ -5,7 +5,7 @@ Description=SMS Tracker
 ContainerName=sms-tracker
 Image=localhost/sms-tracker
 Label=caddy_0={$TRACKER_DOMAIN}
-Label=caddy_0.reverse_proxy={{upstreams 3000}}
+Label=caddy_0.reverse_proxy="{{upstreams 3000}}"
 Secret=TRACKER_AUTHENTICATION,type=env,target=API_AUTHENTICATION
 Secret=TRACKER_MESSAGE,type=env,target=API_MESSAGE
 Network=podman
