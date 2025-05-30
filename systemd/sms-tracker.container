@@ -5,12 +5,12 @@ Description=SMS Tracker
 ContainerName=sms-tracker
 Image=localhost/sms-tracker
 Label=caddy_0={$TRACKER_DOMAIN}
-Label=caddy_0.reverse_proxy={{upstreams}}
+Label=caddy_0.reverse_proxy={{upstreams 3000}}
 Secret=TRACKER_AUTHENTICATION,type=env,target=API_AUTHENTICATION
 Secret=TRACKER_MESSAGE,type=env,target=API_MESSAGE
 Network=podman
 Pull=never
-Volume=%h/.config/sms-tracker:/app/data:z
+Volume=sms-tracker:/app/data:z
 
 [Service]
 ExecStartPre=podman build --tag localhost/sms-tracker https://github.com/escoand/sms-live-tracker.git
