@@ -4,7 +4,7 @@ Description=Redis
 [Container]
 ContainerName=redis
 Exec=docker-entrypoint.sh --appendonly no  --protected-mode no --save ""
-Image=docker.io/library/redis:8.0.1-alpine
+Image=docker.io/library/redis:8.0.2-alpine
 HealthCmd=redis-cli --raw incr ping
 Network=systemd-backend
 
