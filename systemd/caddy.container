@@ -1,16 +1,24 @@
 [Unit]
 Description=Caddy
+Requires=caddy.socket
 
 [Container]
 ContainerName=caddy
 Environment=CADDY_DOCKER_NO_SCOPE=true
 HealthCmd=sh -c 'printf "GET / HTTP/1.0\n\n" | nc localhost:80 | grep -q "^HTTP/.* [23][0-9][0-9]"'
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.9.2-alpine
+Label=caddy_0="http://"
+Label=caddy_0.bind=fd/3
+Label=caddy_0.bind.protocols=h1
+Label=caddy_0.redir=https://{host}{uri}
+Label=caddy_1=""
+Label=caddy_1.auto_https=disable_redirects
+Label=caddy_1.default_bind_0=fd/4
+Label=caddy_1.default_bind_0.protocols="h1 h2"
+Label=caddy_1.default_bind_1=fdgram/5
+Label=caddy_1.default_bind_1.protocols=h3
 Network=podman
 PodmanArgs=--privileged
-PublishPort=80:80
-PublishPort=443:443
-PublishPort=443:443/udp
 Secret=BLUDIT1_DOMAIN,type=env
 Secret=CLAPER_DOMAIN,type=env
 Secret=DOZZLE_PASSWORD,type=env

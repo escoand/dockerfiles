@@ -7,7 +7,7 @@ Wants=mariadb.service
 ContainerName=nextcloud
 Environment=MYSQL_HOST=mariadb
 Environment=NEXTCLOUD_INIT_HTACCESS=TRUE
-Environment=NEXTCLOUD_TRUSTED_PROXIES=10.89.0.0/24
+Environment=NEXTCLOUD_TRUSTED_PROXIES=10.88.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'

@@ -1,0 +1,8 @@
+[Socket]
+BindIPv6Only=both
+# fd/3
+ListenStream=80
+# fd/4
+ListenStream=443
+# fdgram/5
+ListenDatagram=443
