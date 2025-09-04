@@ -4,7 +4,7 @@ Description=Fail2Ban
 [Container]
 ContainerName=fail2ban
 Environment=PGID=33
-Environment=VERBOSITY=-vvvv
+Environment=VERBOSITY=-vv
 Image=lscr.io/linuxserver/fail2ban:1.1.0
 Volume=fail2ban:/config
 Volume=nextcloud_data:/remotelogs/nextcloud:ro
