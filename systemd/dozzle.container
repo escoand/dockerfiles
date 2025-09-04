@@ -14,7 +14,7 @@ Label=caddy.handle=/dozzle/*
 Label=caddy.handle.basic_auth.{$DOZZLE_USER}={$DOZZLE_PASSWORD}
 Label=caddy.handle.reverse_proxy="{{upstreams 8080}}"
 Network=podman
-PodmanArgs="--cpus=1 --memory=512m --privileged"
+PodmanArgs=--cpus=1 --memory=512m --privileged
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
 [Service]
