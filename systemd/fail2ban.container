@@ -1,0 +1,16 @@
+[Unit]
+Description=Fail2Ban
+
+[Container]
+ContainerName=fail2ban
+Environment=VERBOSITY=-vv
+Image=lscr.io/linuxserver/fail2ban:1.1.0
+Volume=fail2ban:/config
+Volume=nextcloud_data:/remotelogs/nextcloud:ro
+Volume=/var/log:/var/log:ro
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
