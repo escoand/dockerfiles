@@ -12,11 +12,23 @@ Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
 Image=docker.io/library/nextcloud:31.0.8
-Label=caddy_0={$NEXTCLOUD_DOMAIN}
-Label=caddy_0.reverse_proxy={{upstreams}}
-Label=caddy_0.reverse_proxy.header_up="X-Real-IP {remote_host}"
-Label=caddy_1={$REDIR_DOMAIN}
-Label=caddy_1.redir={$REDIR_TARGET}
+Label=caddy_0=(cors)
+Label=caddy_0.handle_path="/{args[0]}/*"
+Label=caddy_0.handle_path.reverse_proxy="{args[0]}"
+Label=caddy_0.handle_path.reverse_proxy.header_up_0="Host {upstream_hostport}"
+Label=caddy_0.handle_path.reverse_proxy.header_up_1="-X-Forwarded-For"
+Label=caddy_0.handle_path.reverse_proxy.header_up_2="-X-Forwarded-Host"
+Label=caddy_0.handle_path.reverse_proxy.header_up_3="-X-Forwarded-Proto"
+Label=caddy_0.handle_path.reverse_proxy.header_down_0="Access-Control-Allow-Headers depth"
+Label=caddy_0.handle_path.reverse_proxy.header_down_1="Access-Control-Allow-Methods *"
+Label=caddy_0.handle_path.reverse_proxy.header_down_2="Access-Control-Allow-Origin *"
+Label=caddy_1={$NEXTCLOUD_DOMAIN}
+Label=caddy_1.import_0="cors https://ics.tools"
+Label=caddy_1.import_1="cors https://www.schule.sachsen.de"
+Label=caddy_1.reverse_proxy={{upstreams}}
+Label=caddy_1.reverse_proxy.header_up="X-Real-IP {remote_host}"
+Label=caddy_2={$REDIR_DOMAIN}
+Label=caddy_2.redir={$REDIR_TARGET}
 Network=podman
 Network=systemd-backend
 Secret=NEXTCLOUD_DATABASE,type=env,target=MYSQL_DATABASE
