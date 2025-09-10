@@ -1,6 +1,6 @@
 [DEFAULT]
 backend = systemd
-loglevel = debug
+banaction = dummy
 
 [sshd]
 enabled = true
