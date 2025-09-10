@@ -5,4 +5,4 @@ RUN apt -q update && \
       python3-systemd \
       systemd
 COPY jail.local /etc/fail2ban/jail.local
-CMD ["/usr/bin/fail2ban-server", "-fvx", "start"]
+CMD ["/usr/bin/fail2ban-server", "-fx", "start"]
