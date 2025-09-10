@@ -1,6 +1,6 @@
 [DEFAULT]
 backend = systemd
-banaction = dummy
+banaction = dummy[target=/dev/stderr]
 
 [sshd]
 enabled = true
