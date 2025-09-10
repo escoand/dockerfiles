@@ -7,8 +7,8 @@ enabled = true
 
 [apache-auth]
 enabled = true
-filter = apache-auth[logging=syslog,_daemon=(?:next cloud|wordpress\d*?)]
+filter = apache-auth[logging=syslog,_daemon=(?:nextcloud|wordpress\d*?)]
 
 [apache-badbots]
 enabled = true
-filter = apache-badbots[logging=syslog,_daemon=(?:next cloud|wordpress\d*?)]
+filter = apache-badbots[logging=syslog,_daemon=(?:nextcloud|wordpress\d*?)]
