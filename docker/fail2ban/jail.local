@@ -1,0 +1,12 @@
+[DEFAULT]
+backend = systemd
+loglevel = debug
+
+[sshd]
+enabled = true
+
+[apache-auth]
+enabled = true
+
+[apache-badbots]
+enabled = true
