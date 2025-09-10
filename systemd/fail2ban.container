@@ -1,17 +1,15 @@
 [Unit]
-Description=Fail2Ban
+Description=Fail2ban
 
 [Container]
 ContainerName=fail2ban
-Environment=PGID=33
-Environment=VERBOSITY=-vv
-Image=lscr.io/linuxserver/fail2ban:1.1.0
-Volume=fail2ban:/config
-Volume=nextcloud_data:/remotelogs/nextcloud:ro
+Image=localhost/fail2ban
+PodmanArgs=--group-add keep-groups --security-opt=label=disable
 Volume=/etc/localtime:/etc/localtime:ro
-Volume=/var/log:/var/log:ro
+Volume=/run/log/journal:/run/log/journal:ro
 
 [Service]
+ExecStartPre=podman build --tag localhost/fail2ban https://github.com/escoand/dockerfiles.git#master:docker/fail2ban
 Restart=always
 
 [Install]
