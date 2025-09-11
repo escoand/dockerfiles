@@ -1,13 +1,12 @@
-FROM ubuntu
+FROM docker.io/library/debian:12.2-slim
 
 RUN apt -q update && \
     apt install -yq --no-install-recommends \
       fail2ban \
       python3-systemd \
-      systemd
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY fail2ban.local /etc/fail2ban/fail2ban.local
-COPY jail.local /etc/fail2ban/jail.local
+COPY files/ /etc/fail2ban/
 
 VOLUME /var/lib/fail2ban
 

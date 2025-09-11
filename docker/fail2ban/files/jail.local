@@ -1,0 +1,24 @@
+[DEFAULT]
+backend = systemd
+banaction = dummy[target=/dev/null]
+_journalmatch_apache = CONTAINER_NAME=wordpress1 CONTAINER_NAME=wordpress2 CONTAINER_NAME=wordpress3 CONTAINER_NAME=wordpress4 CONTAINER_NAME=wordpress5 CONTAINER_NAME=nextcloud
+
+[sshd]
+enabled = true
+
+[apache-auth]
+enabled = true
+filter = apache-auth[logging=syslog,_daemon=".*"]
+journalmatch = %(_journalmatch_apache)s
+
+[apache-badbots]
+enabled = true
+#failregex = ^.* <HOST> -.*"(GET|POST|HEAD).*HTTP.*"(?:%(badbots)s|%(badbotscustom)s)"$
+filter = apache-badbots[logging=syslog]
+journalmatch = %(_journalmatch_apache)s
+
+[nextcloud]
+enabled = true
+filter = nextcloud
+journalmatch = CONTAINER_NAME=nextcloud
+port = 80,443
