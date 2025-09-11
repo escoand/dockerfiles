@@ -1,7 +1,7 @@
 FROM docker.io/library/debian:12.12-slim
 
 RUN apt -q update && \
-    apt install -yq --no-install-recommends fail2ban firewall-cmd python3-systemd && \
+    apt install -yq --no-install-recommends fail2ban firewalld python3-systemd && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY files/ /etc/fail2ban/
