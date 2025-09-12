@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:12.12-slim
+FROM docker.io/library/debian:13.1-slim
 
 RUN apt -q update && \
     apt install -yq --no-install-recommends fail2ban firewalld python3-systemd && \
