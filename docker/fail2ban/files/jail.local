@@ -1,6 +1,6 @@
 [DEFAULT]
 action = dummy[target=/dev/null]
-         firewallcmd-new
+         fail2ban-fw
 backend = systemd
 _journalmatch_nextcloud = CONTAINER_NAME=nextcloud
 _journalmatch_wordpress = CONTAINER_NAME=wordpress1 CONTAINER_NAME=wordpress2 CONTAINER_NAME=wordpress3 CONTAINER_NAME=wordpress4 CONTAINER_NAME=wordpress5
