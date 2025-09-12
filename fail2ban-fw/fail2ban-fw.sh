@@ -6,7 +6,7 @@ set -eu
 FAMILY=ipv4
 CHAIN=INPUT_direct
 NAME=fail2ban
-BLOCKTYPE="REJECT --reject-with icmp-port-unreachable"
+BLOCKTYPE="DROP --reject-with icmp-port-unreachable"
 # internal
 skip=FALSE
 
