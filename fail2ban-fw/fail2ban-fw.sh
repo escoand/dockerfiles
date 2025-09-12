@@ -51,7 +51,7 @@ result() {
 {
     while read -r method uri _; do
         ip=$(urldecode "${uri#/}")
-        echo "$method $ip" >&2
+        [ "$skip" != TRUE ] && echo "$method $ip" >&2
         # end of headers
         if [ -z "$method" ] || [ "$method" = $'\r' ]; then
             break
