@@ -1,0 +1,13 @@
+[Unit]
+Description=Fail2Ban firewalld handler (%i)
+Requires=fail2ban-fw.socket
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/fail2ban-fw.sh
+StandardInput=socket
+StandardOutput=socket
+PrivateTmp=yes
+NoNewPrivileges=yes
+User=root

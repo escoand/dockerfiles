@@ -1,0 +1,13 @@
+[Unit]
+Description=Fail2Ban-firewalld UNIX socket
+After=network.target
+
+[Socket]
+ListenStream=/run/fail2ban-fw/fail2ban-fw.sock
+SocketMode=0666
+SocketUser=root
+SocketGroup=root
+Accept=yes
+
+[Install]
+WantedBy=sockets.target
