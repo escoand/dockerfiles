@@ -8,6 +8,7 @@ PodmanArgs=--group-add keep-groups --security-opt=label=disable
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/run/fail2ban-fw:/run/fail2ban-fw:ro
 Volume=/run/log/journal:/run/log/journal:ro
+Volume=fail2ban:/var/lib/fail2ban
 
 [Service]
 ExecStartPre=podman build --tag localhost/fail2ban https://github.com/escoand/dockerfiles.git#master:docker/fail2ban
