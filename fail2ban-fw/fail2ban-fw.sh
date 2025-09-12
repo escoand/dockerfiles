@@ -11,29 +11,29 @@ BLOCKTYPE=DROP
 skip=FALSE
 
 start() {
-    firewall-cmd --direct --add-chain $FAMILY filter $NAME &&
-        firewall-cmd --direct --add-rule $FAMILY filter $NAME 1000 -j RETURN &&
-        firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -j $NAME
+    firewall-cmd --direct --add-chain $FAMILY filter $NAME >&2 &&
+        firewall-cmd --direct --add-rule $FAMILY filter $NAME 1000 -j RETURN >&2 &&
+        firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -j $NAME >&2
 }
 
 stop() {
-    firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -j $NAME &&
-        firewall-cmd --direct --remove-rules $FAMILY filter $NAME &&
-        firewall-cmd --direct --remove-chain $FAMILY filter $NAME
+    firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -j $NAME >&2 &&
+        firewall-cmd --direct --remove-rules $FAMILY filter $NAME >&2 &&
+        firewall-cmd --direct --remove-chain $FAMILY filter $NAME >&2
 }
 
 check() {
-    firewall-cmd --direct --get-chains $FAMILY filter | sed -e 's, ,\n,g' | grep -Fqx $NAME
+    firewall-cmd --direct --query-chain $FAMILY filter $NAME >&2
 }
 
 ban() {
     # shellcheck disable=SC2086
-    firewall-cmd --direct --add-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE
+    firewall-cmd --direct --add-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE >&2
 }
 
 unban() {
     # shellcheck disable=SC2086
-    firewall-cmd --direct --remove-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE
+    firewall-cmd --direct --remove-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE >&2
 }
 
 urldecode() {
@@ -62,21 +62,21 @@ result() {
         elif [ "$method" = START ] && check; then
             result 200 OK
         elif [ "$method" = START ]; then
-            start >&2 && result 200 OK || result 500 FAIL
+            start && result 200 OK || result 500 FAIL
         # stop
         elif [ "$method" = STOP ] && check; then
-            stop >&2 && result 200 OK || result 500 FAIL
+            stop && result 200 OK || result 500 FAIL
         elif [ "$method" = STOP ]; then
             result 200 OK
         # check
         elif [ "$method" = CHECK ]; then
-            check >&2 && result 200 OK || result 500 FAIL
+            check && result 200 OK || result 500 FAIL
         # ban
         elif [ "$method" = BAN ]; then
-            ban "$ip" >&2 && result 200 OK || result 500 FAIL
+            ban "$ip" && result 200 OK || result 500 FAIL
         # unban
         elif [ "$method" = UNBAN ]; then
-            unban "$ip" >&2 && result 200 OK || result 500 FAIL
+            unban "$ip" && result 200 OK || result 500 FAIL
         # invalid
         else
             result 405 Method Not Allowed
