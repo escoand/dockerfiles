@@ -19,7 +19,6 @@ Label=caddy_1.default_bind_1=fdgram/5
 Label=caddy_1.default_bind_1.protocols=h3
 Network=podman
 PodmanArgs=--privileged
-Secret=BLUDIT1_DOMAIN,type=env
 Secret=CLAPER_DOMAIN,type=env
 Secret=DOZZLE_PASSWORD,type=env
 Secret=DOZZLE_USER,type=env
@@ -29,6 +28,8 @@ Secret=REDIR_TARGET,type=env
 Secret=TRACKER_DOMAIN,type=env
 Secret=TRACKER_PASSWORD,type=env
 Secret=TRACKER_USER,type=env
+Secret=VM_PASSWORD,type=env
+Secret=VM_USER,type=env
 Secret=WORDPRESS1_DOMAIN,type=env
 Secret=WORDPRESS2_DOMAIN,type=env
 Secret=WORDPRESS3_DOMAIN,type=env

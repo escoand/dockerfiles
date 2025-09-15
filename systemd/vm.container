@@ -15,7 +15,7 @@ Label=caddy.handle=/vm/*
 Label=caddy.handle.basic_auth.{$VM_USER}={$VM_PASSWORD}
 Label=caddy.handle.reverse_proxy="{{upstreams 8006}}"
 Network=podman
-PodmanArgs=--privileged
+PodmanArgs=--cpus=1 --memory=4G --privileged
 StopTimeout=120
 Volume=vm:/storage:z
 
