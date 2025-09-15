@@ -8,7 +8,7 @@ AddDevice=/dev/net/tun
 ContainerName=vm
 Environment=BOOT=https://mirrors.cicku.me/linuxmint/iso/stable/22.2/linuxmint-22.2-xfce-64bit.iso
 Environment=_CPU_CORES=4
-Environment=RAM_SIZE=1G
+Environment=RAM_SIZE=1.5G
 Image=docker.io/qemux/qemu:7.12
 Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle_path=/vm/*
