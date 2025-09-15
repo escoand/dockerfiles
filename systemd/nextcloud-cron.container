@@ -5,10 +5,9 @@ Wants=mariadb.service
 
 [Container]
 ContainerName=nextcloud-cron
-#Entrypoint=/cron.sh
+Entrypoint=/cron.sh
 Image=docker.io/library/nextcloud:31.0.8
 Network=systemd-backend
-PodmanArgs=--entrypoint /cron.sh
 Volume=nextcloud_app:/var/www/html:z
 Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z

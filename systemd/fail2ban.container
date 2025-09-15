@@ -3,8 +3,9 @@ Description=Fail2ban
 
 [Container]
 ContainerName=fail2ban
+GroupAdd=keep-groups
 Image=localhost/fail2ban
-PodmanArgs=--group-add keep-groups --security-opt=label=disable
+SecurityLabelDisable=true
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/run/fail2ban-fw:/run/fail2ban-fw:ro
 Volume=/run/log/journal:/run/log/journal:ro
