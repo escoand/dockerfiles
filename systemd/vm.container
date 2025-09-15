@@ -1,0 +1,26 @@
+[Unit]
+Description=VM
+
+[Container]
+AddCapability=NET_ADMIN
+AddDevice=/dev/kvm
+AddDevice=/dev/net/tun
+ContainerName=vm
+Environment=BOOT=fedora
+Environment=_CPU_CORES=4
+Environment=_RAM_SIZE=8G
+Image=qemux/qemu
+Label=caddy={$NEXTCLOUD_DOMAIN}
+Label=caddy.handle=/vm/*
+Label=caddy.handle.basic_auth.{$VM_USER}={$VM_PASSWORD}
+Label=caddy.handle.reverse_proxy="{{upstreams 8006}}"
+Network=podman
+PodmanArgs=--privileged
+StopTimeout=120
+Volume=vm:/storage:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
