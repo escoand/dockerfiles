@@ -11,9 +11,9 @@ Environment=_CPU_CORES=4
 Environment=RAM_SIZE=1G
 Image=docker.io/qemux/qemu:7.12
 Label=caddy={$NEXTCLOUD_DOMAIN}
-Label=caddy.handle=/vm/*
-Label=caddy.handle.basic_auth.{$VM_USER}={$VM_PASSWORD}
-Label=caddy.handle.reverse_proxy="{{upstreams 8006}}"
+Label=caddy.handle_path=/vm/*
+Label=caddy.handle_path.basic_auth.{$VM_USER}={$VM_PASSWORD}
+Label=caddy.handle_path.reverse_proxy="{{upstreams 8006}}"
 Network=podman
 PodmanArgs=--cpus=1 --memory=4G --privileged
 StopTimeout=120
