@@ -23,7 +23,7 @@ stop() {
 }
 
 check() {
-    ipset -exist -quiet list $NAME >/dev/null
+    ipset -terse list $NAME >/dev/null
 }
 
 ban() {
