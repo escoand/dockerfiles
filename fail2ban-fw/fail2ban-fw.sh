@@ -11,29 +11,27 @@ BLOCKTYPE=DROP
 skip=FALSE
 
 start() {
-    firewall-cmd --direct --add-chain $FAMILY filter $NAME >&2 &&
-        firewall-cmd --direct --add-rule $FAMILY filter $NAME 1000 -j RETURN >&2 &&
-        firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -j $NAME >&2
+    firewall-cmd --new-ipset $NAME --type hash:ip >&2 &&
+        firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2 &&
+        firewall-cmd --reload >&2
 }
 
 stop() {
-    firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -j $NAME >&2 &&
-        firewall-cmd --direct --remove-rules $FAMILY filter $NAME >&2 &&
-        firewall-cmd --direct --remove-chain $FAMILY filter $NAME >&2
+    firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2 &&
+        firewall-cmd --delete-ipset $NAME >&2 &&
+        firewall-cmd --reload >&2
 }
 
 check() {
-    firewall-cmd --direct --query-chain $FAMILY filter $NAME >&2
+    firewall-cmd --info-ipset $NAME >&2
 }
 
 ban() {
-    # shellcheck disable=SC2086
-    firewall-cmd --direct --add-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE >&2
+    firewall-cmd --ipset $NAME --add-entry "$1" >&2
 }
 
 unban() {
-    # shellcheck disable=SC2086
-    firewall-cmd --direct --remove-rule $FAMILY filter $NAME 0 -s "$1" -j $BLOCKTYPE >&2
+    firewall-cmd --ipset $NAME --remove-entry "$1" >&2
 }
 
 urldecode() {
