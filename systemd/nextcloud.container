@@ -11,7 +11,7 @@ Environment=NEXTCLOUD_TRUSTED_PROXIES=10.88.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
-Image=docker.io/library/nextcloud:31.0.8
+Image=docker.io/library/nextcloud:31.0.9
 Label=caddy_0=(cors)
 Label=caddy_0.handle_path="/{args[0]}/*"
 Label=caddy_0.handle_path.handle=@preflight
