@@ -11,13 +11,13 @@ BLOCKTYPE=DROP
 skip=FALSE
 
 start() {
-    firewall-cmd --new-ipset $NAME --type hash:ip >&2 &&
+    firewall-cmd --direct --new-ipset $NAME --type hash:ip >&2 &&
         firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2
 }
 
 stop() {
     firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2 &&
-        firewall-cmd --delete-ipset $NAME >&2
+        firewall-cmd --direct --delete-ipset $NAME >&2
 }
 
 check() {
