@@ -9,7 +9,7 @@ _journalmatch_wordpress = CONTAINER_NAME=wordpress1 CONTAINER_NAME=wordpress2 CO
 
 [sshd]
 enabled = true
-filter = sshd[mode=aggressive]
+mode = aggressive
 
 [apache-auth]
 enabled = true
