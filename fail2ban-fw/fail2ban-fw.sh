@@ -11,28 +11,27 @@ BLOCKTYPE=DROP
 skip=FALSE
 
 start() {
-    ipset -exist create $NAME hash:ip >&2 &&
+    ipset -exist -quiet create $NAME hash:ip >&2 &&
         firewall-cmd --direct --add-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2
 }
 
 stop() {
     firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2 &&
-        ipset flush $NAME >&2 &&
-        ipset destroy $NAME >&2 ||
-        { sleep 1; ipset destroy $NAME >&2; }
+        ipset -quiet flush $NAME >&2 &&
+        ipset -quiet destroy $NAME >&2 ||
+        { sleep 1; ipset -quiet destroy $NAME >&2; }
 }
 
 check() {
-    #firewall-cmd --info-ipset $NAME >&2
-    true
+    ipset -exist -quiet list $NAME >&2
 }
 
 ban() {
-    ipset -exist add $NAME "$1" >&2
+    ipset -exist -quiet add $NAME "$1" >&2
 }
 
 unban() {
-    ipset -exist del $NAME "$1" >&2
+    ipset -exist -quiet del $NAME "$1" >&2
 }
 
 urldecode() {
