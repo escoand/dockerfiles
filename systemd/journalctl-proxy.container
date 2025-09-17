@@ -4,7 +4,7 @@ Description=Journalctl proxy
 [Container]
 ContainerName=journalctl-proxy
 Image=localhost/journalctl-proxy
-Network=podman
+Network=systemd-backend
 Pull=never
 Volume=journalctl-proxy:/run/journald-proxy
 Volume=/etc/localtime:/etc/localtime:ro
