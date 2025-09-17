@@ -199,15 +199,16 @@ elif [[ "$uri" = /*/containers/$CONTAINER_ID/logs* ]]; then
     done
     result -h 200 OK
     printf "Transfer-Encoding: chunked\r\n\r\n"
-    logs "${args[@]}" 2>&1 |
-        tr -d '\r' |
-        while read -r line; do
-            rawlen=$((${#line} + 2))
-            chunklen=$((rawlen + 8))
-            # shellcheck disable=SC2059
-            header=$(printf '%08x' $rawlen | sed 's/../\\x&/g')
-            printf "%x\r\n\x02\x00\x00\x00$header%s\r\n\r\n" $chunklen "$line" 2>/dev/null
-        done
+    logs "${args[@]}" |
+    awk '{
+        len  = length($0) + 2
+        b1 = int(len / (2^24)) % 256
+        b2 = int(len / (2^16)) % 256
+        b3 = int(len / (2^8))  % 256
+        b4 = len               % 256
+        printf("%x\r\n%c%c%c%c%c%c%c%c%s\r\n\r\n", len + 8, 2,0,0,0, b1,b2,b3,b4, $0)
+    }
+    '
 else
     result 404 Not Found
 fi
