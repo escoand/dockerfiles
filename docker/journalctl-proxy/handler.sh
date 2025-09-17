@@ -144,13 +144,10 @@ while read -r key value; do
     if [ -z "$method" ]; then
         method=$key
         uri=$(urldecode "${value% *}")
-        echo "### METHOD: $method" >&2
-        echo "### URI:    $uri" >&2
+        echo "$method $uri" >&2
     # end of headers
     elif [ -z "$key" ] || [ "$key" = $'\r' ]; then
         break
-    else
-        echo "##### $key $value" >&2
     fi
 done
 
