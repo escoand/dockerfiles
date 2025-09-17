@@ -7,6 +7,7 @@ Environment=DOZZLE_BASE=/dozzle
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_ENABLE_SHELL=false
 Environment=DOZZLE_NO_ANALYTICS=true
+Exec=--remote-host tcp://journalctl-proxy:2375
 HealthCmd=["/dozzle","healthcheck"]
 Image=docker.io/amir20/dozzle:v8.13.14
 Label=caddy={$NEXTCLOUD_DOMAIN}

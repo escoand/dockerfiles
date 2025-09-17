@@ -1,0 +1,17 @@
+[Unit]
+Description=Journalctl proxy
+
+[Container]
+ContainerName=journalctl-proxy
+Image=localhost/journalctl-proxy
+Pull=never
+Volume=journalctl-proxy:/run/journald-proxy
+Volume=/etc/localtime:/etc/localtime:ro
+Volume=/run/log/journal:/run/log/journal:ro
+
+[Service]
+ExecStartPre=podman build --tag localhost/journalctl-proxy https://github.com/escoand/dockerfiles.git#master:docker/journalctl-proxy
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
