@@ -3,7 +3,9 @@ Description=Journalctl proxy
 
 [Container]
 ContainerName=journalctl-proxy
+GroupAdd=keep-groups
 Image=localhost/journalctl-proxy
+SecurityLabelDisable=true
 Network=systemd-backend
 Pull=never
 Volume=journalctl-proxy:/run/journald-proxy
