@@ -19,7 +19,10 @@ stop() {
     firewall-cmd --direct --remove-rule $FAMILY filter $CHAIN 0 -m set --match-set $NAME src -j $BLOCKTYPE >&2 &&
         ipset -quiet flush $NAME >&2 &&
         ipset -quiet destroy $NAME >&2 ||
-        { sleep 1; ipset -quiet destroy $NAME >&2; }
+        {
+            sleep 1
+            ipset -quiet destroy $NAME >&2
+        }
 }
 
 check() {
