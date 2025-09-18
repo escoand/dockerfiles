@@ -79,17 +79,17 @@ list() {
 
 container() {
     systemctl --user show "$1" |
-        jq --slurp --raw-input '
+        NAME="$1" jq --slurp --raw-input '
             split("\n") |
             map(select(.!="") | split("=") | {"key": .[0], "value": (.[1:] | join("="))}) |
             from_entries |
             {
-                Created: (.ExecMainStartTimestamp | strptime("%a %Y-%m-%d %H:%M:%S %Z")? | strftime("%Y-%m-%dT%H:%M:%S.%NZ") // null)
+                Created: (.ExecMainStartTimestamp | strptime("%a %Y-%m-%d %H:%M:%S %Z")? | strftime("%Y-%m-%dT%H:%M:%S.000000Z") // null),
                 HostConfig: {
                     Memory: (.MemoryAvailable | tonumber? // null),
                 },
-                Id: ("_" + .InvocationID) #,
-                Name: .Names,
+                Id: ("_" + .InvocationID),
+                Name: env.NAME,
                 RestartCount: (.NRestarts | tonumber? // null),
                 State: {
                     Status: .SubState
@@ -100,13 +100,13 @@ container() {
 
 stats() {
     systemctl --user show "$1" |
-        jq --slurp --raw-input '
+        NAME="$1" jq --slurp --raw-input '
             split("\n") |
             map(select(.!="") | split("=") | {"key": .[0], "value": (.[1:] | join("="))}) |
             from_entries |
             {
                 id: ("_" + .InvocationID),
-                name: .Names,
+                name: env.NAME,
                 pids_stats: {
                     current: (.MainPID | tonumber? // null)
                 },
@@ -125,7 +125,7 @@ while read -r key value; do
         method=$key
         uri=$(urldecode "${value% *}")
         echo "$method $uri" >&2
-        if [[ "$uri" = *\?* ]]; then
+        if [[ $uri = *\?* ]]; then
             query=${uri#*\?}
             uri=${uri%%\?*}
         fi
@@ -136,28 +136,30 @@ while read -r key value; do
 done
 
 # handle
-if [[ "$uri" = /_ping ]]; then
+if [[ $uri = /_ping ]]; then
     result 200 OK
-elif [[ "$uri" = /*/info ]]; then
+elif [[ $uri = /*/info ]]; then
     result 200 OK
     info
-elif [[ "$uri" = /*/events ]]; then
+elif [[ $uri = /*/events ]]; then
     result 200 OK
     sleep infinity
-elif [[ "$uri" = /*/containers/json ]]; then
+elif [[ $uri = /*/containers/json ]]; then
     result 200 OK
     list
-elif [[ "$uri" = /*/containers/*/json ]]; then
+elif [[ $uri = /*/containers/*/json ]]; then
     container=$(echo "$uri" | cut -d/ -f4)
     service=$(findService "$container")
     if [ -z "$service" ]; then
         result 404 Not found
         printf '{"message": "No such container: %s"}' "$container"
     else
-        result 200 OK
-        container "$service"
+        # this is failing - don't know why
+        #result 200 OK
+        #container "$service"
+        result 501 Not Implemented
     fi
-elif [[ "$uri" = /*/containers/*/stats ]]; then
+elif [[ $uri = /*/containers/*/stats ]]; then
     container=$(echo "$uri" | cut -d/ -f4)
     service=$(findService "$container")
     if [ -z "$service" ]; then
@@ -171,7 +173,7 @@ elif [[ "$uri" = /*/containers/*/stats ]]; then
             stats "$service"
         fi
     fi
-elif [[ "$uri" = /*/containers/*/logs ]]; then
+elif [[ $uri = /*/containers/*/logs ]]; then
     typeset relative args=(--quiet)
     echo "$query" | tr '&' '\n' | while IFS='=' read -r key value; do
         if [ "$key" = follow ] && [ -n "$value" ]; then
@@ -216,6 +218,18 @@ elif [[ "$uri" = /*/containers/*/logs ]]; then
             }
             END { printf("0\r\n\r\n") }
         '
+# actions
+elif [[ $method = POST && $uri = /*/containers/*/restart ]]; then
+    container=$(echo "$uri" | cut -d/ -f4)
+    service=$(findService "$container")
+    if [ -z "$service" ]; then
+        result 404 Not found
+        printf '{"message": "No such container: %s"}' "$container"
+    else
+        systemctl --user restart "$service" &&
+        result 200 OK ||
+        result 500
+    fi
 else
-    result 404 Not Found
+    result 501 Not Implemented
 fi
