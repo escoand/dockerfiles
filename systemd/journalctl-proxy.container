@@ -15,7 +15,7 @@ Tmpfs=/run:64M
 Tmpfs=/run/lock:4M
 Volume=journalctl-proxy:/run/journald-proxy
 Volume=/etc/localtime:/etc/localtime:ro
-Volume=%t:/run/user/1000
+#Volume=%t:/run/user/1000
 Volume=/run/log/journal:/run/log/journal:ro
 
 [Service]
