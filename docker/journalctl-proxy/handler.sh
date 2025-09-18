@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export JOURNAL_ID=__journal
+export JOURNAL_ID=_journal
 
 shopt -s lastpipe
 
@@ -23,8 +23,10 @@ result() {
 }
 
 findService() {
-    systemctl --user show --type=service --property=Id "$1*" |
-        head -n1 |
+    [ "$1" = "$JOURNAL_ID" ] && return
+    systemctl --user show --type=service --property=InvocationID,Id |
+        grep -A1 -B1 -F "InvocationID=${1#_}" |
+        grep ^Id= |
         cut -d= -f2-
 }
 
@@ -49,99 +51,84 @@ END
 }
 
 list() {
-    systemctl --user list-units --all --output=json --type=service |
-        jq '. | to_entries | map(.value += {
-            Created: null,
-            Id: (.value.unit + "         "),
-            Names: ["/" + .value.unit],
-            State: .value.sub
-        } | .value) + [{
-            Created: null,
-            Id: (env.JOURNAL_ID + "         "),
-            Names: ["/" + env.JOURNAL_ID],
-            State: "running"
-        }]'
+    systemctl --user show --type=service |
+        jq --slurp --raw-input '
+            split("\n\n") |
+            map(
+                split("\n") |
+                map(
+                    select(.!="") |
+                    split("=") |
+                    {"key": .[0], "value": (.[1:] | join("="))}
+                ) |
+                from_entries |
+                {
+                    Created: (.ExecMainStartTimestamp | strptime("%a %Y-%m-%d %H:%M:%S %Z")? | strftime("%s") | tonumber? // null),
+                    Id: ("_" + .InvocationID),
+                    Names: (.Names | split(" ") | map("/" + .)),
+                    State: .SubState
+                }
+            ) + [{
+                Created: null,
+                Id: (env.JOURNAL_ID + "            "),
+                Names: ["/" + env.JOURNAL_ID],
+                State: "running"
+            }]
+        '
 }
 
 container() {
-    #systemctl --user show "$A*" |
-    #jq --slurp --raw-input 'split("\n") | map(select(.!="") | split("=") | {"key": .[0], "value": (.[1:] | join("="))}) | from_entries' |
-    # shellcheck disable=SC2016
-    systemctl --user --output=json status "$1" |
-        sed -n '/^{/,${p}' |
-        jq '{
-            Id: .USER_UNIT,
-            Created: .__REALTIME_TIMESTAMP,
-            Path: ._EXE,
-            Args: ._CMDLINE,
-            State: {
-                Status: "running",
-                Running: true,
-                Paused: false,
-                Restarting: false,
-                OOMKilled: false,
-                Dead: false,
-                Pid: ._PID,
-                ExitCode: 0,
-                Error: "",
-                StartedAt: .__REALTIME_TIMESTAMP,
-                FinishedAt: "0001-01-01T00:00:00Z"
-            },
-            Image: "sha256:9234e8fb04c47cfe0f49931e4ac7eb76fa904e33b7f8576aec0501c085f02516",
-            Name: ("/" + .USER_UNIT),
-            RestartCount: 0,
-            Driver: "overlay",
-            Platform: "linux",
-            MountLabel: "",
-            ProcessLabel: "",
-            AppArmorProfile: "",
-            ExecIDs: [],
-            HostConfig: {},
-            GraphDriver: {},
-            SizeRootFs: 0,
-            Mounts: [],
-            Config: {},
-            NetworkSettings: {}
-        }'
+    systemctl --user show "$1" |
+        jq --slurp --raw-input '
+            split("\n") |
+            map(select(.!="") | split("=") | {"key": .[0], "value": (.[1:] | join("="))}) |
+            from_entries |
+            {
+                Created: (.ExecMainStartTimestamp | strptime("%a %Y-%m-%d %H:%M:%S %Z")? | strftime("%Y-%m-%dT%H:%M:%S.%NZ") // null)
+                HostConfig: {
+                    Memory: (.MemoryAvailable | tonumber? // null),
+                },
+                Id: ("_" + .InvocationID) #,
+                Name: .Names,
+                RestartCount: (.NRestarts | tonumber? // null),
+                State: {
+                    Status: .SubState
+                }
+            }
+        '
 }
 
 stats() {
-    cat <<END
-{
-  "read": "2025-09-17T10:48:21.637410081+02:00",
-  "preread": "2025-09-17T10:48:21.634478364+02:00",
-  "num_procs": 0,
-  "cpu_stats": {
-    "cpu_usage": {
-      "total_usage": 1718576000,
-      "usage_in_kernelmode": 849178,
-      "usage_in_usermode": 1717726822
-    },
-    "system_cpu_usage": 6461561673000,
-    "online_cpus": 20,
-    "cpu": 0,
-    "throttling_data": {
-      "periods": 0,
-      "throttled_periods": 0,
-      "throttled_time": 0
-    }
-  },
-  "memory_stats": { "usage": 782336, "limit": 16577101824 },
-  "name": "$CONTAINER_NAME",
-  "id": "$CONTAINER_ID"
-}
-END
+    systemctl --user show "$1" |
+        jq --slurp --raw-input '
+            split("\n") |
+            map(select(.!="") | split("=") | {"key": .[0], "value": (.[1:] | join("="))}) |
+            from_entries |
+            {
+                id: ("_" + .InvocationID),
+                name: .Names,
+                pids_stats: {
+                    current: (.MainPID | tonumber? // null)
+                },
+                memory_stats: {
+                    limit: (.MemoryAvailable | tonumber? // null),
+                    max_usage: (.MemoryPeak | tonumber? // null),
+                    usage: (.MemoryCurrent | tonumber? // null)
+                }
+            }'
 }
 
 # request
-typeset method uri
+typeset method uri query
 while read -r key value; do
     if [ -z "$method" ]; then
         method=$key
         uri=$(urldecode "${value% *}")
-        query=${uri#*\?}
-        uri=${uri%%\?*}
-        echo "$method $uri?$query" >&2
+        echo "$method $uri" >&2
+        if [[ "$uri" = *\?* ]]; then
+            query=${uri#*\?}
+            uri=${uri%%\?*}
+        fi
     # end of headers
     elif [ -z "$key" ] || [ "$key" = $'\r' ]; then
         break
@@ -163,11 +150,27 @@ elif [[ "$uri" = /*/containers/json ]]; then
 elif [[ "$uri" = /*/containers/*/json ]]; then
     container=$(echo "$uri" | cut -d/ -f4)
     service=$(findService "$container")
-    result 200 OK
-    container "$service"
+    if [ -z "$service" ]; then
+        result 404 Not found
+        printf '{"message": "No such container: %s"}' "$container"
+    else
+        result 200 OK
+        container "$service"
+    fi
 elif [[ "$uri" = /*/containers/*/stats ]]; then
-    result 200 OK
-    stats
+    container=$(echo "$uri" | cut -d/ -f4)
+    service=$(findService "$container")
+    if [ -z "$service" ]; then
+        result 404 Not found
+        printf '{"message": "No such container: %s"}' "$container"
+    else
+        result 200 OK
+        if [[ "$query" = *stream=* ]]; then
+            while true; do stats "$service"; done
+        else
+            stats "$service"
+        fi
+    fi
 elif [[ "$uri" = /*/containers/*/logs ]]; then
     typeset relative args=(--quiet)
     echo "$query" | tr '&' '\n' | while IFS='=' read -r key value; do
