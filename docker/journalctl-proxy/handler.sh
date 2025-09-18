@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export JOURNAL_ID=__journal___
+export JOURNAL_ID=__journal
 
 shopt -s lastpipe
 
@@ -52,12 +52,12 @@ list() {
     systemctl --user list-units --all --output=json --type=service |
         jq '. | to_entries | map(.value += {
             Created: null,
-            Id: .value.unit,
+            Id: (.value.unit + "         "),
             Names: ["/" + .value.unit],
             State: .value.sub
         } | .value) + [{
             Created: null,
-            Id: env.JOURNAL_ID,
+            Id: (env.JOURNAL_ID + "         "),
             Names: ["/" + env.JOURNAL_ID],
             State: "running"
         }]'
