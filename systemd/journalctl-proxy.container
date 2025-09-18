@@ -3,14 +3,19 @@ Description=Journalctl proxy
 
 [Container]
 ContainerName=journalctl-proxy
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+Environment=PULSE_RUNTIME_PATH=/run/user/1000/pulse
 GroupAdd=keep-groups
 Image=localhost/journalctl-proxy
 PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
 Network=systemd-backend
 Pull=never
+Tmpfs=/run:64M
+Tmpfs=/run/lock:4M
 Volume=journalctl-proxy:/run/journald-proxy
 Volume=/etc/localtime:/etc/localtime:ro
+Volume=%t:/run/user/1000
 Volume=/run/log/journal:/run/log/journal:ro
 
 [Service]
