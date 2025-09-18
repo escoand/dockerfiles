@@ -11,8 +11,8 @@ PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
 Network=systemd-backend
 Pull=never
-Tmpfs=/run,size=64M
-Tmpfs=/run/lock,size=4M
+Tmpfs=/run:size=64M
+Tmpfs=/run/lock:size=4M
 Volume=journalctl-proxy:/run/journald-proxy
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=%t:/run/user/1000
