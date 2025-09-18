@@ -5,6 +5,7 @@ Description=Fail2ban
 ContainerName=fail2ban
 GroupAdd=keep-groups
 Image=localhost/fail2ban
+PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/run/fail2ban-fw:/run/fail2ban-fw:ro

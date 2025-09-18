@@ -12,6 +12,7 @@ Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
 Network=systemd-backend
+PodmanArgs=--cpus=1 --memory=512m
 Pull=never
 Secret=WORDPRESS%i_DB_CHARSET,type=env,target=WORDPRESS_DB_CHARSET
 Secret=WORDPRESS%i_DB_NAME,type=env,target=WORDPRESS_DB_NAME

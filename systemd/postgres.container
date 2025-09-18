@@ -6,6 +6,7 @@ ContainerName=postgres
 HealthCmd=sh -c 'pg_isready -q -d "$POSTGRES_DB" -U "$POSTGRES_USER"'
 Image=docker.io/library/postgres:15.14-alpine
 Network=systemd-backend
+PodmanArgs=--cpus=2 --memory=512m
 Secret=POSTGRES_DB,type=env
 Secret=POSTGRES_PASSWORD,type=env
 Secret=POSTGRES_USER,type=env

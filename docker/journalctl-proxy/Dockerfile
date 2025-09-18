@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:stable-slim
+FROM docker.io/library/debian:13.1-slim
 
 RUN apt -q update && \
     apt install -yq --no-install-recommends gawk socat systemd && \

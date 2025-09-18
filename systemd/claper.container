@@ -22,6 +22,7 @@ Label=caddy={$CLAPER_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 4000}}"
 Network=podman
 Network=systemd-backend
+PodmanArgs=--cpus=1 --memory=128m
 Secret=BASE_URL,type=env
 Secret=DATABASE_URL,type=env
 Secret=OIDC_CLIENT_ID,type=env

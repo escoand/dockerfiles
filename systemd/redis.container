@@ -7,6 +7,7 @@ Exec=docker-entrypoint.sh --appendonly no  --protected-mode no --save ""
 Image=docker.io/library/redis:8.2.1-alpine
 HealthCmd=redis-cli --raw incr ping
 Network=systemd-backend
+PodmanArgs=--cpus=1 --memory=128m
 
 [Service]
 Restart=always

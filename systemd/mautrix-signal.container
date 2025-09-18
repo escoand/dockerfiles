@@ -8,6 +8,7 @@ Environment=GID=991
 HealthCmd=["curl", "-fsS", "http://localhost:29328/_matrix/mau/live"]
 Image=dock.mau.dev/mautrix/signal:v0.8.6
 Network=systemd-backend
+PodmanArgs=--cpus=1 --memory=128m
 Volume=mautrix-signal:/data:z
 
 [Service]

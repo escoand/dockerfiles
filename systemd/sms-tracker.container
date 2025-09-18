@@ -13,6 +13,7 @@ Secret=TRACKER_API_AUTHENTICATION,type=env,target=API_AUTHENTICATION
 Secret=TRACKER_API_ENCRYPTION,type=env,target=API_ENCRYPTION
 Secret=TRACKER_API_MESSAGE,type=env,target=API_MESSAGE
 Network=podman
+PodmanArgs=--cpus=1 --memory=128m
 Pull=never
 Volume=sms-tracker:/app/data:z
 

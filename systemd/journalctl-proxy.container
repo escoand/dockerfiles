@@ -5,6 +5,7 @@ Description=Journalctl proxy
 ContainerName=journalctl-proxy
 GroupAdd=keep-groups
 Image=localhost/journalctl-proxy
+PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
 Network=systemd-backend
 Pull=never

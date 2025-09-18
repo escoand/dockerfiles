@@ -8,6 +8,7 @@ Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMI
 HealthCmd=["healthcheck.sh", "--su-mysql", "--connect"]
 Image=docker.io/library/mariadb:11.8.3
 Network=systemd-backend
+PodmanArgs=--cpus=2 --memory=512m
 Secret=MARIADB_ROOT_PASSWORD,type=env
 Volume=mariadb:/var/lib/mysql:z
 
