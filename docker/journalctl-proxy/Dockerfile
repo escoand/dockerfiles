@@ -6,6 +6,8 @@ RUN apt -q update && \
 
 COPY --chmod=0755 *.sh /
 
+ENV SHOW_SYSTEMD_UNITS=
+
 EXPOSE 2375
 
 CMD ["/entrypoint.sh"]

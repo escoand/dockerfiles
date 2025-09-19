@@ -51,7 +51,11 @@ END
 }
 
 list() {
-    systemctl --user show --all --type=service |
+    if [ -n "$SHOW_SYSTEMD_UNITS" ]; then
+        systemctl --user show --all --type=service
+    else
+        printf ""
+    fi |
         jq --slurp --raw-input '
             split("\n\n") |
             map(
@@ -227,8 +231,8 @@ elif [[ $method = POST && $uri = /*/containers/*/restart ]]; then
         printf '{"message": "No such container: %s"}' "$container"
     else
         systemctl --user restart "$service" &&
-        result 200 OK ||
-        result 500
+            result 200 OK ||
+            result 500
     fi
 else
     result 501 Not Implemented
