@@ -51,7 +51,7 @@ END
 }
 
 list() {
-    systemctl --user show --type=service |
+    systemctl --user show --all --type=service |
         jq --slurp --raw-input '
             split("\n\n") |
             map(

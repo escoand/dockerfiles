@@ -7,7 +7,7 @@ Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 Environment=PULSE_RUNTIME_PATH=/run/user/1000/pulse
 GroupAdd=keep-groups
 Image=localhost/journalctl-proxy
-PodmanArgs=--cpus=1 --memory=128m
+PodmanArgs=--cpus=0.5 --memory=128m
 SecurityLabelDisable=true
 Network=systemd-backend
 Pull=never
