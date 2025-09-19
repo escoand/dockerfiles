@@ -53,8 +53,6 @@ END
 list() {
     if [ -n "$SHOW_SYSTEMD_UNITS" ]; then
         systemctl --user show --all --type=service
-    else
-        printf ""
     fi |
         jq --slurp --raw-input '
             split("\n\n") |
