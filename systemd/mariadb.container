@@ -6,7 +6,7 @@ ContainerName=mariadb
 Environment=MARIADB_AUTO_UPGRADE=TRUE
 Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
 HealthCmd=["healthcheck.sh", "--su-mysql", "--connect"]
-Image=docker.io/library/mariadb:11.8.3
+Image=docker.io/library/mariadb:12.0.2
 Network=systemd-backend
 PodmanArgs=--cpus=2 --memory=1g
 Secret=MARIADB_ROOT_PASSWORD,type=env
