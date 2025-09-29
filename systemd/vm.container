@@ -9,7 +9,7 @@ ContainerName=vm
 Environment=BOOT=https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.1.0-amd64-netinst.iso
 Environment=_CPU_CORES=4
 Environment=RAM_SIZE=1.5G
-Image=docker.io/qemux/qemu:7.14
+Image=docker.io/qemux/qemu:7.18
 Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle_path=/vm/*
 Label=caddy.handle_path.basic_auth.{$VM_USER}={$VM_PASSWORD}
