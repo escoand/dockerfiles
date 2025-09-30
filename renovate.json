@@ -19,5 +19,12 @@
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
     }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "groupName": "{{{replace '^.*/' '' packageName}}}",
+      "groupSlug": "docker-{{{replace '^.*/' '' packageName}}}"
+    }
   ]
 }
