@@ -1,0 +1,53 @@
+#cloud-config
+users:
+  - name: admin
+    groups: users, admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+    - >-
+      ssh-rsa
+      AAAAB3NzaC1yc2EAAAADAQABAAABAQDp7Ij6tMK/6enpXE6qftq5PmPZL9HT6/iO975Bt9UjUezptGHIjh1hQ1z2ZOvC9r/Yuvu6X7g3PntFadwE5LMrmBL8Wte5unIcWLORoH7ha1lGDuOWKVyfuuhDzZ9aUHFMQ2hmFzShEHACub/gIAqLIGjQUlNykK32mGz8YSFh4FBELmDWbZXK7hmA34l4I1Hojd/nN0IZk4qQHVVNoUdzy77ZLO6sJbtlOD8SoQqaS0PRg+KFtG/LlKW1jTTUL4YXI80swNMPtyquXgRa+cn6EbdxMTJkmbQMS9fttLneOdPL5DGKu/2cRNjEM+FbIQtFePr1dEicNxMw7UdlRrRj
+      desktop
+    - >-
+      ssh-rsa
+      AAAAB3NzaC1yc2EAAAADAQABAAABAQDRLWPBKT1/DVBg4RkwCxF/S00fl/NHEAWf+T+2a0/gM8mYd2KZKUqHAgLMk1v/2mExifBW/LT/vtQnD89bxHOpDP+jxjfYLDMoli05vfn/hwImte/lGbNPY6gZjTUm7ujcz8c0aoNUOO7WAlvkqPZi2+bFq+9YiVCiIVpy9vefgjqcFRZXVow1PSin/Kp3SxuPY1BniVm7ZdkENdnisbM5yCCOxzLNbGVDMWE9lhHgdtp629UBJ30cWW4Zn/oBKkLgoRZ1zkAjEyc1yBUWnkZJnbyQ4T0EJmHWcd9TqlpFi2P313QrTa0se1Xw2PzOhIs/UnIFflDe0sY4Gq0s0TVV
+      phone
+packages:
+  - firewalld
+  - podman
+package_update: true
+package_upgrade: true
+write_files:
+  - path: /etc/ssh/sshd_config.d/ssh-hardening.conf
+    content: |
+      AllowAgentForwarding no
+      AllowTcpForwarding no
+      AllowUsers admin
+      AuthorizedKeysFile .ssh/authorized_keys
+      ChallengeResponseAuthentication no
+      KbdInteractiveAuthentication no
+      MaxAuthTries 2
+      PasswordAuthentication no
+      PermitRootLogin no
+      #Port 2222
+      X11Forwarding no
+runcmd:
+  # allow privileged ports
+  - sysctl net.ipv4.ip_unprivileged_port_start=80
+  # fail2ban handler
+  - curl -LOsS --output-dir /usr/local/bin/ https://raw.githubusercontent.com/escoand/dockerfiles/master/fail2ban-fw/fail2ban-fw.sh
+  - curl -LOsS --output-dir /etc/systemd/system/ https://raw.githubusercontent.com/escoand/dockerfiles/master/fail2ban-fw/fail2ban-fw.socket https://raw.githubusercontent.com/escoand/dockerfiles/master/fail2ban-fw/fail2ban-fw@.service
+  - chmod 0755 /usr/local/bin/fail2ban-fw.sh
+  - systemctl daemon-reload
+  - systemctl enable fail2ban-fw.socket
+  # user services
+  - loginctl enable-linger admin
+  - mkdir -p ~admin/.quadit ~admin/.config/containers/systemd
+  - curl -LOsS --output-dir ~admin/.quadit/ https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
+  - curl -LOsS --output-dir ~admin/.config/containers/systemd/ https://raw.githubusercontent.com/ubiquitous-factory/quadit/main/deploy/quadit.container
+  - chown -R admin:users ~admin/
+  - su - admin -c systemctl --user daemon-reload
+  - su - admin -c systemctl --user start quadit
+  # reboot
+  - reboot
