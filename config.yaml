@@ -2,7 +2,7 @@
 timezone: Europe/Berlin
 users:
   - name: horst
-    groups: users, admin
+    groups: wheel
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh_authorized_keys:
@@ -30,7 +30,7 @@ write_files:
     content: |
       AllowAgentForwarding no
       AllowTcpForwarding no
-      AllowGroups admin
+      AllowUsers horst
       AuthorizedKeysFile .ssh/authorized_keys
       ChallengeResponseAuthentication no
       KbdInteractiveAuthentication no
@@ -61,8 +61,8 @@ runcmd:
   - setsebool -P container_manage_cgroup true
   - loginctl enable-linger horst
   - mkdir -p ~horst/.quadit ~horst/.config/containers/systemd
-  - curl -LsS https://raw.githubusercontent.com/escoand/dockerfiles/master/secrets.init.sh | bash -s
   - curl -LsS -o ~horst/.quadit/config.yaml https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
   - curl -LOsS --output-dir ~horst/.config/containers/systemd/ https://raw.githubusercontent.com/ubiquitous-factory/quadit/main/deploy/quadit.container
   - chown -R "horst:" ~horst/
+  - curl -LsS https://raw.githubusercontent.com/escoand/dockerfiles/master/secrets.init.sh | su - horst -c "bash -s"
   - su - horst -c "export XDG_RUNTIME_DIR=/run/user/1000; systemctl --user daemon-reload; systemctl --user enable --now podman.socket; systemctl --user start quadit"
