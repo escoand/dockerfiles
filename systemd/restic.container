@@ -10,6 +10,7 @@ Environment=RESTIC_PROGRESS_FPS=0.1
 HostName=%H
 Image=docker.io/mazzolino/restic:1.8.0
 Secret=RESTIC_ACCESS_KEY,type=env,target=AWS_ACCESS_KEY_ID
+Secret=RESTIC_PASSWORD,type=env
 Secret=RESTIC_REPOSITORY,type=env
 Secret=RESTIC_SECRET_KEY,type=env,target=AWS_SECRET_ACCESS_KEY
 Volume=/etc/localtime:/etc/localtime:ro
