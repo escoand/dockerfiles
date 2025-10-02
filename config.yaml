@@ -14,6 +14,11 @@ users:
         ssh-rsa
         AAAAB3NzaC1yc2EAAAADAQABAAABAQDRLWPBKT1/DVBg4RkwCxF/S00fl/NHEAWf+T+2a0/gM8mYd2KZKUqHAgLMk1v/2mExifBW/LT/vtQnD89bxHOpDP+jxjfYLDMoli05vfn/hwImte/lGbNPY6gZjTUm7ujcz8c0aoNUOO7WAlvkqPZi2+bFq+9YiVCiIVpy9vefgjqcFRZXVow1PSin/Kp3SxuPY1BniVm7ZdkENdnisbM5yCCOxzLNbGVDMWE9lhHgdtp629UBJ30cWW4Zn/oBKkLgoRZ1zkAjEyc1yBUWnkZJnbyQ4T0EJmHWcd9TqlpFi2P313QrTa0se1Xw2PzOhIs/UnIFflDe0sY4Gq0s0TVV
         phone
+packages:
+  - firewalld
+  - podman
+package_update: true
+package_upgrade: true
 write_files:
   - path: /etc/ssh/sshd_config.d/ssh-hardening.conf
     content: |
@@ -37,9 +42,7 @@ write_files:
       sed -n '/ ExecStart=/{ s/.* ExecStart=//; s/(code=.*//; s/ -d//; p; }' |
       sh -s
 runcmd:
-  # dependencies
-  - dnf --assumeyes --refresh upgrade
-  - dnf --assumeyes install firewalld podman
+  # disable syslog
   - systemctl disable --now syslog.socket rsyslog.service
   # allow privileged ports
   - sysctl net.ipv4.ip_unprivileged_port_start=80
@@ -56,6 +59,6 @@ runcmd:
   - curl -LsS -o ~horst/.quadit/config.yaml https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
   - curl -LOsS --output-dir ~horst/.config/containers/systemd/ https://raw.githubusercontent.com/ubiquitous-factory/quadit/main/deploy/quadit.container
   - chown -R "horst:" ~horst/
-  - su - horst -c systemctl --user daemon-reload
-  - su - horst -c systemctl --user enable --now podman.socket
-  - su - horst -c systemctl --user start quadit
+  - sudo -u horst systemctl --user daemon-reload
+  - sudo -u horst systemctl --user enable --now podman.socket
+  - sudo -u horst systemctl --user start quadit
