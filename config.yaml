@@ -62,6 +62,4 @@ runcmd:
   - curl -LsS -o ~horst/.quadit/config.yaml https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
   - curl -LOsS --output-dir ~horst/.config/containers/systemd/ https://raw.githubusercontent.com/ubiquitous-factory/quadit/main/deploy/quadit.container
   - chown -R "horst:" ~horst/
-  - su - horst -c "systemctl --user daemon-reload"
-  - su - horst -c "systemctl --user enable --now podman.socket"
-  - su - horst -c "systemctl --user start quadit"
+  - su - horst -c "export XDG_RUNTIME_DIR=/run/user/1000; systemctl --user daemon-reload; systemctl --user enable --now podman.socket; systemctl --user start quadit"
