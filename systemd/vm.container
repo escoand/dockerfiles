@@ -23,4 +23,4 @@ Volume=vm:/storage:z
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target default.target
+#WantedBy=multi-user.target default.target
