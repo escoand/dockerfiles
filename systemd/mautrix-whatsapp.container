@@ -7,7 +7,7 @@ Environment=UID=991
 Environment=GID=991
 HealthCmd=["curl", "-fsS", "http://localhost:29318/_matrix/mau/live"]
 Image=dock.mau.dev/mautrix/whatsapp:v0.12.5
-Network=systemd-backend
+Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m
 Volume=mautrix-whatsapp:/data:z
 

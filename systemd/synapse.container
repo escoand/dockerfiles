@@ -10,7 +10,7 @@ Image=docker.io/matrixdotorg/synapse:v1.138.0
 Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 8008}}"
 Network=podman
-Network=systemd-backend
+Network=backend.network
 PodmanArgs=--cpus=1 --memory=512m
 Volume=synapse:/data:z
 

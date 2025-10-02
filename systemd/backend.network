@@ -1,4 +1,1 @@
 [Network]
-
-[Install]
-WantedBy=multi-user.target default.target

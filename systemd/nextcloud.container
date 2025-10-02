@@ -34,7 +34,7 @@ Label=caddy_1.reverse_proxy.header_up="X-Real-IP {remote_host}"
 Label=caddy_2={$REDIR_DOMAIN}
 Label=caddy_2.redir={$REDIR_TARGET}
 Network=podman
-Network=systemd-backend
+Network=backend.network
 PodmanArgs=--cpus=2 --memory=512m
 Secret=NEXTCLOUD_DATABASE,type=env,target=MYSQL_DATABASE
 Secret=NEXTCLOUD_DATABASE_PASSWORD,type=env,target=MYSQL_PASSWORD

@@ -8,7 +8,7 @@ ContainerName=nextcloud-cron
 Entrypoint=/cron.sh
 Image=docker.io/library/nextcloud:31.0.9
 PodmanArgs=--cpus=1 --memory=128m
-Network=systemd-backend
+Network=backend.network
 Volume=nextcloud_app:/var/www/html:z
 Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z

@@ -11,7 +11,7 @@ Image=localhost/wordpress
 Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
-Network=systemd-backend
+Network=backend.network
 PodmanArgs=--cpus=1 --memory=512m
 Pull=never
 Secret=WORDPRESS%i_DB_CHARSET,type=env,target=WORDPRESS_DB_CHARSET

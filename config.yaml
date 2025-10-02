@@ -34,7 +34,7 @@ write_files:
       AuthorizedKeysFile .ssh/authorized_keys
       ChallengeResponseAuthentication no
       KbdInteractiveAuthentication no
-      MaxAuthTries 2
+      #MaxAuthTries 2
       PasswordAuthentication no
       PermitRootLogin no
       #Port 2222
