@@ -5,20 +5,6 @@ users:
     groups: wheel
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    ssh_authorized_keys:
-      - >-
-        ssh-rsa
-        AAAAB3NzaC1yc2EAAAADAQABAAABAQDp7Ij6tMK/6enpXE6qftq5PmPZL9HT6/iO975Bt9UjUezptGHIjh1hQ1z2ZOvC9r/Yuvu6X7g3PntFadwE5LMrmBL8Wte5unIcWLORoH7ha1lGDuOWKVyfuuhDzZ9aUHFMQ2hmFzShEHACub/gIAqLIGjQUlNykK32mGz8YSFh4FBELmDWbZXK7hmA34l4I1Hojd/nN0IZk4qQHVVNoUdzy77ZLO6sJbtlOD8SoQqaS0PRg+KFtG/LlKW1jTTUL4YXI80swNMPtyquXgRa+cn6EbdxMTJkmbQMS9fttLneOdPL5DGKu/2cRNjEM+FbIQtFePr1dEicNxMw7UdlRrRj
-        desktop
-      - >-
-        ssh-rsa
-        AAAAB3NzaC1yc2EAAAADAQABAAABAQDRLWPBKT1/DVBg4RkwCxF/S00fl/NHEAWf+T+2a0/gM8mYd2KZKUqHAgLMk1v/2mExifBW/LT/vtQnD89bxHOpDP+jxjfYLDMoli05vfn/hwImte/lGbNPY6gZjTUm7ujcz8c0aoNUOO7WAlvkqPZi2+bFq+9YiVCiIVpy9vefgjqcFRZXVow1PSin/Kp3SxuPY1BniVm7ZdkENdnisbM5yCCOxzLNbGVDMWE9lhHgdtp629UBJ30cWW4Zn/oBKkLgoRZ1zkAjEyc1yBUWnkZJnbyQ4T0EJmHWcd9TqlpFi2P313QrTa0se1Xw2PzOhIs/UnIFflDe0sY4Gq0s0TVV
-        phone
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN5TRGkhYFdXV7x9/0nyY/qsk1v8lqK/eKVr06qTWDJD homeassistant
-      - >-
-        ssh-rsa
-        AAAAB3NzaC1yc2EAAAADAQABAAABgQC7DLJAxJNbTKYipUMVlMLPTH9CSGY0D47YgtMXP54Ms3MrUPWDw+QKRKJIKYcJp7rXVAeDLRJfoO56JhjiqyOohven2CJ9dfNvqG9V6ecimsXL8JGMRwSo+EmcadAitexeQ9VWrOPN2u+vKVZULMQY2TO+Q4zAg4x37Egm722weOSljAKkHc2ou376qXa8liAr6GueUx2XflRBTnYCrycuqz0WpAf9ip1CyPJFGk6QwMziY8LmqmQ5YKCVuxGSQXLJeIOobSiLoZECv3/U58eUBFZhR3IpWOtf2qgyClECNYwWhh5zvtaMmJYZDwLZSRAb2UQGRpzI5WjWbenGoILk7YvJiDRIw7F8X+z/kxKQPGxb9rRJ3ovbzYIPe9xZhpyYvHExJyChIx7rpHc0GlpUtRfIVt19TuzwwLOvag62EznyB0/O7BlHsroD+LPe1lGpJx1dtTXCAxgqF40/Z97gXE2MpwCjTp7+98amHK49bfzLRgVMQHdrwL8D+gkMca8=
-        homeassistant
 packages:
   - firewalld
   - git
@@ -31,6 +17,7 @@ write_files:
       AllowAgentForwarding no
       AllowTcpForwarding no
       AllowUsers horst
+      AuthorizedKeysCommand curl -LsS https://github.com/escoand.keys
       AuthorizedKeysFile .ssh/authorized_keys
       ChallengeResponseAuthentication no
       KbdInteractiveAuthentication no
