@@ -8,7 +8,7 @@ Environment=BACKUP_CRON="00 00 03 * * *"
 Environment=RESTIC_FORGET_ARGS="--keep-last 1 --prune"
 Environment=RESTIC_PROGRESS_FPS=0.1
 HostName=%H
-Image=docker.io/mazzolino/restic:1.8.0
+Image=docker.io/mazzolino/restic:1.8.2
 Secret=RESTIC_ACCESS_KEY,type=env,target=AWS_ACCESS_KEY_ID
 Secret=RESTIC_PASSWORD,type=env
 Secret=RESTIC_REPOSITORY,type=env
