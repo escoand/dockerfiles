@@ -12,7 +12,8 @@ Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
 Image=docker.io/library/nextcloud:32.0.0
-Label=caddy_0=(cors)
+# CORS for external
+Label=caddy_0=(cors_external)
 Label=caddy_0.handle_path="/{args[0]}/*"
 Label=caddy_0.handle_path.handle=@preflight
 Label=caddy_0.handle_path.handle.header_0="Access-Control-Allow-Methods *"
@@ -25,14 +26,27 @@ Label=caddy_0.handle_path.reverse_proxy.header_up_2="-X-Forwarded-Host"
 Label=caddy_0.handle_path.reverse_proxy.header_up_3="-X-Forwarded-Proto"
 Label=caddy_0.handle_path.reverse_proxy.header_down_0="Access-Control-Allow-Methods *"
 Label=caddy_0.handle_path.reverse_proxy.header_down_1="Access-Control-Allow-Origin *"
-Label=caddy_1={$NEXTCLOUD_DOMAIN}
-Label=caddy_1.@preflight="method OPTIONS"
-Label=caddy_1.import_0="cors https://ics.tools"
-Label=caddy_1.import_1="cors https://www.schule.sachsen.de"
-Label=caddy_1.reverse_proxy={{upstreams}}
-Label=caddy_1.reverse_proxy.header_up="X-Real-IP {remote_host}"
-Label=caddy_2={$REDIR_DOMAIN}
-Label=caddy_2.redir={$REDIR_TARGET}
+# CORS for internal
+Label=caddy_1=(cors_internal)
+Label=caddy_1.handle_path="{args[0]}"
+Label=caddy_1.handle_path.handle=@preflight
+Label=caddy_1.handle_path.handle.header_0="Access-Control-Allow-Credentials true"
+Label=caddy_1.handle_path.handle.header_1="Access-Control-Allow-Headers Content-Type"
+Label=caddy_1.handle_path.handle.header_2="Access-Control-Allow-Methods POST, OPTIONS"
+Label=caddy_1.handle_path.handle.header_3="Access-Control-Allow-Origin *"
+Label=caddy_1.handle_path.handle.header_4="Vary Origin"
+Label=caddy_1.handle_path.handle.respond=204
+# generic
+Label=caddy_2={$NEXTCLOUD_DOMAIN}
+Label=caddy_2.@preflight="method OPTIONS"
+Label=caddy_2.import_0="cors_external https://ics.tools"
+Label=caddy_2.import_1="cors_external https://www.schule.sachsen.de"
+Label=caddy_2.import_2="cors_internal /index.php/apps/oauth2/api/v1/token"
+Label=caddy_2.reverse_proxy={{upstreams}}
+Label=caddy_2.reverse_proxy.header_up="X-Real-IP {remote_host}"
+# redirect
+Label=caddy_3={$REDIR_DOMAIN}
+Label=caddy_3.redir={$REDIR_TARGET}
 Network=podman
 Network=backend.network
 PodmanArgs=--cpus=2 --memory=512m
