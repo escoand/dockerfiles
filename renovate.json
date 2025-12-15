@@ -20,16 +20,6 @@
       "versioningTemplate": "docker"
     }
   ],
-  "packageAliases": {
-    "postgres": [
-      "docker.io/library/postgres",
-      "postgres"
-    ],
-    "mariadb": [
-      "docker.io/library/mariadb",
-      "mariadb"
-    ]
-  },
   "packageRules": [
     {
       "matchDatasources": ["docker"],
