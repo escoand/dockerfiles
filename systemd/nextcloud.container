@@ -31,8 +31,8 @@ Label=caddy_1=(cors_internal)
 Label=caddy_1.handle_path="{args[0]}"
 Label=caddy_1.handle_path.handle=@preflight
 Label=caddy_1.handle_path.handle.header_0="Access-Control-Allow-Credentials true"
-Label=caddy_1.handle_path.handle.header_1="Access-Control-Allow-Headers Accept, Content-Type, X-Requested-With"
-Label=caddy_1.handle_path.handle.header_2="Access-Control-Allow-Methods POST, OPTIONS"
+Label=caddy_1.handle_path.handle.header_1="Access-Control-Allow-Headers Accept,Content-Type,X-Requested-With"
+Label=caddy_1.handle_path.handle.header_2="Access-Control-Allow-Methods POST,OPTIONS"
 Label=caddy_1.handle_path.handle.header_3="Access-Control-Allow-Origin *"
 Label=caddy_1.handle_path.handle.header_4="Vary Origin"
 Label=caddy_1.handle_path.handle.respond=204
