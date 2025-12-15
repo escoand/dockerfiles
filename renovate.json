@@ -23,8 +23,7 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "groupName": "{{{replace '^.*/' '' packageName}}}",
-      "groupSlug": "docker-{{{replace '^.*/' '' packageName}}}"
+      "packageName": "{{{replace '^.*/' '' packageName}}}"
     }
   ]
 }
