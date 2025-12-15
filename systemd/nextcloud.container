@@ -36,6 +36,8 @@ Label=caddy_1.handle.handle.header_2="Access-Control-Allow-Methods POST,OPTIONS"
 Label=caddy_1.handle.handle.header_3="Access-Control-Allow-Origin *"
 Label=caddy_1.handle.handle.header_4="Vary Origin"
 Label=caddy_1.handle.handle.respond=204
+Label=caddy_1.handle.header_0="Access-Control-Allow-Credentials true"
+Label=caddy_1.handle.header_1="Access-Control-Allow-Origin *"
 # generic
 Label=caddy_2={$NEXTCLOUD_DOMAIN}
 Label=caddy_2.@preflight="method OPTIONS"
