@@ -9,8 +9,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "/.*\\.container$"
+      "managerFilePatterns": [
+        "//.*\\.container$/"
       ],
       "matchStrings": [
         "Image=(?<registry>\\S+/)(?<depName>\\S+):(?<currentValue>\\S+)"
@@ -22,9 +22,12 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "groupName": "{{{replace '^.*/' '' packageName}}}",
-      "groupSlug": "docker-{{{replace '^.*/' '' packageName}}}"
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "{{{replace '^.*/' '' packageName}}}"
+      ]
     }
   ]
 }
