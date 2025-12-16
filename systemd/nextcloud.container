@@ -31,8 +31,8 @@ Label=caddy_1=(cors_internal)
 Label=caddy_1.handle="{args[0]}"
 Label=caddy_1.handle.handle=@preflight
 Label=caddy_1.handle.handle.header_0="Access-Control-Allow-Credentials true"
-Label=caddy_1.handle.handle.header_1="Access-Control-Allow-Headers Accept,Content-Type,Depth,X-Requested-With"
-Label=caddy_1.handle.handle.header_2="Access-Control-Allow-Methods OPTIONS,POST,PROPFIND"
+Label=caddy_1.handle.handle.header_1="Access-Control-Allow-Headers Accept,Content-Type,{args[2]}"
+Label=caddy_1.handle.handle.header_2="Access-Control-Allow-Methods OPTIONS,{args[1]}"
 Label=caddy_1.handle.handle.header_3="Access-Control-Allow-Origin *"
 Label=caddy_1.handle.handle.header_4="Vary Origin"
 Label=caddy_1.handle.handle.respond=204
@@ -43,9 +43,9 @@ Label=caddy_2={$NEXTCLOUD_DOMAIN}
 Label=caddy_2.@preflight="method OPTIONS"
 Label=caddy_2.import_0="cors_external https://ics.tools"
 Label=caddy_2.import_1="cors_external https://www.schule.sachsen.de"
-Label=caddy_2.import_2="cors_internal /index.php/apps/oauth2/api/v1/token"
-Label=caddy_2.import_3="cors_internal /apps/oauth2/api/v1/token"
-Label=caddy_2.import_4="cors_internal /.well-known/caldav"
+Label=caddy_2.import_2="cors_internal /index.php/apps/oauth2/api/v1/token POST     X-Requested-With"
+Label=caddy_2.import_2="cors_internal /apps/oauth2/api/v1/token           POST     X-Requested-With"
+Label=caddy_2.import_4="cors_internal /.well-known/caldav                 PROPFIND Authorization,Depth"
 Label=caddy_2.reverse_proxy={{upstreams}}
 Label=caddy_2.reverse_proxy.header_up="X-Real-IP {remote_host}"
 # redirect
