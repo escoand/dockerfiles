@@ -32,7 +32,7 @@ Label=caddy_1.handle="{args[0]}"
 Label=caddy_1.handle.handle=@preflight
 Label=caddy_1.handle.handle.header_0="Access-Control-Allow-Credentials true"
 Label=caddy_1.handle.handle.header_1="Access-Control-Allow-Headers Accept,Content-Type,X-Requested-With"
-Label=caddy_1.handle.handle.header_2="Access-Control-Allow-Methods POST,OPTIONS"
+Label=caddy_1.handle.handle.header_2="Access-Control-Allow-Methods OPTIONS,POST,PROPFIND"
 Label=caddy_1.handle.handle.header_3="Access-Control-Allow-Origin *"
 Label=caddy_1.handle.handle.header_4="Vary Origin"
 Label=caddy_1.handle.handle.respond=204
