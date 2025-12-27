@@ -17,7 +17,7 @@ HealthCmd=sh -c '\
     "http://localhost:4000/live/websocket" 2>&1 | \
   grep -Fq "HTTP/1.1 101"'
 HealthLogDestination=events_logger
-Image=ghcr.io/claperco/claper:2.3.2
+Image=ghcr.io/claperco/claper:2.4.0
 Label=caddy={$CLAPER_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 4000}}"
 Network=podman
