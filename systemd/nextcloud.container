@@ -46,7 +46,10 @@ Label=caddy_2.import_1="cors_external https://www.schule.sachsen.de"
 Label=caddy_2.import_2="cors_internal /index.php/apps/oauth2/api/v1/token POST     X-Requested-With"
 Label=caddy_2.import_3="cors_internal /apps/oauth2/api/v1/token           POST     X-Requested-With"
 Label=caddy_2.reverse_proxy={{upstreams}}
-Label=caddy_2.reverse_proxy.header_up="X-Real-IP {remote_host}"
+Label=caddy_2.reverse_proxy.header_up_0="X-Forwarded-For {remote_host}"
+Label=caddy_2.reverse_proxy.header_up_1="X-Forwarded-Host {host}"
+Label=caddy_2.reverse_proxy.header_up_3="X-Forwarded-Proto {scheme}"
+Label=caddy_2.reverse_proxy.header_up_4="X-Real-IP {remote_host}"
 # redirect
 Label=caddy_3={$REDIR_DOMAIN}
 Label=caddy_3.redir={$REDIR_TARGET}
