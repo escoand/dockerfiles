@@ -6,7 +6,7 @@ ContainerName=mautrix-signal
 Environment=UID=991
 Environment=GID=991
 HealthCmd=["curl", "-fsS", "http://localhost:29328/_matrix/mau/live"]
-Image=dock.mau.dev/mautrix/signal:v0.2511.0
+Image=dock.mau.dev/mautrix/signal:v0.2512.0
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m
 Volume=mautrix-signal:/data:z
