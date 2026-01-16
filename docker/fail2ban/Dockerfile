@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:13.2-slim
+FROM docker.io/library/debian:13.3-slim
 
 RUN apt -q update && \
     apt install -yq --no-install-recommends curl fail2ban python3-systemd && \
