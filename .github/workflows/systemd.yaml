@@ -13,30 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install systemd tools
+      - name: Verify units
         run: |
           set -e
-          sudo apt-get update
           sudo apt-get install -y podman
-
-      - name: Install Podman
-        run: |
-          set -e
-          sudo apt-get install -y \
-            curl \
-            gnupg2 \
-            software-properties-common
-          curl -fsSL https://packages.podman.io/podman-archive.key | sudo tee /etc/apt/trusted.gpg.d/podman.asc
-          sudo add-apt-repository -y ppa:projectatomic/ppa
-          sudo apt-get update
-          sudo apt-get install -y podman
-          podman --version
-
-      - name: Verify systemd unit files
-        run: |
-          set -ex
-          sudo cp systemd/* /etc/containers/systemd
-          for file in systemd/*.container; do
-            unit=$(basename "$file" .container)
-            systemd-analyze --generators=true verify "${unit%@}.service"
-          done
+          podman run --rm -it -v ./:/etc/containers/systemd:ro almalinux:minimal sh -ex '
+            for file in /etc/containers/systemd/systemd/*.container; do
+              unit=$(basename "$file" .container)
+              systemd-analyze --generators=true verify "${unit%@}.service"
+            done
+          '
