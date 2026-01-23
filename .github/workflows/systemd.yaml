@@ -21,7 +21,9 @@ jobs:
       - name: Verify systemd unit files
         run: |
           set -e
-          for unit in systemd/*.container; do
+          cp systemd/* /etc/containers/systemd
+          for file in systemd/*.container; do
             echo "Verifying $unit"
-            systemd-analyze --generators=true verify "${unit%.container}.service"
+            unit=$(basename "$file" .container)
+            systemd-analyze --generators=true verify "$unit.service"
           done
