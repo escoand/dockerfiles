@@ -16,7 +16,7 @@ jobs:
       - name: Install systemd tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y systemd
+          sudo apt-get install -y podman systemd
 
       - name: Verify systemd unit files
         run: |
