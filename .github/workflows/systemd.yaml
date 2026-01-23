@@ -1,0 +1,28 @@
+name: systemd-units
+
+on:
+  pull_request:
+    paths:
+      - "systemd/**"
+  push:
+    branches: [ main ]
+
+jobs:
+  verify-units:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install systemd tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y systemd
+
+      - name: Verify systemd unit files
+        run: |
+          set -e
+          for unit in systemd/**/*.service; do
+            echo "Verifying $unit"
+            systemd-analyze verify "$unit"
+          done
