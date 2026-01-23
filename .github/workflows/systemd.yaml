@@ -23,5 +23,5 @@ jobs:
           set -e
           for unit in systemd/*.container; do
             echo "Verifying $unit"
-            systemd-analyze verify "$unit"
+            systemd-analyze --generators=true verify "${unit%.container}.service"
           done
