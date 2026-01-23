@@ -21,7 +21,7 @@ jobs:
       - name: Verify systemd unit files
         run: |
           set -e
-          for unit in systemd/**/*.container; do
+          for unit in systemd/*.container; do
             echo "Verifying $unit"
             systemd-analyze verify "$unit"
           done
