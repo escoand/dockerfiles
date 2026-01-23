@@ -21,7 +21,7 @@ jobs:
       - name: Verify systemd unit files
         run: |
           set -e
-          cp systemd/* /etc/containers/systemd
+          sudo cp systemd/* /etc/containers/systemd
           for file in systemd/*.container; do
             echo "Verifying $unit"
             unit=$(basename "$file" .container)
