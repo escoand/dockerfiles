@@ -18,7 +18,7 @@ jobs:
           set -e
           sudo apt-get install -y podman
           podman run --rm -it -v ./:/etc/containers/systemd:ro almalinux:minimal sh -exc '
-            sudo dnf install -y podman systemd
+            dnf install -y podman systemd
             for file in /etc/containers/systemd/systemd/*.container; do
               unit=$(basename "$file" .container)
               systemd-analyze --generators=true verify "${unit%@}.service"
