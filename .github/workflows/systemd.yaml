@@ -19,7 +19,7 @@ jobs:
       - name: Verify units
         run: |
           mkdir -p /etc/containers/systemd/
-          cp systemd/*.container /data/systemd/*.network /etc/containers/systemd/
+          cp systemd/*.container systemd/*.network /etc/containers/systemd/
           cp systemd/*.socket /etc/systemd/system/
           for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
