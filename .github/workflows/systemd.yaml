@@ -20,22 +20,21 @@ jobs:
         run: |
           set -e
           mkdir -p \
-            ~/.config/containers/systemd/ \
-            ~/.config/systemd/user/
+            /etc/containers/systemd/
           cp \
             systemd/*.container \
             systemd/*.network \
-            ~/.config/containers/systemd/
+            /etc/containers/systemd/
           cp \
             systemd/*.socket \
-            ~/.config/systemd/user/
+            /etc/systemd/user/
       - name: Verify units
         run: |
           set -e
-          for file in ~/.config/containers/systemd/*.container; do
+          for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
             echo "# verify $unit"
-            systemd-analyze --generators=true --user verify "$unit.service" ||
+            systemd-analyze --generators=true verify "$unit.service" ||
             touch /tmp/RC.tmp
           done
           ! test -r /tmp/RC.tmp
