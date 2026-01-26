@@ -12,7 +12,7 @@ jobs:
     container:
       image: almalinux
       volumes:
-        - $GITHUB_WORKSPACE:/etc/containers/systemd/systemd
+        - ${{ github.workspace }}:/etc/containers/systemd/systemd
     steps:
       - uses: actions/checkout@v6
       - name: Verify units
