@@ -18,9 +18,9 @@ jobs:
       - name: Verify units
         run: |
           set -x
-          find /etc/containers/systemd/systemd -ls
+          find /etc/containers/systemd -ls
           dnf install -y podman systemd
-          for file in /etc/containers/systemd/systemd/*.container; do
+          for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
             systemd-analyze --generators=true verify "${unit%@}.service"
           done
