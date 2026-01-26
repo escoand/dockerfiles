@@ -16,15 +16,26 @@ jobs:
       - name: Install deps
         run: |
           dnf install -qy podman systemd
+      - name: Prepare
+        run: |
+          set -e
+          mkdir -p \
+            ~/.config/containers/systemd/ \
+            ~/.config/systemd/user/
+          cp \
+            systemd/*.container \
+            systemd/*.network \
+            ~/.config/containers/systemd/
+          cp \
+            systemd/*.socket \
+            ~/.config/systemd/system/
       - name: Verify units
         run: |
-          mkdir -p /etc/containers/systemd/
-          cp systemd/*.container systemd/*.network /etc/containers/systemd/
-          cp systemd/*.socket /etc/systemd/system/
-          for file in /etc/containers/systemd/*.container; do
+          set -e
+          for file in ~/.config/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
             echo "# verify $unit"
-            systemd-analyze --generators=true verify "$unit.service" ||
+            systemd-analyze --generators=true --user verify "$unit.service" ||
             touch /tmp/RC.tmp
           done
           ! test -r /tmp/RC.tmp
