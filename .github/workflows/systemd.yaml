@@ -28,7 +28,7 @@ jobs:
             ~/.config/containers/systemd/
           cp \
             systemd/*.socket \
-            ~/.config/systemd/system/
+            ~/.config/systemd/user/
       - name: Verify units
         run: |
           set -e
