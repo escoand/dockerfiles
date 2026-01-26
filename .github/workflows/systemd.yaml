@@ -10,19 +10,21 @@ jobs:
   verify-units:
     runs-on: ubuntu-latest
     container:
-      image: almalinux
+      image: almalinux:9.6
       volumes:
         - ${{ github.workspace }}:/data
     steps:
       - uses: actions/checkout@v6
       - name: Verify units
         run: |
-          set -ex
           mkdir -p /etc/containers/systemd/
           cp /data/systemd/*.container /data/systemd/*.network /etc/containers/systemd/
           cp /data/systemd/*.socket /etc/systemd/system/
           dnf install -y podman systemd
           for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
-            systemd-analyze --generators=true verify "$unit.service"
+            echo "# verify $unit"
+            systemd-analyze --generators=true verify "$unit.service" ||
+            touch /tmp/RC.tmp
           done
+          ! test -r /tmp/RC.tmp
