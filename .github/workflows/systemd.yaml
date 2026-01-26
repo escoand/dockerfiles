@@ -17,12 +17,12 @@ jobs:
       - uses: actions/checkout@v6
       - name: Verify units
         run: |
-          set -x
+          set -ex
           mkdir -p /etc/containers/systemd/
           cp /data/systemd/*.container /data/systemd/*.network /etc/containers/systemd/
           cp /data/systemd/*.socket /etc/systemd/system/
           dnf install -y podman systemd
           for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
-            systemd-analyze --generators=true verify "${unit%@}.service" || true
+            systemd-analyze --generators=true verify "${unit%@}.service"
           done
