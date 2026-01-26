@@ -12,13 +12,13 @@ jobs:
     container:
       image: almalinux
       volumes:
-        - ${{ github.workspace }}:/etc/containers/systemd
+        - ${{ github.workspace }}:/data
     steps:
       - uses: actions/checkout@v6
       - name: Verify units
         run: |
           set -x
-          find /etc/containers/systemd -ls
+          cp /data/systemd/* /etc/containers/systemd/
           dnf install -y podman systemd
           for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
