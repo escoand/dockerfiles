@@ -5,14 +5,14 @@ on:
   push:
 
 jobs:
-  verify-units:
+  test-cloudinit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - run: |
           set -ex
-          apt-get -qy update
-          apt-get -qy install cloud-init qemu wget
+          sudo apt-get -qy update
+          sudo apt-get -qy install cloud-init qemu wget
           wget https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-latest.x86_64.qcow2
           cloud-localds seed.img user-data
           kvm \
