@@ -10,7 +10,7 @@ jobs:
   verify-units:
     runs-on: ubuntu-latest
     container:
-      image: almalinux:9.6
+      image: almalinux:9.7
     steps:
       - uses: actions/checkout@v6
 
