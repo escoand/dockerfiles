@@ -13,9 +13,11 @@ jobs:
       image: almalinux:9.6
     steps:
       - uses: actions/checkout@v6
+
       - name: Install deps
         run: |
           dnf install -qy podman systemd
+
       - name: Prepare
         run: |
           set -e
@@ -28,6 +30,7 @@ jobs:
           cp \
             systemd/*.socket \
             /etc/systemd/system/
+
       - name: Verify units
         run: |
           set -e
