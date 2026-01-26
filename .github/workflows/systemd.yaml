@@ -19,7 +19,7 @@ jobs:
         run: |
           set -x
           mkdir -p /etc/containers/systemd/
-          cp /data/systemd/*.backend /data/systemd/*.container /etc/containers/systemd/
+          cp /data/systemd/*.container /data/systemd/*.network /etc/containers/systemd/
           cp /data/systemd/*.socket /etc/systemd/system/
           dnf install -y podman systemd
           for file in /etc/containers/systemd/*.container; do
