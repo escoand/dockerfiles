@@ -12,7 +12,7 @@ jobs:
       - run: |
           set -ex
           sudo apt-get -qy update
-          sudo apt-get -qy install cloud-init qemu wget
+          sudo apt-get -qy install cloud-init qemu-system-x86 wget
           wget https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-latest.x86_64.qcow2
           cloud-localds seed.img user-data
           kvm \
