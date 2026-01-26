@@ -1,0 +1,26 @@
+name: cloud-init
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  verify-units:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: |
+          set -ex
+          apt-get -qy update
+          apt-get -qy install cloud-init qemu wget
+          wget https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-latest.x86_64.qcow2
+          cloud-localds seed.img user-data
+          kvm \
+            -m 512 \
+            -net nic \
+            -net user \
+            -redir tcp:2222::22 \
+            -drive file=AlmaLinux-9-GenericCloud-latest.x86_64.qcow2,if=virtio,format=qcow2 \
+            -drive file=seed.img,if=virtio,format=raw
+          ssh -p 2222 localhost 'cat /var/log/cloud-init.log' |
+          cloud-init analyze blame -i -
