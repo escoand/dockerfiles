@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: almalinux:9.6
-      volumes:
-        - ${{ github.workspace }}:/data
     steps:
       - uses: actions/checkout@v6
+      - name: Install deps
+        run: |
+          dnf install -qy podman systemd
       - name: Verify units
         run: |
           mkdir -p /etc/containers/systemd/
-          cp /data/systemd/*.container /data/systemd/*.network /etc/containers/systemd/
-          cp /data/systemd/*.socket /etc/systemd/system/
-          dnf install -y podman systemd
+          cp systemd/*.container /data/systemd/*.network /etc/containers/systemd/
+          cp systemd/*.socket /etc/systemd/system/
           for file in /etc/containers/systemd/*.container; do
             unit=$(basename "$file" .container)
             echo "# verify $unit"
