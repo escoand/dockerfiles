@@ -18,6 +18,7 @@ jobs:
       - name: Verify units
         run: |
           set -x
+          mkdir -p /etc/containers/systemd/
           cp /data/systemd/* /etc/containers/systemd/
           dnf install -y podman systemd
           for file in /etc/containers/systemd/*.container; do
