@@ -34,9 +34,7 @@ jobs:
           } >/tmp/ciuser.yaml
           sed -e "/users:/r /tmp/ciuser.yaml" \
               -e "s/AllowUsers.*/& ci/" \
-              -e "s/^\(package_up.*:\) *true/\1 false/" \
-              -e "/runcmd:/a\ \ - systemctl mask firewalld || true" \
-              -e "/runcmd:/a\ \ - systemctl mask NetworkManager-wait-online.service || true" \
+              -e "s/- firewalld/#&/" \
               cloud-init.yaml >/tmp/config.yaml
           printf "instance-id: iid-alma\nlocal-hostname: alma\n" >/tmp/meta-data
           cloud-localds /tmp/seed.img /tmp/config.yaml /tmp/meta-data
