@@ -35,6 +35,7 @@ jobs:
           sed -e "/users:/r /tmp/ciuser.yaml" \
               -e "s/AllowUsers.*/& ci/" \
               -e "s/- firewalld/#&/" \
+              -e "s/^\(package_up.*:\).*/\1 false/" \
               cloud-init.yaml >/tmp/config.yaml
           printf "instance-id: iid-alma\nlocal-hostname: alma\n" >/tmp/meta-data
           cloud-localds /tmp/seed.img /tmp/config.yaml /tmp/meta-data
