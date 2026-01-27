@@ -41,7 +41,7 @@ jobs:
 
       - name: Run cloud-init
         run: |
-          set -ex
+          set -e
           kvm \
               -cpu max \
               -m 512 \
