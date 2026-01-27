@@ -43,7 +43,7 @@ jobs:
         run: |
           set -e
           kvm \
-              -cpu host \
+              -cpu max \
               -m 512 \
               -net nic \
               -net user,hostfwd=tcp::2222-:22 \
