@@ -30,7 +30,7 @@ jobs:
               echo "    groups: root"
               echo "    ssh_authorized_keys:"
               printf "    - "
-              cat ssh_key.pub
+              cat /tmp/ssh_key.pub
           } >/tmp/ciuser.yaml
           sed -e "/users:/r /tmp/ciuser.yaml" \
               -e "s/AllowUsers.*/& ci/" \
