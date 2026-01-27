@@ -19,7 +19,7 @@ jobs:
             -m 512 \
             -net nic \
             -net user \
-            -redir tcp:2222::22 \
+            -serial \
             -drive file=AlmaLinux-9-GenericCloud-latest.x86_64.qcow2,if=virtio,format=qcow2 \
             -drive file=seed.img,if=virtio,format=raw
           ssh -p 2222 localhost 'cat /var/log/cloud-init.log' |
