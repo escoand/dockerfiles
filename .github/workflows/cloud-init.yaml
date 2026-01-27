@@ -1,0 +1,64 @@
+name: cloud-init
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  test-cloudinit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install deps
+        run: |
+          set -e
+          sudo apt-get -qy update
+          sudo apt-get -qy install cloud-image-utils cloud-init qemu-system-x86 wget
+
+      - name: Validate cloud-init
+        run: |
+          set -e
+          cloud-init schema -c cloud-init.yaml
+
+      - name: Prepare
+        run: |
+          set -e
+          ssh-keygen -f /tmp/ssh_key -N "" -q -t ed25519
+          {
+              echo "  - name: ci"
+              echo "    groups: root"
+              echo "    ssh_authorized_keys:"
+              printf "    - "
+              cat ssh_key.pub
+          } >/tmp/ciuser.yaml
+          sed -e "/users:/r /tmp/ciuser.yaml" \
+              -e "s/AllowUsers.*/& ci/" \
+              cloud-init.yaml >/tmp/config.yaml
+          printf "instance-id: iid-alma\nlocal-hostname: alma\n" >/tmp/meta-data
+          cloud-localds /tmp/seed.img /tmp/config.yaml /tmp/meta-data
+          wget https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-latest.x86_64.qcow2
+
+      - name: Run cloud-init
+        run: |
+          set -ex
+          kvm \
+              -cpu max \
+              -m 512 \
+              -net nic \
+              -net user,hostfwd=tcp::2222-:22 \
+              -vga none \
+              -nographic \
+              -serial mon:stdio \
+              -drive file=AlmaLinux-9-GenericCloud-latest.x86_64.qcow2,if=virtio,format=qcow2 \
+              -drive file=/tmp/seed.img,if=virtio,format=raw |
+          tee /tmp/kvm.log &
+          PID_KVM=$!
+          while ! grep -q " Cloud-init .* finished at " /tmp/kvm.log; do sleep 1; done
+          scp -i /tmp/ssh_key -o StrictHostKeyChecking=accept-new -P 2222 ci@localhost:/var/log/cloud-init.log .
+          kill $PID_KVM
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cloud-init.log
+          path: cloud-init.log

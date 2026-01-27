@@ -35,13 +35,13 @@ write_files:
       PermitRootLogin no
       #Port 2222
       X11Forwarding no
-  - path: /usr/local/bin/startcontainer
-    permissions: 0755
-    content: |
-      #!/bin/sh
-      systemctl --user status "$1" |
-      sed -n '/ ExecStart=/{ s/.* ExecStart=//; s/(code=.*//; s/ -d//; p; }' |
-      sh -s
+#  - path: /usr/local/bin/startcontainer
+#    permissions: "0755"
+#    content: |
+#      #!/bin/sh
+#      systemctl --user status "$1" |
+#      sed -n '/ ExecStart=/{ s/.* ExecStart=//; s/(code=.*//; s/ -d//; p; }' |
+#      sh -s
 runcmd:
   # disable syslog
   - systemctl disable --now syslog.socket rsyslog.service
