@@ -1,7 +1,7 @@
 [Unit]
 Description=Nextcloud
 After=mariadb.service
-Wants=mariadb.service
+Requires=mariadb.service
 
 [Container]
 ContainerName=nextcloud
