@@ -1,7 +1,7 @@
 [Unit]
 Description=claper
 After=postgres.service
-Wants=postgres.service
+Requires=postgres.service
 StartLimitBurst=3
 StartLimitIntervalSec=120
 
