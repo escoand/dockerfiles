@@ -3,8 +3,8 @@ sources:
     type: exec
     command: [podman, --url, unix://run/podman/podman.sock, events, --format, json, --streaming]
     mode: streaming
-    decoding:
-      codec: json
+    #decoding:
+    #  codec: json
 
 sinks:
   console:
