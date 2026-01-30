@@ -12,7 +12,7 @@ transforms:
     inputs:
       - podman_events
     condition: |
-      .status != "health_status" || .HealthStatus != "healthy"
+      .Status != "health_status" || .health_status != "healthy"
 
 sinks:
   console:
