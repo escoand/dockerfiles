@@ -7,7 +7,7 @@ Image=localhost/vector
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Pull=never
 Volume=/etc/localtime:/etc/localtime:ro
-Volume=%t/podman/podman.sock:/run/podman.sock:ro
+Volume=%t/podman/podman.sock:/run/podman/podman.sock:ro
 
 [Service]
 ExecStartPre=podman build --tag localhost/vector https://github.com/escoand/dockerfiles.git#master:docker/vector

@@ -1,7 +1,7 @@
 sources:
   podman_events:
     type: exec
-    command: [podman, --url, unix://run/podman/podman.sock, events, --format, json]
+    command: [podman, events, --format, json]
     mode: streaming
 
 sinks:
