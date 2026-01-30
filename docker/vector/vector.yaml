@@ -14,6 +14,12 @@ transforms:
     condition: |
       .Status != "health_status" || .health_status != "healthy"
 
+  grouped_events:
+    type: reduce
+    inputs:
+      - filtered_events
+    end_every_period_ms: 60000
+
 sinks:
   console:
     type: console
