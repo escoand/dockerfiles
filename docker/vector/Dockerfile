@@ -1,4 +1,4 @@
-FROM timberio/vector:0.53.0-alpine
+FROM docker.io/timberio/vector:0.53.0-alpine
 
 RUN apk add --no-cache podman
 
