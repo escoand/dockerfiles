@@ -1,0 +1,17 @@
+[Unit]
+Description=Vector
+
+[Container]
+ContainerName=vector
+Image=localhost/vector
+PodmanArgs=--cpus=1 --memory=128m --privileged
+Pull=never
+Volume=/etc/localtime:/etc/localtime:ro
+Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
+
+[Service]
+ExecStartPre=podman build --tag localhost/vector https://github.com/escoand/dockerfiles.git#master:docker/vector
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

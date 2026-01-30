@@ -1,0 +1,13 @@
+sources:
+  podman_events:
+    type: exec
+    command: [podman, events, --format, json]
+    mode: streaming
+
+sinks:
+  console:
+    type: console
+    inputs:
+      - podman_events
+    encoding:
+      codec: json
