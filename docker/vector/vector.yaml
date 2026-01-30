@@ -6,10 +6,18 @@ sources:
     decoding:
       codec: json
 
+transforms:
+  filtered_events:
+    type: filter
+    inputs:
+      - podman_events
+    condition: |
+      .status != "health_status" || .HealthStatus != "healthy"
+
 sinks:
   console:
     type: console
     inputs:
-      - podman_events
+      - filtered_events
     encoding:
       codec: json
