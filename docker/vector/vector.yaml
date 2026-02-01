@@ -33,7 +33,7 @@ sinks:
     inputs:
       - filtered_events
     uri: "http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/{{ uuid_v4() }}"
-    method: PUT
+    method: put
     encoding:
       codec: json
     headers:
