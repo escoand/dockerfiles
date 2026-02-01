@@ -29,10 +29,7 @@ transforms:
         "matrixRoom": encode_percent("${MATRIX_ROOM_ID}"),
         "timeNano": .timeNano,
         "msgtype": "m.text",
-        "body": "Podman Event\n"
-          + "Time: " + to_string!(.Time) + "\n"
-          + "Action: " + .Action + "\n"
-          + "Name: " + (.Actor.Attributes.name ?? "unknown")
+        "body": "Podman Event\n" + "Time: " + to_string!(.Time) + "\n" + "Action: " + .Action + "\n" + "Name: " + (.Actor.Attributes.name ?? "unknown")
       }
 
 sinks:
