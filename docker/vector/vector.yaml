@@ -24,7 +24,7 @@ transforms:
     type: remap
     inputs:
       - filtered_events
-    source: |
+    source: >
       . = {
         "matrixRoom": encode_percent("${MATRIX_ROOM_ID}"),
         "timeNano": .timeNano,
