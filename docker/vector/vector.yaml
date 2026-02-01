@@ -27,7 +27,7 @@ transforms:
     source: |
       .matrixRoom = encode_percent("${MATRIX_ROOM_ID}")
       msg = {
-        "msgtype": "m.text"
+        "msgtype": "m.text",
         "body":    "Test"
       }
       . = msg
