@@ -25,9 +25,9 @@ send_mail() {
 
 send_matrix() {
     UUID=$(uuidgen)
-    jq -R '{msgtype:"m.text",body:.}' |
+    jq -cR '{msgtype:"m.text",body:.}' |
     tee /dev/stderr
-    curl -sS -XPUT \
+    curl -XPUT \
         -H "Authorization: Bearer ${MATRIX_ACCESS_TOKEN}" \
         "http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/$UUID"
 }
