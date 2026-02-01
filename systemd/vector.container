@@ -6,6 +6,8 @@ ContainerName=vector
 Image=localhost/vector
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Pull=never
+Secret=EVENTS_ACCESS_TOKEN,type=env,target=MATRIX_ACCESS_TOKEN
+Secret=EVENTS_ROOM_ID,type=env,target=MATRIX_ROOM_ID
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=%t/podman/podman.sock:/run/podman/podman.sock:ro
 
