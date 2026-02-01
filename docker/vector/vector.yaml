@@ -26,11 +26,8 @@ transforms:
       - filtered_events
     source: |
       .matrixRoom = encode_percent("${MATRIX_ROOM_ID}")
-      msg = {
-        "msgtype": "m.text",
-        "body":    "Test"
-      }
-      . = msg
+      .msgtype = "m.text"
+      .body    = "Test"
 
 sinks:
   console:
@@ -51,6 +48,9 @@ sinks:
       token: "${MATRIX_ACCESS_TOKEN}"
     encoding:
       codec: json
+      only_fields:
+        - msgtype
+        - body
     request:
       headers:
         Content-Type: "application/json"
