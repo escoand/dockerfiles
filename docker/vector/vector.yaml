@@ -20,7 +20,7 @@ transforms:
       - filtered_events
     end_every_period_ms: 60000
 
-  matrix_event:
+  matrix_message:
     type: remap
     inputs:
       - filtered_events
@@ -46,7 +46,7 @@ sinks:
   matrix:
     type: http
     inputs:
-      - matrix_url
+      - matrix_message
     uri: "http://synapse:8008/_matrix/client/v3/rooms/{{ matrixRoom }}/send/m.room.message/txn-{{ timeNano }}"
     method: put
     auth:
