@@ -26,8 +26,7 @@ send_mail() {
 
 send_matrix() {
     UUID=$(uuidgen)
-    jq -cRs '{msgtype:"m.text",body:.}' |
->"$TMP"
+    jq -cRs '{msgtype:"m.text",body:.}' >"$TMP"
     curl -fsS -XPUT \
         --data-binary "@$TMP" \
         -H "Authorization: Bearer ${MATRIX_ACCESS_TOKEN}" \
