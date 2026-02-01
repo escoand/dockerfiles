@@ -26,9 +26,9 @@ transforms:
       - filtered_events
     source: |
       . = {
-        "msgtype": "m.text",
-        "matrixRoom": encode_percent("${MATRIX_ROOM_ID}")
+        "matrixRoom": encode_percent("${MATRIX_ROOM_ID}"),
         "timeNano": .timeNano,
+        "msgtype": "m.text",
         "body": "Podman Event\n"
           + "Time: " + to_string!(.Time) + "\n"
           + "Action: " + .Action + "\n"
