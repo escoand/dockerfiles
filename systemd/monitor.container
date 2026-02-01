@@ -7,7 +7,8 @@ Image=localhost/monitor
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Pull=never
-Secret=EVENTS_ACCESS_TOKEN,type=env,target=MATRIX_ACCESS_TOKEN
+Secret=EVENTS_MATRIX_PASSWORD,type=env,target=MATRIX_PASSWORD
+Secret=EVENTS_MATRIX_USER,type=env,target=MATRIX_USER
 Secret=EVENTS_ROOM_ID,type=env,target=MATRIX_ROOM_ID
 Secret=MAIL_FROM,type=env
 Secret=MAIL_HOST,type=env
