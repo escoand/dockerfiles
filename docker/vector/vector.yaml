@@ -24,13 +24,10 @@ transforms:
     type: remap
     inputs:
       - filtered_events
-    source: >
-      . = {
-        "matrixRoom": encode_percent("${MATRIX_ROOM_ID}"),
-        "timeNano": .timeNano,
-        "msgtype": "m.text",
-        "body": "Podman Event\n" + "Time: " + to_string!(.Time) + "\n" + "Action: " + .Action + "\n" + "Name: " + ("unknown")
-      }
+    source: |
+      .matrixRoom = encode_percent("${MATRIX_ROOM_ID}")
+      .msgtype    = "m.text"
+      .body       = "Podman Event\n" + "Time: " + to_string!(.Time) + "\n" + "Action: " + .Action + "\n" + "Name: " + ("unknown")
 
 sinks:
   console:
