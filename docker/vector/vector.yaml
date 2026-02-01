@@ -34,8 +34,11 @@ sinks:
       - filtered_events
     uri: "http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/txn-{{ ID }}"
     method: put
+    auth:
+      strategy: bearer
+      token: "${MATRIX_ACCESS_TOKEN}"
     encoding:
       codec: json
-    headers:
-      Authorization: "Bearer ${MATRIX_ACCESS_TOKEN}"
-      Content-Type: "application/json"
+    request:
+      headers:
+        Content-Type: "application/json"
