@@ -3,7 +3,7 @@ Description=Vector
 
 [Container]
 ContainerName=vector
-Env=VECTOR_LOG=debug
+Env=VECTOR_LOG=DEBUG
 Image=localhost/vector
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
