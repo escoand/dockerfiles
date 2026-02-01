@@ -26,8 +26,11 @@ transforms:
       - filtered_events
     source: |
       .matrixRoom = encode_percent("${MATRIX_ROOM_ID}")
-      .msgtype    = "m.text"
-      .body       = "Test"
+      msg = {
+        "msgtype": "m.text"
+        "body":    "Test"
+      }
+      . = msg
 
 sinks:
   console:
