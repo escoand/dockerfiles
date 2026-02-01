@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2016
 
-set -e
+set -ex
 
 WAIT=60
 MATRIX_HOST=http://synapse:8008
