@@ -53,7 +53,6 @@ sinks:
         - body
     batch:
       max_events: 1
-      timeout_secs: 0
     request:
       headers:
         Content-Type: "application/json"
