@@ -20,12 +20,20 @@ transforms:
       - filtered_events
     end_every_period_ms: 60000
 
-  matrix_url:
+  matrix_event:
     type: remap
     inputs:
       - filtered_events
     source: |
-      .matrix_room = encode_percent("${MATRIX_ROOM_ID}")
+      . = {
+        "msgtype": "m.text",
+        "matrixRoom": encode_percent("${MATRIX_ROOM_ID}")
+        "timeNano": .timeNano,
+        "body": "Podman Event\n"
+          + "Time: " + to_string!(.Time) + "\n"
+          + "Action: " + .Action + "\n"
+          + "Name: " + (.Actor.Attributes.name ?? "unknown")
+      }
 
 sinks:
   console:
@@ -39,7 +47,7 @@ sinks:
     type: http
     inputs:
       - matrix_url
-    uri: "http://synapse:8008/_matrix/client/v3/rooms/{{ matrix_room }}/send/m.room.message/txn-{{ timeNano }}"
+    uri: "http://synapse:8008/_matrix/client/v3/rooms/{{ matrixRoom }}/send/m.room.message/txn-{{ timeNano }}"
     method: put
     auth:
       strategy: bearer
