@@ -6,7 +6,7 @@ set -e
 WAIT=60
 MATRIX_HOST=http://synapse:8008
 MATRIX_ACCESS_TOKEN=$(
-    curl \
+    curl -fsS \
         -d '{"type":"m.login.password","user":env.MATRIX_USER,"password":env.MATRIX_PASSWORD}' \
         "$MATRIX_HOST/_matrix/client/r0/login" |
     jq -r '.access_token'
