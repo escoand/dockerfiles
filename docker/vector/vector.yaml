@@ -58,4 +58,4 @@ sinks:
     batch:
       max_events: 1
     framing:
-      method: newline_delimited
+      method: none
