@@ -27,7 +27,7 @@ transforms:
     source: |
       .matrixRoom = encode_percent("${MATRIX_ROOM_ID}")
       .msgtype    = "m.text"
-      .body       = "Podman Event\n" + "Time: " + to_string!(.Time) + "\n" + "Action: " + .Action + "\n" + "Name: " + ("unknown")
+      .body       = "Test"
 
 sinks:
   console:
