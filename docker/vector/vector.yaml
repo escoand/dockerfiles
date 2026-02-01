@@ -25,7 +25,7 @@ transforms:
     inputs:
       - filtered_events
     source: |
-      .matrix_url = encode_percent("http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/txn-{{ .timeNano }}")
+      .matrix_room = encode_percent("${MATRIX_ROOM_ID}")
 
 sinks:
   console:
@@ -39,7 +39,7 @@ sinks:
     type: http
     inputs:
       - matrix_url
-    uri: "{{ matrix_url }}"
+    uri: "http://synapse:8008/_matrix/client/v3/rooms/{{ matrix_room }}/send/m.room.message/txn-{{ timeNano }}"
     method: put
     auth:
       strategy: bearer
