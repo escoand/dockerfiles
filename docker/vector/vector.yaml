@@ -25,7 +25,7 @@ transforms:
     inputs:
       - filtered_events
     source: |
-      .matrix_url = encode_percent(""http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/txn-{{ timeNano }}"")
+      .matrix_url = encode_percent("http://synapse:8008/_matrix/client/v3/rooms/${MATRIX_ROOM_ID}/send/m.room.message/txn-{{ timeNano }}")
 
 sinks:
   console:
