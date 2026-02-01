@@ -4,6 +4,7 @@ Description=Monitor
 [Container]
 ContainerName=monitor
 Image=localhost/monitor
+Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Pull=never
 Secret=MAIL_FROM,type=env
