@@ -4,7 +4,6 @@ Description=tuwunel
 [Container]
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
-Environment=TUWUNEL_ALLOW_FEDERATION=false
 Image=docker.io/jevolk/tuwunel:v1.5.0
 Label=caddy=chat.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 8008}}"
