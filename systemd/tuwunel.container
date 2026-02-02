@@ -5,8 +5,11 @@ Description=tuwunel
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
 Image=docker.io/jevolk/tuwunel:v1.5.0
-Label=caddy=chat.{$WORDPRESS1_DOMAIN}
-Label=caddy.reverse_proxy="{{upstreams 8008}}"
+Label=caddy_0={$WORDPRESS1_DOMAIN}
+Label=caddy_0.respond_0='/.well-known/matrix/server {"m.server":"chat.{$WORDPRESS1_DOMAIN}:443"}'
+Label=caddy_0.respond_1='/.well-known/matrix/client {"m.server":{"base_url":"https://chat.{$WORDPRESS1_DOMAIN}"},"m.homeserver":{"base_url":"https://chat.{$WORDPRESS1_DOMAIN}"},"org.matrix.msc3575.proxy":{"url":"https://chat.{$WORDPRESS1_DOMAIN}"}}'
+Label=caddy_1=chat.{$WORDPRESS1_DOMAIN}
+Label=caddy_1.reverse_proxy="{{upstreams 8008}}"
 Network=backend.network
 Network=podman
 PodmanArgs=--cpus=1 --memory=256m
