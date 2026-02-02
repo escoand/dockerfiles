@@ -15,7 +15,7 @@ Secret=WORDPRESS1_DOMAIN,type=env,target=TUWUNEL_SERVER_NAME
 Volume=tuwunel:/var/lib/tuwunel
 
 [Service]
-Restart=unless-stopped
+Restart=always
 
 [Install]
 WantedBy=multi-user.target default.target
