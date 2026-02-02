@@ -3,6 +3,7 @@ Description=Monitor
 
 [Container]
 ContainerName=monitor
+Environment=MATRIX_HOST=http://tuwunel:8008
 Image=localhost/monitor
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
