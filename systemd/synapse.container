@@ -6,6 +6,7 @@ ContainerName=synapse
 Environment=UID=991
 Environment=GID=991
 HealthCmd=["curl", "-fsS", "http://localhost:8008/health"]
+HealthLogDestination=events_logger
 Image=docker.io/matrixdotorg/synapse:v1.145.0
 Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 8008}}"
