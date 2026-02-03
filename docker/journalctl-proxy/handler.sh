@@ -176,7 +176,7 @@ elif [[ $uri = /*/containers/*/stats ]]; then
         fi
     fi
 elif [[ $uri = /*/containers/*/logs ]]; then
-    typeset relative args=(--quiet)
+    typeset relative args=(--quiet --output json)
     echo "$query" | tr '&' '\n' | while IFS='=' read -r key value; do
         if [ "$key" = follow ] && [ -n "$value" ]; then
             args[${#args[@]}]=--follow
@@ -189,8 +189,8 @@ elif [[ $uri = /*/containers/*/logs ]]; then
                 date=$(date -u +"%Y-%m-%d %H:%M:%S" -d "@$value") &&
                     args[${#args[@]}]="--since=$date"
             fi
-        elif [ "$key" = timestamps ] && [ -n "$value" ]; then
-            args[${#args[@]}]=--output=short-iso
+        #elif [ "$key" = timestamps ] && [ -n "$value" ]; then
+        #    args[${#args[@]}]=--output=short-iso
         elif [ "$key" = tail ]; then
             args[${#args[@]}]="--lines=${value:-all}"
         elif [ "$key" = until ]; then
@@ -206,7 +206,7 @@ elif [[ $uri = /*/containers/*/logs ]]; then
         args[${#args[@]}]="USER_UNIT=$service"
     fi
     result -h 200 OK
-    journalctl -o json "${args[@]}" |
+    journalctl "${args[@]}" |
     jq -r 'select(.CONTAINER_ID==null) | [
             ((.__REALTIME_TIMESTAMP | tonumber) / 1000000 | round | tostring | strptime("%s") | todate),
             ._HOSTNAME,
