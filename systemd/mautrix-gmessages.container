@@ -1,0 +1,18 @@
+[Unit]
+Before=tuwunel.service
+Description=mautrix-gmessages
+
+[Container]
+ContainerName=mautrix-gmessages
+HealthCmd=["curl", "-fsS", "http://localhost:29336/_matrix/mau/live"]
+HealthLogDestination=events_logger
+Image=dock.mau.dev/mautrix/gmessages:v0.2601.0
+Network=backend.network
+PodmanArgs=--cpus=1 --memory=128m
+Volume=mautrix-gmessages:/data:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
