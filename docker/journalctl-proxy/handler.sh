@@ -206,7 +206,13 @@ elif [[ $uri = /*/containers/*/logs ]]; then
         args[${#args[@]}]="USER_UNIT=$service"
     fi
     result -h 200 OK
-    journalctl "${args[@]}" |
+    journalctl -o json "${args[@]}" |
+    jq -r 'select(.CONTAINER_ID==null) | [
+            ((.__REALTIME_TIMESTAMP | tonumber) / 1000000 | round | tostring | strptime("%s") | todate),
+            ._HOSTNAME,
+            (.SYSLOG_IDENTIFIER // ._COMM) + "[" + ._PID + "]:",
+            .MESSAGE
+        ] | join(" ")' |
         gawk '
             BEGIN { printf "Transfer-Encoding: chunked\r\n\r\n" }
             {
