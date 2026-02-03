@@ -1,7 +1,7 @@
 [Unit]
 Description=Nextcloud cron
-After=mariadb.service
-Requires=mariadb.service
+After=mariadb.service redis.service
+Requires=mariadb.service redis.service
 
 [Container]
 ContainerName=nextcloud-cron
