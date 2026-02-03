@@ -4,7 +4,7 @@ Description=tuwunel
 [Container]
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
-HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
+#HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
 Image=docker.io/jevolk/tuwunel:v1.5.0
 Label=caddy_0={$WORDPRESS1_DOMAIN}
 Label=caddy_0.respond_0='/.well-known/matrix/server {"m.server":"chat.{$WORDPRESS1_DOMAIN}:443"}'
