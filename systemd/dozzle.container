@@ -10,7 +10,7 @@ Environment=DOZZLE_REMOTE_HOST=tcp://journalctl-proxy:2375
 Environment=DOZZLE_NO_ANALYTICS=true
 HealthCmd=["/dozzle","healthcheck"]
 HealthLogDestination=events_logger
-Image=docker.io/amir20/dozzle:v9.0.3
+Image=docker.io/amir20/dozzle:v10.0.0
 Label=caddy={$NEXTCLOUD_DOMAIN}
 Label=caddy.handle=/dozzle/*
 Label=caddy.handle.basic_auth.{$DOZZLE_USER}={$DOZZLE_PASSWORD}
