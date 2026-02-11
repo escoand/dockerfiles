@@ -13,6 +13,16 @@ MATRIX_ACCESS_TOKEN=$(
 )
 TMP=$(mktemp)
 
+api_request() {
+    curl -fNsS \
+        --unix-socket /var/run/docker.sock \
+        "http://localhost/$1"
+}
+
+api_logs() {
+    api_request "container/$1/logs?stdout=1&stderr=1&tail=10"
+}
+
 send_mail() {
     {
         echo "Subject: Docker events"
@@ -41,25 +51,34 @@ send_matrix() {
 }
 
 # main loop
-curl -fNsS --unix-socket /var/run/docker.sock http://localhost/events |
+api_request events |
     jq -r --unbuffered '
         select(
             (.status=="health_status" and .HealthStatus=="healthy") | not
         ) |
-        [ (.time | localtime | strftime("%Y-%m-%d %H:%M:%S")), .Type, .Actor.Attributes.name // .from, .HealthStatus // .Action // .status ] |
+        [ .id, (.time | localtime | strftime("%Y-%m-%d %H:%M:%S")), .Type, .Actor.Attributes.name // .from, .HealthStatus // .Action // .status ] |
         join(" ")
     ' |
 
     # wait for input
-    while read -r LINE; do
+    while read -r CID LINE; do
         END=$(($(date +%s) + WAIT))
         REMAINING=$WAIT
         {
-            while read -r -t $REMAINING LINE; do
+            unset LOGS
+            echo "$LINE" | grep -qw die &&
+                LOGS=$(api_logs "$CID")
+            echo "$LINE" | tee /dev/stderr
+            while read -r -t $REMAINING CID LINE; do
+                echo "$LINE" | grep -qw die &&
+                    LOGS=$(api_logs "$CID")
                 echo "$LINE" | tee /dev/stderr
                 REMAINING=$((END - $(date +%s)))
                 [ $REMAINING -lt 0 ] && break
             done
+            [ -n "$LOGS" ] &&
+                echo &&
+                echo "$LOGS"
         } |
         send_matrix
 
