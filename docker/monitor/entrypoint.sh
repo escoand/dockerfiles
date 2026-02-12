@@ -20,7 +20,7 @@ api_request() {
 }
 
 api_logs() {
-    api_request "container/$1/logs?stdout=1&stderr=1&tail=10"
+    api_request "containers/$1/logs?stdout=1&stderr=1&tail=10"
 }
 
 send_mail() {
