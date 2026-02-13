@@ -5,7 +5,7 @@ Description=postgres
 ContainerName=postgres
 HealthCmd=sh -c 'pg_isready -q -d "$POSTGRES_DB" -U "$POSTGRES_USER"'
 HealthLogDestination=events_logger
-Image=docker.io/library/postgres:15.15-alpine
+Image=docker.io/library/postgres:15.16-alpine
 Network=backend.network
 PodmanArgs=--cpus=2 --memory=512m
 Secret=POSTGRES_DB,type=env
