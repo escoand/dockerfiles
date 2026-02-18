@@ -5,9 +5,10 @@ Requires=mariadb.service
 
 [Container]
 ContainerName=wordpress%i
+Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');"
 Environment=WORDPRESS_DB_HOST=mariadb
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=localhost/wordpress
+Image=docker.io/library/wordpress:6.9.1-apache
 Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
@@ -30,7 +31,6 @@ Secret=WORDPRESS%i_SECURE_AUTH_SALT,type=env,target=WORDPRESS_SECURE_AUTH_SALT
 Volume=wordpress%i:/var/www/html/wp-content:z
 
 [Service]
-ExecStartPre=podman build --tag localhost/wordpress https://github.com/escoand/dockerfiles.git#master:docker/wordpress
 Restart=always
 
 [Install]
