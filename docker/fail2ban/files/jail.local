@@ -13,7 +13,7 @@ mode = extra
 
 # ban port scanners
 [sshd-closed]
-enabled  = false
+enabled  = true
 port     = ssh
 filter   = sshd-closed
 maxretry = 10
