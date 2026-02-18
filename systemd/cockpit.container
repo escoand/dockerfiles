@@ -1,0 +1,18 @@
+[Unit]
+Description=Cockpit
+
+[Container]
+ContainerName=cockpit
+Environment=COCKPIT_SSH_KEY_PATH=/.ssh/id_rsa
+Exec=/container/label-run --no-tls
+Image=quay.io/cockpit/ws
+Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
+Label=caddy.reverse_proxy="{{upstreams 9090}}"
+Network=podman
+Volume=%h/.ssh:/.ssh:ro,Z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
