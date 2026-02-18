@@ -9,11 +9,11 @@ _journalmatch_wordpress = CONTAINER_NAME=wordpress1 CONTAINER_NAME=wordpress2 CO
 
 [sshd]
 enabled = true
-#mode = aggressive
+mode = extra
 
 # ban port scanners
 [sshd-closed]
-enabled  = true
+enabled  = false
 port     = ssh
 filter   = sshd-closed
 maxretry = 10
