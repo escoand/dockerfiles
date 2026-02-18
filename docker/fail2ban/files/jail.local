@@ -11,6 +11,13 @@ _journalmatch_wordpress = CONTAINER_NAME=wordpress1 CONTAINER_NAME=wordpress2 CO
 enabled = true
 #mode = aggressive
 
+# ban port scanners
+[sshd-closed]
+enabled  = true
+port     = ssh
+filter   = sshd-closed
+maxretry = 10
+
 [apache-auth]
 enabled = true
 filter = apache-auth[logging=syslog,_daemon=".*"]
