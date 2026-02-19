@@ -53,6 +53,7 @@ Label=caddy_3={$REDIR_DOMAIN}
 Label=caddy_3.redir={$REDIR_TARGET}
 Network=podman
 Network=backend.network
+Pod=nextcloud.pod
 PodmanArgs=--cpus=2 --memory=512m
 Secret=NEXTCLOUD_DATABASE,type=env,target=MYSQL_DATABASE
 Secret=NEXTCLOUD_DATABASE_PASSWORD,type=env,target=MYSQL_PASSWORD
