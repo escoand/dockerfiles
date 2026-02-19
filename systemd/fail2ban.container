@@ -4,6 +4,8 @@ Description=Fail2ban
 [Container]
 ContainerName=fail2ban
 GroupAdd=keep-groups
+HealthCmd=["fail2ban-client","ping"]
+HealthLogDestination=events_logger
 Image=localhost/fail2ban
 PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
