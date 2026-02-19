@@ -15,12 +15,18 @@ users:
         AAAAB3NzaC1yc2EAAAADAQABAAABAQDRLWPBKT1/DVBg4RkwCxF/S00fl/NHEAWf+T+2a0/gM8mYd2KZKUqHAgLMk1v/2mExifBW/LT/vtQnD89bxHOpDP+jxjfYLDMoli05vfn/hwImte/lGbNPY6gZjTUm7ujcz8c0aoNUOO7WAlvkqPZi2+bFq+9YiVCiIVpy9vefgjqcFRZXVow1PSin/Kp3SxuPY1BniVm7ZdkENdnisbM5yCCOxzLNbGVDMWE9lhHgdtp629UBJ30cWW4Zn/oBKkLgoRZ1zkAjEyc1yBUWnkZJnbyQ4T0EJmHWcd9TqlpFi2P313QrTa0se1Xw2PzOhIs/UnIFflDe0sY4Gq0s0TVV
         phone
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLQ7xJbWDGtI5zDJHFRBWWhJiqVFP7uLhHQ9sUL5AlF homeassistant
+# packages
+package_reboot_if_required: true
+package_update: true
+package_upgrade: true
 packages:
+  - cockpit-files
+  - cockpit-podman
   - firewalld
   - git
   - podman
-package_update: true
-package_upgrade: true
+# hardening
+disable_root: true
 write_files:
   - path: /etc/ssh/sshd_config.d/ssh-hardening.conf
     content: |
@@ -35,13 +41,6 @@ write_files:
       PermitRootLogin no
       #Port 2222
       X11Forwarding no
-  - path: /usr/local/bin/startcontainer
-    permissions: 0755
-    content: |
-      #!/bin/sh
-      systemctl --user status "$1" |
-      sed -n '/ ExecStart=/{ s/.* ExecStart=//; s/(code=.*//; s/ -d//; p; }' |
-      sh -s
 runcmd:
   # disable syslog
   - systemctl disable --now syslog.socket rsyslog.service
