@@ -13,6 +13,7 @@ Label=caddy_1=chat.{$WORDPRESS1_DOMAIN}
 Label=caddy_1.reverse_proxy="{{upstreams 8008}}"
 Network=backend.network
 Network=podman
+Pod=matrix.pod
 PodmanArgs=--cpus=1 --memory=256m
 Secret=WORDPRESS1_DOMAIN,type=env,target=TUWUNEL_SERVER_NAME
 Volume=tuwunel:/var/lib/tuwunel
