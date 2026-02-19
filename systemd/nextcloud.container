@@ -46,7 +46,7 @@ Label=caddy_2.import_0="cors_external https://ics.tools"
 Label=caddy_2.import_1="cors_external https://www.schule.sachsen.de"
 Label=caddy_2.import_2="cors_internal /index.php/apps/oauth2/api/v1/token POST     X-Requested-With"
 Label=caddy_2.import_3="cors_internal /apps/oauth2/api/v1/token           POST     X-Requested-With"
-Label=caddy_2.import_4="cors_internal /public.php/dav/files/*             PROPFIND Accept"
+Label=caddy_2.import_4="cors_internal /public.php/dav/files/*             PROPFIND Depth"
 Label=caddy_2.reverse_proxy={{upstreams}}
 Label=caddy_2.reverse_proxy.header_up_0="X-Real-IP {remote_host}"
 # redirect
