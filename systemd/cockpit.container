@@ -9,10 +9,8 @@ Image=localhost/cockpit
 Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 9090}}"
 Network=podman
-PodmanArgs=--privileged
 Pull=never
 Volume=%h/.ssh:/.ssh:ro,Z
-Volume=%t/podman/podman.sock:/lib/systemd/system/podman.socket:ro
 
 [Service]
 ExecStartPre=podman build --tag localhost/cockpit https://github.com/escoand/dockerfiles.git#master:docker/cockpit
