@@ -8,7 +8,7 @@ Environment=UID=991
 Environment=GID=991
 HealthCmd=["curl", "-fsS", "http://localhost:29328/_matrix/mau/live"]
 HealthLogDestination=events_logger
-Image=dock.mau.dev/mautrix/signal:v0.2602.0
+Image=dock.mau.dev/mautrix/signal:v0.2602.1
 # Network ist handled by pod
 #Network=backend.network
 Pod=matrix.pod
