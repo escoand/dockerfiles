@@ -3,11 +3,11 @@ Description=Monitor
 
 [Container]
 ContainerName=monitor
+Environment=MATRIX_HOST=http://systemd-matrix:8008
 Image=localhost/monitor
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Pull=never
-Secret=EVENTS_MATRIX_DOMAIN,type=env,target=MATRIX_HOST
 Secret=EVENTS_MATRIX_PASSWORD,type=env,target=MATRIX_PASSWORD
 Secret=EVENTS_MATRIX_USER,type=env,target=MATRIX_USER
 Secret=EVENTS_ROOM_ID,type=env,target=MATRIX_ROOM_ID
