@@ -5,7 +5,7 @@ Description=tuwunel
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
 #HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
-Image=docker.io/jevolk/tuwunel:v1.5.0
+Image=docker.io/jevolk/tuwunel:v1.5.1
 Label=caddy_0={$WORDPRESS1_DOMAIN}
 Label=caddy_0.respond_0='/.well-known/matrix/server {"m.server":"chat.{$WORDPRESS1_DOMAIN}:443"}'
 Label=caddy_0.respond_1='/.well-known/matrix/client {"m.server":{"base_url":"https://chat.{$WORDPRESS1_DOMAIN}"},"m.homeserver":{"base_url":"https://chat.{$WORDPRESS1_DOMAIN}"},"org.matrix.msc3575.proxy":{"url":"https://chat.{$WORDPRESS1_DOMAIN}"}}'
