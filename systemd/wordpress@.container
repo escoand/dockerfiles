@@ -8,7 +8,7 @@ ContainerName=wordpress%i
 Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');"
 Environment=WORDPRESS_DB_HOST=mariadb
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=docker.io/library/wordpress:6.9.1-apache
+Image=docker.io/library/wordpress:6.9.4-apache
 Label=caddy={$WORDPRESS%i_DOMAIN}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
