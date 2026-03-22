@@ -14,7 +14,6 @@ Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=512m
-Pull=never
 Secret=WORDPRESS%i_DB_CHARSET,type=env,target=WORDPRESS_DB_CHARSET
 Secret=WORDPRESS%i_DB_NAME,type=env,target=WORDPRESS_DB_NAME
 Secret=WORDPRESS%i_DB_PASSWORD,type=env,target=WORDPRESS_DB_PASSWORD
