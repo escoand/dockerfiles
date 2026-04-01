@@ -5,7 +5,7 @@ Description=Cockpit
 ContainerName=cockpit
 #Environment=COCKPIT_SSH_KEY_PATH=/.ssh/id_rsa
 Exec=/container/label-run --no-tls
-Image=quay.io/cockpit/ws:358
+Image=quay.io/cockpit/ws:359
 Label=caddy=matrix.{$WORDPRESS1_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 9090}}"
 Network=podman
