@@ -5,7 +5,7 @@ Requires=mariadb.service
 
 [Container]
 ContainerName=wordpress%i
-Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');"
+Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');define('WP_CACHE',true);"
 Environment=WORDPRESS_DB_HOST=mariadb
 HealthCmd=["curl", "-fsS", "http://localhost"]
 Image=docker.io/library/wordpress:6.9.4-apache
