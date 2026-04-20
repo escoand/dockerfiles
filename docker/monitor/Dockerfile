@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:3.23.3
+FROM docker.io/library/alpine:3.23.4
 
 # hadolint ignore=DL3018
 RUN apk add --no-cache curl jq msmtp uuidgen
