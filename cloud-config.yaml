@@ -24,6 +24,7 @@ packages:
   - cockpit-podman
   - firewalld
   - git
+  - jq
   - podman
 # hardening
 disable_root: true
@@ -55,11 +56,16 @@ runcmd:
   # user services
   - setsebool -P container_manage_cgroup true
   - loginctl enable-linger horst
-  - mkdir -p ~horst/.ssh ~horst/.quadit ~horst/.config/containers/systemd
+  - mkdir -p ~horst/.config/containers/systemd ~horst/.config/systemd/user/service.d ~horst/.ssh ~horst/.quadit ~horst/bin
+  # notify-fail handler
+  - curl -LsS -o ~horst/.config/systemd/user/notify-fail@.service https://raw.githubusercontent.com/escoand/dockerfiles/master/notify-fail/notify-fail@.service
+  - curl -LsS -o ~horst/.config/systemd/user/service.d/notify-fail.conf https://raw.githubusercontent.com/escoand/dockerfiles/master/notify-fail/service.d/notify-fail.conf
+  - curl -LsS -o ~horst/bin/notify-fail.sh https://raw.githubusercontent.com/escoand/dockerfiles/master/notify-fail/notify-fail.sh
+  - chmod 0755 ~horst/bin/notify-fail.sh
   - curl -LsS -o ~horst/.ssh/authorized_keys https://github.com/escoand.keys
   - curl -LsS -o ~horst/.quadit/config.yaml https://raw.githubusercontent.com/escoand/dockerfiles/master/quadit.yaml
   - curl -LOsS --output-dir ~horst/.config/containers/systemd/ https://raw.githubusercontent.com/ubiquitous-factory/quadit/main/deploy/quadit.container
   - chown -R "horst:" ~horst/
-  - chmod -R g-rwx,o-rwx ~horst/.ssh/
+  - chmod -R g-rwx,o-rwx ~horst/.config/systemd/ ~horst/.ssh/ ~horst/bin/
   - curl -LsS https://raw.githubusercontent.com/escoand/dockerfiles/master/secrets.init.sh | su - horst -c "bash -s"
   - su - horst -c "export XDG_RUNTIME_DIR=/run/user/1000; systemctl --user daemon-reload; systemctl --user enable --now podman.socket; systemctl --user start quadit"

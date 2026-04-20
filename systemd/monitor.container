@@ -25,4 +25,4 @@ ExecStartPre=podman build --tag localhost/monitor https://github.com/escoand/doc
 Restart=always
 
 [Install]
-WantedBy=multi-user.target default.target
+#WantedBy=multi-user.target default.target
