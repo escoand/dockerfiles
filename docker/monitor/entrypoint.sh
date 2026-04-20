@@ -56,7 +56,7 @@ api_request events |
         select(
             (.status=="health_status" and .HealthStatus=="healthy") | not
         ) |
-        [ .id, (.time | localtime | strftime("%Y-%m-%d %H:%M:%S")), .Type, .Actor.Attributes.name // .from, .HealthStatus // .Action // .status ] |
+        [ (.id // "-"), (.time | localtime | strftime("%Y-%m-%d %H:%M:%S")), .Type, .Actor.Attributes.name // .from, .HealthStatus // .Action // .status ] |
         join(" ")
     ' |
 
