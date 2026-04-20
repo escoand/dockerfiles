@@ -69,6 +69,7 @@ api_request events |
             echo "$LINE" | grep -qw die &&
                 LOGS=$(api_logs "$CID")
             echo "$LINE" | tee /dev/stderr
+            # shellcheck disable=SC3045
             while read -r -t $REMAINING CID LINE; do
                 echo "$LINE" | grep -qw die &&
                     LOGS=$(api_logs "$CID")

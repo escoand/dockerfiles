@@ -1,3 +1,5 @@
+#!/bin/sh
+
 podman run --rm -it \
   --label 'caddy=matrix.{$WORDPRESS1_DOMAIN}' \
   --label 'caddy.reverse_proxy={{upstreams}}' \
