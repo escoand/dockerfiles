@@ -26,6 +26,7 @@ jobs:
           cp \
             systemd/*.container \
             systemd/*.network \
+            systemd/*.pod \
             /etc/containers/systemd/
           cp \
             systemd/*.socket \

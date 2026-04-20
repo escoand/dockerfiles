@@ -1,0 +1,32 @@
+name: image-size
+
+on:
+  pull_request:
+    paths:
+      - "docker/**"
+  push:
+
+jobs:
+  image-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build Dockerfiles
+        run: |
+          for df in docker/**/Dockerfile; do
+            dir=$(dirname "$df")
+            tag=$(basename "$dir" | tr '[:upper:]' '[:lower:]')
+            echo "Building $df"
+            docker build -t "ci-$tag" "$dir"
+          done
+
+      - name: Check image sizes
+        run: |
+          for tag in fail2ban monitor; do
+            size=$(docker image inspect "ci-$tag" --format='{{.Size}}')
+            echo "ci-$tag: $((size / 1024 / 1024))MB"
+            [ "$size" -lt 209715200 ] || { echo "Image too large"; exit 1; }
+          done
