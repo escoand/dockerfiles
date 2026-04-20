@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:13.3-slim
+FROM docker.io/library/debian:13.4-slim
 
 # hadolint ignore=DL3008
 RUN apt-get -q update && \
