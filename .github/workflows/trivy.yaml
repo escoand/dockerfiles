@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build Dockerfiles
         run: |
@@ -23,13 +23,13 @@ jobs:
             docker build -t "ci-$tag" "$dir"
           done
 
-      - uses: aquasecurity/trivy-action@v0.35.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ci-fail2ban
           exit-code: '1'
           severity: 'CRITICAL'
 
-      - uses: aquasecurity/trivy-action@v0.35.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ci-monitor
           exit-code: '1'
