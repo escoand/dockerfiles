@@ -1,0 +1,18 @@
+[Unit]
+Description=Hugo %i
+
+[Container]
+ContainerName=hugo-%i
+HealthCmd=["curl", "-fsS", "http://localhost"]
+Image=localhost/hugo-%i
+Label=caddy={$WORDPRESS%i_DOMAIN}
+Label=caddy.reverse_proxy={{upstreams}}
+Network=podman
+PodmanArgs=--cpus=1 --memory=128m
+
+[Service]
+ExecStartPre=podman build --tag localhost/hugo-%i --build-arg REPO_URL=git@github.com:escoand/website-%i.git --secret id=git_ssh_key,src=%h/.ssh/id_rsa https://github.com/escoand/dockerfiles.git#master:docker/hugo
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
