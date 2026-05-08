@@ -8,7 +8,7 @@ RUN --mount=type=secret,id=git_ssh_key \
     ssh-keyscan github.com >> /root/.ssh/known_hosts && \
     git config --global core.sshCommand 'ssh -i /run/secrets/git_ssh_key' && \
     git clone --depth 1 ${REPO_URL} /src && \
-    hugo --minify --source /src
+    hugo --source /src
 
 FROM docker.io/caddy:alpine
 
