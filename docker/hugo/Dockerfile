@@ -2,8 +2,6 @@ FROM hugomods/hugo AS builder
 
 ARG REPO_URL
 
-COPY . /src
-
 RUN --mount=type=secret,id=git_ssh_key \
     apk add --no-cache git openssh && \
     mkdir -p /root/.ssh && \
