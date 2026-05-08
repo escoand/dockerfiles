@@ -5,7 +5,7 @@ Description=Hugo %i
 ContainerName=hugo-%i
 HealthCmd=["curl", "-fsS", "http://localhost"]
 Image=localhost/hugo-%i
-Label=caddy={$WORDPRESS%i_DOMAIN}
+Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
 PodmanArgs=--cpus=1 --memory=128m
