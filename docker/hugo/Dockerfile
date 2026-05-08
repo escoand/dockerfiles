@@ -1,4 +1,4 @@
-FROM hugomods/hugo AS builder
+FROM docker.io/hugomods/hugo AS builder
 
 ARG REPO_URL
 
@@ -10,7 +10,7 @@ RUN --mount=type=secret,id=git_ssh_key \
     git clone --depth 1 ${REPO_URL} /src && \
     hugo --minify --source /src
 
-FROM caddy:alpine
+FROM docker.io/caddy:alpine
 
 COPY --from=builder /src/public /srv
 
