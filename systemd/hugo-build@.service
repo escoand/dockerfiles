@@ -5,10 +5,14 @@ After=network-online.target
 [Service]
 Type=oneshot
 EnvironmentFile=%h/.config/caddy.env
-ExecStart=/usr/bin/podman build \
-  --tag localhost/hugo-%i \
-  --build-arg REPO_URL=${REPO_%i} \
-  --secret id=git_ssh_key,src=%h/.ssh/id_rsa \
-  https://github.com/escoand/dockerfiles.git#master:docker/hugo
+ExecStart=/usr/bin/bash -c '\
+  REPO_VAR=REPO_%i; \
+  REPO_URL=${!REPO_VAR}; \
+  exec podman build \
+    --tag localhost/hugo-%i \
+    --build-arg REPO_URL=$REPO_URL \
+    --secret id=git_ssh_key,src=%h/.ssh/id_rsa \
+    https://github.com/escoand/dockerfiles.git#master:docker/hugo \
+'
 
 RemainAfterExit=yes
