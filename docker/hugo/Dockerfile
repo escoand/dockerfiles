@@ -6,7 +6,6 @@ ARG REPO_BRANCH
 RUN apk add --no-cache git openssh
 
 RUN --mount=type=secret,id=git_ssh_key \
-    set -x && \
     mkdir -p /root/.ssh && \
     ssh-keyscan github.com >> /root/.ssh/known_hosts && \
     git config --global core.sshCommand 'ssh -i /run/secrets/git_ssh_key' && \
