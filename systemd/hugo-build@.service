@@ -1,0 +1,15 @@
+[Unit]
+Description=Build Hugo image %i
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/caddy.env
+ExecStart=podman build \
+    --tag localhost/hugo-%i \
+    --build-arg REPO_BRANCH=${BRANCH_%i} \
+    --build-arg REPO_URL=${REPO_%i} \
+    --secret id=git_ssh_key,src=%h/.ssh/id_rsa \
+    https://github.com/escoand/dockerfiles.git#master:docker/hugo
+
+RemainAfterExit=yes

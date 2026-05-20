@@ -1,5 +1,7 @@
 [Unit]
 Description=Hugo %i
+Requires=hugo-build@%i.service
+After=hugo-build@%i.service
 
 [Container]
 ContainerName=hugo-%i
@@ -11,7 +13,6 @@ Network=podman
 PodmanArgs=--cpus=1 --memory=128m
 
 [Service]
-ExecStartPre=podman build --tag localhost/hugo-%i --no-cache --build-arg REPO_URL=git@github.com:escoand/website-%i.git --secret id=git_ssh_key,src=%h/.ssh/id_rsa https://github.com/escoand/dockerfiles.git#master:docker/hugo
 Restart=always
 
 [Install]
