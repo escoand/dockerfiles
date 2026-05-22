@@ -49,7 +49,7 @@ local: $(IGNITION) $(LOCALIMAGE)
 		-drive "if=virtio,file=$(LOCALIMAGE)" \
 		-drive "if=virtio,file=fat:ro:$(DATADIR)" \
 		-fw_cfg "name=opt/com.coreos/config,file=$(IGNITION)" \
-		-nic "user,model=virtio,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080" \
+		-nic "user,model=virtio,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:80" \
 		-chardev "vc,id=char0,logfile=$(BUILDDIR)/qemu-serial.log" \
 		-serial chardev:char0
 
