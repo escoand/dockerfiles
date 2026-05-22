@@ -1,5 +1,6 @@
 [Unit]
 Description=Monitor
+Requires=podman.socket
 
 [Container]
 ContainerName=monitor

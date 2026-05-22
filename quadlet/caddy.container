@@ -1,6 +1,7 @@
 [Unit]
 Description=Caddy
 Requires=caddy.socket
+Requires=podman.socket
 
 [Container]
 ContainerName=caddy
