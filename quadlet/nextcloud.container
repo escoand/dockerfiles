@@ -10,7 +10,7 @@ Environment=NEXTCLOUD_INIT_HTACCESS=TRUE
 Environment=NEXTCLOUD_TRUSTED_PROXIES=10.88.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
-EnvironmentFile=/var/mnt/data/%n.env
+EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
 HealthLogDestination=events_logger
 Image=docker.io/library/nextcloud:33.0.3

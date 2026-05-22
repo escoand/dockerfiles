@@ -4,7 +4,7 @@ Description=mariadb
 [Container]
 ContainerName=mariadb
 Environment=MARIADB_AUTO_UPGRADE=TRUE
-EnvironmentFile=/var/mnt/data/%n.env
+EnvironmentFile=/var/mnt/data/%N.env
 Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
 HealthCmd=["healthcheck.sh","--su-mysql","--connect"]
 HealthLogDestination=events_logger

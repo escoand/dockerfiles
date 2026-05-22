@@ -5,5 +5,5 @@ OnSuccess=quadlet-reload.service
 [Service]
 Type=oneshot
 Environment=MARKER=%t/quadlet-sync.changed
-EnvironmentFile=/var/mnt/data/%n.env
-ExecStart=/usr/local/bin/git-sync.sh
+EnvironmentFile=/var/mnt/data/%N.env
+ExecStart=/usr/local/bin/quadlet-sync.sh

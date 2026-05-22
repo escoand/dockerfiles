@@ -4,7 +4,7 @@ Description=tuwunel
 [Container]
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
-EnvironmentFile=/var/mnt/data/%n.env
+EnvironmentFile=/var/mnt/data/%N.env
 #HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
 Image=docker.io/jevolk/tuwunel:v1.6.2
 Label=caddy_0={$WORDPRESS1_DOMAIN}

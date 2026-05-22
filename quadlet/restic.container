@@ -7,7 +7,7 @@ ContainerName=restic
 Environment=BACKUP_CRON="00 00 03 * * *"
 Environment=RESTIC_FORGET_ARGS="--keep-last 1 --prune"
 Environment=RESTIC_PROGRESS_FPS=0.1
-EnvironmentFile=/var/mnt/data/%n.env
+EnvironmentFile=/var/mnt/data/%N.env
 HostName=%H
 Image=docker.io/mazzolino/restic:1.8.2
 Volume=/etc/localtime:/etc/localtime:ro

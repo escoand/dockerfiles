@@ -3,7 +3,7 @@ Description=SMS Tracker
 
 [Container]
 ContainerName=sms-tracker
-EnvironmentFile=/var/mnt/data/%n.env
+EnvironmentFile=/var/mnt/data/%N.env
 Image=localhost/sms-tracker
 Label=caddy={$TRACKER_DOMAIN}
 Label=caddy.@nonhook.not="path /api/receive"
