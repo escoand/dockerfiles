@@ -1,15 +1,19 @@
 CONFIG      := infra/config.bu
-COREOS      := fedora-coreos-44.20260419.3.1
+COREOS      := 44.20260419.3.1
 STREAM      := stable
 
 BUILDDIR    := build
 DATADIR     := $(BUILDDIR)/data
-LOCALIMAGE  := $(BUILDDIR)/$(COREOS)-qemu.x86_64.qcow2
+LOCALIMAGE  := $(BUILDDIR)/fedora-coreos-$(COREOS)-qemu.x86_64.qcow2
 IGNITION    := $(BUILDDIR)/config.ign
 QUAYIO      ?= quay.io
 
-REMOTEARCH  := aarch64
-REMOTEIMAGE := $(BUILDDIR)/$(COREOS)-hetzner.$(REMOTEARCH).raw.xz
+REMOTELOCATION := fsn1
+REMOTEBASE     := fedora-44
+REMOTERESCUER  := coreos-rescue
+REMOTEIMAGE    := coreos-snapshot
+REMOTEARCH     := x86_64
+REMOTEKEY      := /tmp/$(REMOTERESCUER).key
 
 .PHONY: all local upload remote clean
 
@@ -23,15 +27,6 @@ $(LOCALIMAGE):
 		-v ."/$(BUILDDIR)://data" -w //data \
 		$(QUAYIO)/coreos/coreos-installer:release \
 			download -s "$(STREAM)" -p qemu -f qcow2.xz -C //data
-
-$(REMOTEIMAGE):
-	mkdir -p "$(BUILDDIR)"
-	podman run --rm -it \
-		--security-opt label=disable \
-		--pull=always \
-		-v "./$(BUILDDIR)://data" -w //data \
-		"$(QUAYIO)/coreos/coreos-installer:release" \
-			download -s "$(STREAM)" -p hetzner -a "$(REMOTEARCH)" -C //data
 
 $(IGNITION): $(CONFIG)
 	mkdir -p "$(BUILDDIR)"
@@ -53,22 +48,56 @@ local: $(IGNITION) $(LOCALIMAGE)
 		-chardev "vc,id=char0,logfile=$(BUILDDIR)/qemu-serial.log" \
 		-serial chardev:char0
 
-upload: $(REMOTEIMAGE)
-	hcloud-upload-image upload \
-		--architecture "$(REMOTEARCH)" \
-		--compression xz \
-		--image-path "$(IMAGE_NAME)" \
-		--labels "os=fedora-coreos,channel=$(STREAM)" \
-		--description "Fedora CoreOS ($(STREAM), $(REMOTEARCH))"
+remote-setup: $(REMOTEKEY)
+	ssh-keygen -b 2048 -t rsa -f "$(REMOTEKEY)" -q -N ""
+	hcloud context create --token-from-env "$(REMOTERESCUER)"
+	hcloud ssh-key create \
+		--name "$(REMOTERESCUER)" \
+		--public-key-from-file "$(REMOTEKEY).pub"
 
-remote: $(IGNITION) upload
+remote-image: $(IGNITION) remote-setup
 	hcloud server create \
+		--location "$(REMOTELOCATION)" \
+		--type cpx22 \
+		--image "$(REMOTEBASE)" \
+		--name "$(REMOTERESCUER)" \
+		--start-after-create=false
+	hcloud server enable-rescue "$(REMOTERESCUER)" \
+		--ssh-key "$(REMOTERESCUER)"
+	hcloud server poweron "$(REMOTERESCUER)"
+	sleep 60
+	hcloud server ssh "$(REMOTERESCUER)" \
+		-i "$(REMOTEKEY)" \
+		-o StrictHostKeyChecking=no ' \
+			cat >config.ign && \
+			curl -sL "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/$(COREOS)/$(REMOTEARCH)/fedora-coreos-$(COREOS)-hetzner.$(REMOTEARCH).raw.xz" | \
+				xz -d | \
+				dd of=/dev/sda status=progress && \
+			mount /dev/sda3 /mnt && \
+			mkdir /mnt/ignition && \
+			cp config.ign /mnt/ignition/ && \
+			umount /mnt \
+		' < "$(IGNITION)"
+	hcloud server poweroff
+	hcloud server create-image \
+		--description "$(REMOTEIMAGE)" \
+		--type snapshot "$(REMOTERESCUER)"
+	hcloud image list | grep "$(REMOTEIMAGE)"
+
+remote:
+	hcloud server create \
+		--location "$(REMOTELOCATION)" \
 		--name "$(SERVERNAME)" \
 		--type "$(SERVERTYPE)" \
-		--datacenter "$(DATACENTER)" \
 		--image "$(IMAGEID)" \
 		--ssh-key "$(SSHKEYNAME)" \
 		--user-data-from-file "$(IGNITION)"
+
+remote-clean:
+	hcloud server delete "$(REMOTERESCUER)" || true
+	hcloud ssh-key delete "$(REMOTERESCUER)" || true
+	hcloud context delete "$(REMOTERESCUER)" || true
+	rm -f "$(REMOTEKEY)"
 
 clean:
 	rm -f $(IGNITION) $(LOCALIMAGE) $(REMOTEIMAGE)
