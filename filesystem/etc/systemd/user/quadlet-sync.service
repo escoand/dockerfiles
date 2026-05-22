@@ -1,0 +1,10 @@
+[Unit]
+Before=quadlet-reload.service
+OnSuccess=quadlet-reload.service
+
+[Service]
+Type=oneshot
+Environment=LOCAL=%h/git/infra
+Environment=REPO=https://github.com/escoand/dockerfiles.git
+Environment=MARKER=%t/quadlet-sync.changed
+ExecStart=/usr/local/bin/git-sync.sh

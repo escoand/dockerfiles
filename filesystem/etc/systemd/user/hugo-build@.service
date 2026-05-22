@@ -11,5 +11,4 @@ ExecStart=podman build \
     --build-arg REPO_URL=${REPO_%i} \
     --secret id=git_ssh_key,src=%h/.ssh/id_rsa \
     https://github.com/escoand/dockerfiles.git#master:docker/hugo
-
 RemainAfterExit=yes

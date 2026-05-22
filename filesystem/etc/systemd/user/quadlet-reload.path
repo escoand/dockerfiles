@@ -1,0 +1,5 @@
+[Path]
+PathChanged=%h/git/infra
+
+[Install]
+WantedBy=default.target

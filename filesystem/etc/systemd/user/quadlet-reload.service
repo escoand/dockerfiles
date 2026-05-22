@@ -1,0 +1,9 @@
+[Unit]
+After=quadlet-sync.service
+ConditionPathExists=%t/quadlet-sync.changed
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl --user daemon-reload
+ExecStart=/usr/bin/systemctl --user start default.target
+ExecStartPost=/usr/bin/rm -f %t/quadlet-sync.changed

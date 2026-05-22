@@ -5,10 +5,13 @@ set -e
 
 UNIT="$1"
 UUID=$(uuidgen)
-BODY=$(
-    printf "Service %s failed:\n" "$UNIT"
-    journalctl -u "${UNIT}.service" --no-pager -o cat -n 10 2>/dev/null || true
+LOGS=$(
+    journalctl -u "$UNIT" --no-pager -o cat -n 10 2>/dev/null ||
+        journalctl -u "${UNIT}.service" --no-pager -o cat -n 10 2>/dev/null ||
+        true
 )
+[ -n "$LOGS" ] || LOGS=$(podman logs --tail 10 "${UNIT%.service}" 2>/dev/null || true)
+BODY=$(printf 'Service %s failed:\n%s' "$UNIT" "$LOGS")
 
 jq -cn --arg b "$BODY" '{msgtype:"m.text",body:$b}' |
     curl -fsS -XPUT \
