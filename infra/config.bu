@@ -12,24 +12,21 @@ passwd:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLQ7xJbWDGtI5zDJHFRBWWhJiqVFP7uLhHQ9sUL5AlF homeassistant
 
 storage:
+  filesystems:
+    - device: /dev/vdb1
+      format: vfat
+      path: /var/mnt/data
+      with_mount_unit: true
   trees:
     - local: filesystem
   files:
     - path: /var/lib/systemd/linger/core
       mode: 0644
   links:
+    - path: /etc/localtime
+      target: /usr/share/zoneinfo/Europe/Berlin
+    # enable services
+    - path: /etc/systemd/system/sockets.target.wants/fail2ban-fw.socket
+      target: /etc/systemd/system/fail2ban-fw.socket
     - path: /etc/systemd/user/default.target.wants/quadlet-sync.timer
       target: /etc/systemd/user/quadlet-sync.timer
-
-#storage:
-#  filesystems:
-#
-#    - device: /dev/vdb
-#      format: xfs
-#      path: /var/mnt/data
-#      with_mount_unit: true
-#
-#    - device: /dev/vdcq
-#      format: xfs
-#      path: /var/mnt/secrets
-#      with_mount_unit: true

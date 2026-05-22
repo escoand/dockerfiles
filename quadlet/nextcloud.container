@@ -10,6 +10,7 @@ Environment=NEXTCLOUD_INIT_HTACCESS=TRUE
 Environment=NEXTCLOUD_TRUSTED_PROXIES=10.88.0.0/24
 Environment=NEXTCLOUD_UPDATE=1
 Environment=REDIS_HOST=redis
+EnvironmentFile=/var/mnt/data/%n.env
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
 HealthLogDestination=events_logger
 Image=docker.io/library/nextcloud:33.0.3
@@ -56,10 +57,6 @@ Network=podman
 Network=backend.network
 Pod=nextcloud.pod
 PodmanArgs=--cpus=2 --memory=512m
-Secret=NEXTCLOUD_DATABASE,type=env,target=MYSQL_DATABASE
-Secret=NEXTCLOUD_DATABASE_PASSWORD,type=env,target=MYSQL_PASSWORD
-Secret=NEXTCLOUD_DATABASE_USER,type=env,target=MYSQL_USER
-Secret=NEXTCLOUD_DOMAIN,type=env,target=NEXTCLOUD_TRUSTED_DOMAINS
 Volume=nextcloud_app:/var/www/html:z
 Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z

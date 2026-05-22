@@ -5,13 +5,9 @@ set -e
 changed=0
 
 if [ ! -d "$LOCAL/.git" ]; then
-    git clone "$REPO" "$LOCAL"
+    git clone --branch "$REPOBRANCH" "$REPO" "$LOCAL"
     mkdir -p ~/.config/containers
-    if [ -d "$LOCAL/quadlet" ]; then
-        ln -sfn "$LOCAL/quadlet" ~/.config/containers/systemd
-    else
-        ln -sfn "$LOCAL/systemd" ~/.config/containers/systemd
-    fi
+    ln -sfn "$LOCAL/$REPODIR" ~/.config/containers/systemd
     changed=1
 else
     before_rev=$(git -C "$LOCAL" rev-parse HEAD)

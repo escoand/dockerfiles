@@ -4,6 +4,7 @@ Description=tuwunel
 [Container]
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
+EnvironmentFile=/var/mnt/data/%n.env
 #HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
 Image=docker.io/jevolk/tuwunel:v1.6.2
 Label=caddy_0={$WORDPRESS1_DOMAIN}
@@ -16,7 +17,6 @@ Label=caddy_1.reverse_proxy="{{upstreams 8008}}"
 #Network=podman
 Pod=matrix.pod
 PodmanArgs=--cpus=1 --memory=256m
-Secret=WORDPRESS1_DOMAIN,type=env,target=TUWUNEL_SERVER_NAME
 Volume=tuwunel:/var/lib/tuwunel
 
 [Service]

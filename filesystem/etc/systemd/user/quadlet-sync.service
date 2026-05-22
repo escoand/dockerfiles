@@ -4,7 +4,6 @@ OnSuccess=quadlet-reload.service
 
 [Service]
 Type=oneshot
-Environment=LOCAL=%h/git/infra
-Environment=REPO=https://github.com/escoand/dockerfiles.git
 Environment=MARKER=%t/quadlet-sync.changed
+EnvironmentFile=/var/mnt/data/%n.env
 ExecStart=/usr/local/bin/git-sync.sh

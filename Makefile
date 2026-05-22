@@ -3,6 +3,7 @@ COREOS      := fedora-coreos-44.20260419.3.1
 STREAM      := stable
 
 BUILDDIR    := build
+DATADIR     := $(BUILDDIR)/data
 LOCALIMAGE  := $(BUILDDIR)/$(COREOS)-qemu.x86_64.qcow2
 IGNITION    := $(BUILDDIR)/config.ign
 QUAYIO      ?= quay.io
@@ -15,36 +16,38 @@ REMOTEIMAGE := $(BUILDDIR)/$(COREOS)-hetzner.$(REMOTEARCH).raw.xz
 all: local
 
 $(LOCALIMAGE):
-	mkdir -p $(BUILDDIR)
+	mkdir -p "$(BUILDDIR)"
 	podman run --rm -it \
 		--security-opt label=disable \
 		--pull=always \
-		-v ./infra://data -w //data \
+		-v ."/$(BUILDDIR)://data" -w //data \
 		$(QUAYIO)/coreos/coreos-installer:release \
-			download -s $(STREAM) -p qemu -C //data
+			download -s "$(STREAM)" -p qemu -f qcow2.xz -C //data
 
 $(REMOTEIMAGE):
-	mkdir -p $(BUILDDIR)
+	mkdir -p "$(BUILDDIR)"
 	podman run --rm -it \
 		--security-opt label=disable \
 		--pull=always \
-		-v ./infra://data -w //data \
-		$(QUAYIO)/coreos/coreos-installer:release \
-			download -s $(STREAM) -p hetzner -a $(REMOTEARCH) -C //data
+		-v "./$(BUILDDIR)://data" -w //data \
+		"$(QUAYIO)/coreos/coreos-installer:release" \
+			download -s "$(STREAM)" -p hetzner -a "$(REMOTEARCH)" -C //data
 
 $(IGNITION): $(CONFIG)
-	mkdir -p $(BUILDDIR)
+	mkdir -p "$(BUILDDIR)"
 	podman run --rm -i \
 		-v .://data -w //data \
-		$(QUAYIO)/coreos/butane:release \
-			--files-dir //data --pretty --strict //data/$(CONFIG) > $@
+		"$(QUAYIO)/coreos/butane:release" \
+			--files-dir //data --pretty --strict "//data/$(CONFIG)" > $@
 
 local: $(IGNITION) $(LOCALIMAGE)
-	qemu-system-x86_64 \
+	mkdir -p "$(DATADIR)"
+	kvm \
 		-snapshot \
-		-cpu max \
 		-m 4096 \
+		-boot c \
 		-drive "if=virtio,file=$(LOCALIMAGE)" \
+		-drive "if=virtio,file=fat:ro:$(DATADIR)" \
 		-fw_cfg "name=opt/com.coreos/config,file=$(IGNITION)" \
 		-nic "user,model=virtio,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080" \
 		-chardev "vc,id=char0,logfile=$(BUILDDIR)/qemu-serial.log" \

@@ -4,5 +4,5 @@ DefaultDependencies=no
 
 [Service]
 Type=oneshot
-EnvironmentFile=%h/.config/notify-fail.env
+EnvironmentFile=/var/mnt/data/%p.env
 ExecStart=%h/bin/notify-fail.sh %i
