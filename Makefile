@@ -10,10 +10,9 @@ QUAYIO      ?= quay.io
 
 REMOTELOCATION := fsn1
 REMOTEBASE     := fedora-44
-REMOTERESCUER  := coreos-rescue
-REMOTEIMAGE    := coreos-snapshot
+REMOTESERVER   := coreos-$(COREOS)
 REMOTEARCH     := x86_64
-REMOTEKEY      := /tmp/$(REMOTERESCUER).key
+REMOTEKEY      := /tmp/$(REMOTESERVER).key
 
 .PHONY: all local upload remote clean
 
@@ -48,56 +47,41 @@ local: $(IGNITION) $(LOCALIMAGE)
 		-chardev "vc,id=char0,logfile=$(BUILDDIR)/qemu-serial.log" \
 		-serial chardev:char0
 
-remote-setup: $(REMOTEKEY)
+$(REMOTEKEY):
 	ssh-keygen -b 2048 -t rsa -f "$(REMOTEKEY)" -q -N ""
-	hcloud context create --token-from-env "$(REMOTERESCUER)"
+	hcloud context create "$(REMOTESERVER)"
 	hcloud ssh-key create \
-		--name "$(REMOTERESCUER)" \
+		--name "$(REMOTESERVER)" \
 		--public-key-from-file "$(REMOTEKEY).pub"
 
-remote-image: $(IGNITION) remote-setup
+remote: $(IGNITION) $(REMOTEKEY)
 	hcloud server create \
 		--location "$(REMOTELOCATION)" \
 		--type cpx22 \
 		--image "$(REMOTEBASE)" \
-		--name "$(REMOTERESCUER)" \
+		--name "$(REMOTESERVER)" \
 		--start-after-create=false
-	hcloud server enable-rescue "$(REMOTERESCUER)" \
-		--ssh-key "$(REMOTERESCUER)"
-	hcloud server poweron "$(REMOTERESCUER)"
+	hcloud server enable-rescue "$(REMOTESERVER)" \
+		--ssh-key "$(REMOTESERVER)"
+	hcloud server poweron "$(REMOTESERVER)"
 	sleep 60
-	hcloud server ssh "$(REMOTERESCUER)" \
+	hcloud server ssh "$(REMOTESERVER)" \
 		-i "$(REMOTEKEY)" \
 		-o StrictHostKeyChecking=no ' \
 			cat >config.ign && \
-			curl -sL "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/$(COREOS)/$(REMOTEARCH)/fedora-coreos-$(COREOS)-hetzner.$(REMOTEARCH).raw.xz" | \
+			curl -sL "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/$(COREOS)/$(REMOTEARCH)/fedora-coreos-$(COREOS)-metal.$(REMOTEARCH).raw.xz" | \
 				xz -d | \
 				dd of=/dev/sda status=progress && \
 			mount /dev/sda3 /mnt && \
 			mkdir /mnt/ignition && \
 			cp config.ign /mnt/ignition/ && \
-			umount /mnt \
+			reboot \
 		' < "$(IGNITION)"
-	hcloud server poweroff
-	hcloud server create-image \
-		--description "$(REMOTEIMAGE)" \
-		--type snapshot "$(REMOTERESCUER)"
-	hcloud image list | grep "$(REMOTEIMAGE)"
-
-remote:
-	hcloud server create \
-		--location "$(REMOTELOCATION)" \
-		--name "$(SERVERNAME)" \
-		--type "$(SERVERTYPE)" \
-		--image "$(IMAGEID)" \
-		--ssh-key "$(SSHKEYNAME)" \
-		--user-data-from-file "$(IGNITION)"
 
 remote-clean:
-	hcloud server delete "$(REMOTERESCUER)" || true
-	hcloud ssh-key delete "$(REMOTERESCUER)" || true
-	hcloud context delete "$(REMOTERESCUER)" || true
+	hcloud ssh-key delete "$(REMOTESERVER)" || true
+	hcloud context delete "$(REMOTESERVER)" || true
 	rm -f "$(REMOTEKEY)"
 
 clean:
-	rm -f $(IGNITION) $(LOCALIMAGE) $(REMOTEIMAGE)
+	rm -f $(IGNITION) $(LOCALIMAGE)
