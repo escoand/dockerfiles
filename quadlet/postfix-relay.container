@@ -1,0 +1,15 @@
+[Unit]
+Description=Postfix Inbound Mail Relay
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Container=postfix-relay
+Exec=/usr/sbin/postfix start-fg
+Image=boky/postfix:v5.1.0-alpine
+PublishPort=25:25
+Volume=/var/mnt/data/postfix/main.cf:/etc/postfix/main.cf.custom
+Volume=/var/mnt/data/postfix/virtual:/etc/postfix/virtual
+
+[Install]
+WantedBy=default.target
