@@ -5,11 +5,10 @@ Wants=network-online.target
 
 [Container]
 ContainerName=postfix-relay
+EnvironmentFile=/var/mnt/data/%N.env
 Exec=/usr/sbin/postfix start-fg
 Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
-Volume=/var/mnt/data/postfix/main.cf:/etc/postfix/main.cf.custom
-Volume=/var/mnt/data/postfix/virtual:/etc/postfix/virtual
 
 [Install]
 WantedBy=default.target
