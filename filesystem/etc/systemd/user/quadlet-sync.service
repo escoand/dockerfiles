@@ -1,11 +1,8 @@
 [Unit]
 Wants=network-online.target
 After=network-online.target
-Before=quadlet-reload.service
-OnSuccess=quadlet-reload.service
 
 [Service]
 Type=oneshot
-Environment=MARKER=%t/quadlet-sync.changed
 EnvironmentFile=/var/mnt/data/%N.env
 ExecStart=/usr/local/bin/quadlet-sync.sh
