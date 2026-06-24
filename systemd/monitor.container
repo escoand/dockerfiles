@@ -18,6 +18,7 @@ Secret=MAIL_PORT,type=env
 Secret=MAIL_TO,type=env
 Secret=MAIL_USER,type=env
 Volume=/etc/localtime:/etc/localtime:ro
+Volume=/run/log/journal:/run/log/journal:ro
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
 [Service]
