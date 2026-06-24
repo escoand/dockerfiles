@@ -3,8 +3,8 @@ Description=Redis
 
 [Container]
 ContainerName=redis
-Exec=docker-entrypoint.sh --appendonly no  --protected-mode no --save ""
-Image=docker.io/library/redis:8.8.0-alpine
+Exec=docker-entrypoint.sh --appendonly no --protected-mode no --save ""
+Image=reg.mini.dev/redis:8.8.0
 HealthCmd=redis-cli --raw incr ping
 HealthLogDestination=events_logger
 Network=backend.network
