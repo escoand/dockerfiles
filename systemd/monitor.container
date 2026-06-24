@@ -4,6 +4,7 @@ Description=Monitor
 [Container]
 ContainerName=monitor
 Environment=MATRIX_HOST=http://systemd-matrix:8008
+GroupAdd=keep-groups
 Image=localhost/monitor
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m --privileged
@@ -17,6 +18,7 @@ Secret=MAIL_PASSWORD
 Secret=MAIL_PORT,type=env
 Secret=MAIL_TO,type=env
 Secret=MAIL_USER,type=env
+SecurityLabelDisable=true
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/run/log/journal:/run/log/journal:ro
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
