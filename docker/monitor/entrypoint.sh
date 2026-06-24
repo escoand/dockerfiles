@@ -60,7 +60,7 @@ done |
     while read -r _ TYPE NAME STATUS; do
         echo "$TYPE $NAME $STATUS"
         [[ $TYPE = container && $STATUS = @(stopped|die) ]] &&
-            journalctl -n 10 -o short-iso "CONTAINER_NAME=$NAME"
+            journalctl -n 10 -o short-iso "CONTAINER_NAME=$NAME" 2>&1
     done |
 
     # stderr
