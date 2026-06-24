@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:3.24.0
+FROM docker.io/library/debian:stable-slim
 
 # hadolint ignore=DL3018
 RUN apt update -y && \
