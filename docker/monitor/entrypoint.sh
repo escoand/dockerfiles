@@ -57,8 +57,8 @@ done |
     ' |
 
     # get logs
-    while read -r _ TYPE NAME STATUS; do
-        echo "$TYPE $NAME $STATUS"
+    while read -r _ TIME TYPE NAME STATUS; do
+        echo "$TIME $TYPE $NAME $STATUS"
         [[ $TYPE = container && $STATUS = @(stopped|die) ]] &&
             journalctl -n 10 -o short-iso "CONTAINER_NAME=$NAME" 2>&1
     done |
