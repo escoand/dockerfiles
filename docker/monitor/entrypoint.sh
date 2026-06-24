@@ -1,27 +1,17 @@
-#!/bin/sh
-# shellcheck disable=SC2016
+#!/bin/bash
 
-set -e
+set -eu
 
 WAIT=60
 MATRIX_ACCESS_TOKEN=$(
     jq -n '{"type":"m.login.password","user":env.MATRIX_USER,"password":env.MATRIX_PASSWORD}' |
-    curl -fsS \
-        --data-binary @- \
-        "$MATRIX_HOST/_matrix/client/r0/login" |
-    jq -r '.access_token'
+        curl -fsS \
+            --data-binary @- \
+            "${MATRIX_HOST?}/_matrix/client/r0/login" |
+        jq -r '.access_token'
 )
+: "${MATRIX_ROOM_ID?}"
 TMP=$(mktemp)
-
-api_request() {
-    curl -fNsS \
-        --unix-socket /var/run/docker.sock \
-        "http://localhost/$1"
-}
-
-api_logs() {
-    api_request "containers/$1/logs?stdout=1&stderr=1&tail=10"
-}
 
 send_mail() {
     {
@@ -50,8 +40,14 @@ send_matrix() {
         "$MATRIX_HOST/_matrix/client/v3/rooms/$MATRIX_ROOM_ID/send/m.room.message/$UUID"
 }
 
-# main loop
-api_request events |
+# watch events
+while true; do
+    curl -fNsS \
+        --unix-socket /var/run/docker.sock \
+        http://localhost/events
+done |
+
+    # filter events
     jq -r --unbuffered '
         select(
             (.status=="health_status" and .HealthStatus=="healthy") | not
@@ -60,27 +56,30 @@ api_request events |
         join(" ")
     ' |
 
-    # wait for input
-    while read -r CID LINE; do
+    # get logs
+    while read -r _ TYPE NAME STATUS; do
+        echo "$TYPE $NAME $STATUS"
+        [[ $TYPE = container && $STATUS = @(stopped|die) ]] &&
+            journalctl -n 10 -o short-iso "CONTAINER_NAME=$NAME"
+    done |
+
+    # stderr
+    tee /dev/stderr |
+
+    # send blocked
+    while read -r LINE; do
         END=$(($(date +%s) + WAIT))
         REMAINING=$WAIT
         {
-            unset LOGS
-            echo "$LINE" | grep -qw die &&
-                LOGS=$(api_logs "$CID")
-            echo "$LINE" | tee /dev/stderr
+            echo "$LINE"
             # shellcheck disable=SC3045
-            while read -r -t $REMAINING CID LINE; do
-                echo "$LINE" | grep -qw die &&
-                    LOGS=$(api_logs "$CID")
-                echo "$LINE" | tee /dev/stderr
+            while read -r -t $REMAINING LINE; do
+                echo "$LINE"
                 REMAINING=$((END - $(date +%s)))
                 [ $REMAINING -lt 0 ] && break
             done
-            [ -n "$LOGS" ] &&
-                echo &&
-                echo "$LOGS"
         } |
-        send_matrix
 
+            # send
+            send_matrix
     done
