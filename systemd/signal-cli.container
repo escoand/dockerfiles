@@ -1,0 +1,13 @@
+[Unit]
+Description=signal-cli
+
+[Container]
+ContainerName=signal-cli
+Image=registry.gitlab.com/packaging/signal-cli/signal-cli-jre:v0-14-5-1
+Volume=signal-cli:/var/lib/signal-cli
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
