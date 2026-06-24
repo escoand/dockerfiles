@@ -1,8 +1,0 @@
-[Unit]
-Description=Notify failure of %i
-DefaultDependencies=no
-
-[Service]
-Type=oneshot
-EnvironmentFile=%h/.config/notify-fail.env
-ExecStart=%h/bin/notify-fail.sh %i

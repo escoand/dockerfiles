@@ -15,14 +15,6 @@ sudo sysctl net.ipv4.ip_unprivileged_port_start=80
 cp fail2ban-fw/*.sh /usr/local/bin/
 chmod 0755 /usr/local/bin/fail2ban-fw.sh
 
-# notify-fail script and service (not deployable via Quadit - plain systemd, not quadlet)
-mkdir -p ~/.config/systemd/user/service.d
-cp notify-fail/notify-fail@.service ~/.config/systemd/user/
-cp notify-fail/service.d/notify-fail.conf ~/.config/systemd/user/service.d/
-systemctl --user daemon-reload
-# credentials required in ~/.config/notify-fail.env
-# (MATRIX_HOST, MATRIX_ACCESS_TOKEN, MATRIX_ROOM_ID)
-
 # fail2ban socket and service
 cp -- fail2ban-fw/*.service fail2ban-fw/*.socket /etc/systemd/system/
 sudo systemctl daemon-reload
