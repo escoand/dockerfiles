@@ -1,0 +1,25 @@
+name: shUnit2
+
+on:
+  pull_request:
+    paths:
+      - "**/*.sh"
+  push:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get shUnit2
+        run: |
+          curl -sS https://api.github.com/repos/kward/shunit2/releases/latest |
+          jq -r .tarball_url |
+          xargs curl -LsS -o- |
+          tar -x "*/shunit2"
+
+      - name: Run shUnit2
+        run: |
+          PATH=$PATH:$(ls -d kward-shunit2-*) \
+          find test -name "*.test.sh" -exec sh {} ";"

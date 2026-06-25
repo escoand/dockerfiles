@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eux
+set -eu
 
 restart_units=$(mktemp)
 stop_units=$(mktemp)
@@ -36,7 +36,7 @@ after_rev=$(git -C "$LOCAL" rev-parse HEAD)
 # link to systemd
 mkdir -p ~/.config/containers
 ln -fsn "$LOCAL/$REPODIR" ~/.config/containers/systemd
-/usr/bin/systemctl --user daemon-reload
+systemctl --user daemon-reload
 
 # find changed quadlets
 git -C "$LOCAL" diff --name-status --find-renames "$before_rev" "$after_rev" -- "$REPODIR" |
@@ -47,22 +47,22 @@ git -C "$LOCAL" diff --name-status --find-renames "$before_rev" "$after_rev" -- 
 
 		case "$status" in
 		D)
-			echo "$old_unit" >"$stop_units"
+			echo "$old_unit" >>"$stop_units"
 			;;
 		R*)
-			echo "$old_unit" >"$stop_units"
-			echo "$new_unit" >"$restart_units"
+			echo "$old_unit" >>"$stop_units"
+			echo "$new_unit" >>"$restart_units"
 			;;
 		*)
-			echo "$old_unit" >"$restart_units"
+			echo "$old_unit" >>"$restart_units"
 			;;
 		esac
 	done
 
 # stop units
 cat "$stop_units" |
-	xargs /usr/bin/systemctl --user stop
+	xargs -r systemctl --user stop || true
 
 # restart units
 cat "$restart_units" |
-	xargs /usr/bin/systemctl --user try-restart
+	xargs -r systemctl --user try-restart || true
