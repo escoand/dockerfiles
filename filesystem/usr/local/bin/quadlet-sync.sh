@@ -60,9 +60,7 @@ git -C "$LOCAL" diff --name-status --find-renames "$before_rev" "$after_rev" -- 
 	done
 
 # stop units
-cat "$stop_units" |
-	xargs -r systemctl --user stop || true
+xargs -r systemctl --user stop <"$stop_units" || true
 
 # restart units
-cat "$restart_units" |
-	xargs -r systemctl --user try-restart || true
+xargs -r systemctl --user try-restart <"$restart_units" || true

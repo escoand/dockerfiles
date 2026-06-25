@@ -17,7 +17,7 @@ jobs:
           curl -sS https://api.github.com/repos/kward/shunit2/releases/latest |
           jq -r .tarball_url |
           xargs curl -LsS -o- |
-          tar -x "*/shunit2"
+          tar -xz "*/shunit2"
 
       - name: Run shUnit2
         run: |
