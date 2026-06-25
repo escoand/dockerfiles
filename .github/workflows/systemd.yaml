@@ -12,7 +12,7 @@ jobs:
     container:
       image: almalinux:9.8
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install deps
         run: |
