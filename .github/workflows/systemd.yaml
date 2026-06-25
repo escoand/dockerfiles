@@ -2,8 +2,6 @@ name: systemd-units
 
 on:
   pull_request:
-    paths:
-      - "systemd/**"
   push:
 
 jobs:
@@ -24,21 +22,36 @@ jobs:
           mkdir -p \
             /etc/containers/systemd/
           cp \
-            systemd/*.container \
-            systemd/*.network \
-            systemd/*.pod \
+            quadlet/* \
             /etc/containers/systemd/
           cp \
-            systemd/*.socket \
+            filesystem/etc/systemd/*/* \
             /etc/systemd/system/
+          cp \
+            filesystem/usr/local/bin/* \
+            /usr/local/bin/
+          chmod +x /etc/rc.d/rc.local
 
       - name: Verify units
         run: |
           set -e
-          for file in /etc/containers/systemd/*.container; do
-            unit=$(basename "$file" .container)
-            echo "# verify $unit"
-            systemd-analyze --generators=true verify "$unit.service" ||
+          find quadlet/ filesystem/etc/systemd/ -type f |
+          while read -r file; do
+            dir=${file%/*}
+            filename=${file##*/}
+            case "$filename" in
+              *.artifact)  unit=$dir/${filename%.artifact}-artifact.service ;;
+              *.build)     unit=$dir/${filename%.build}-build.service ;;
+              *.container) unit=$dir/${filename%.container}.service ;;
+              *.image)     unit=$dir/${filename%.image}-image.service ;;
+              *.kube)      unit=$dir/${filename%.kube}.service ;;
+              *.network)   unit=$dir/${filename%.network}-network.service ;;
+              *.pod)       unit=$dir/${filename%.pod}-pod.service ;;
+              *.volume)    unit=$dir/${filename%.volume}-volume.service ;;
+              *)           unit=$dir/$filename ;;
+            esac
+            echo "# verify $file"
+            systemd-analyze --generators=true verify "$unit" ||
             touch /tmp/RC.tmp
           done
           ! test -r /tmp/RC.tmp

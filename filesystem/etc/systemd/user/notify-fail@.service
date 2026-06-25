@@ -1,8 +1,0 @@
-[Unit]
-Description=Notify failure of %i
-DefaultDependencies=no
-
-[Service]
-Type=oneshot
-EnvironmentFile=/var/mnt/data/%p.env
-ExecStart=%h/bin/notify-fail.sh %i
