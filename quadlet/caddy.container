@@ -4,7 +4,6 @@ Requires=caddy.socket
 Requires=podman.socket
 
 [Container]
-AddCapability=NET_BIND_SERVICE
 ContainerName=caddy
 Environment=CADDY_DOCKER_NO_SCOPE=true
 EnvironmentFile=/var/mnt/data/%N.env
