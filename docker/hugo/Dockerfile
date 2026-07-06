@@ -18,6 +18,6 @@ RUN --mount=type=secret,id=git_ssh_key \
 
 FROM reg.mini.dev/caddy:2.11.4
 
-COPY --from=builder /src/public /srv
+COPY --from=builder /src/public /data
 
 CMD ["caddy", "file-server"]
