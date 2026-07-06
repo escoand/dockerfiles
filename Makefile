@@ -2,11 +2,12 @@ COREOS      := 44.20260419.3.1
 STREAM      ?= stable
 
 DOCKER      ?= docker
+TMP         ?= /tmp
 
 REMOTELOCATION := fsn1
 REMOTEBASE     := fedora-44
 REMOTESERVER   := coreos-$(COREOS)
-REMOTEKEY      := /tmp/$(REMOTESERVER).key
+REMOTEKEY      := $(TMP)/$(REMOTESERVER).key
 
 ARCH        := $(shell arch)
 QEMU        := qemu-system-$(ARCH)
@@ -91,7 +92,7 @@ $(REMOTEKEY):
 		--name "$(REMOTESERVER)" \
 		--public-key-from-file "$(REMOTEKEY).pub"
 
-remote: $(IGNITION) $(REMOTEKEY)
+hetzner: $(BUILDDIR)/config.ign $(REMOTEKEY)
 	hcloud server create \
 		--location "$(REMOTELOCATION)" \
 		--type cpx22 \
@@ -106,16 +107,16 @@ remote: $(IGNITION) $(REMOTEKEY)
 		-i "$(REMOTEKEY)" \
 		-o StrictHostKeyChecking=no ' \
 			cat >config.ign && \
-			curl -sL "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/$(COREOS)/$(REMOTEARCH)/fedora-coreos-$(COREOS)-$(PLATFORM).$(REMOTEARCH).$(FORMAT).xz" | \
+			curl -sL "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/$(COREOS)/$(ARCH)/fedora-coreos-$(COREOS)-$(PLATFORM).$(ARCH).$(FORMAT).xz" | \
 				xz -d | \
 				dd of=/dev/sda status=progress && \
 			mount /dev/sda3 /mnt && \
 			mkdir /mnt/ignition && \
 			cp config.ign /mnt/ignition/ && \
 			reboot \
-		' < "$(IGNITION)"
+		' < "$<"
 
-remote-clean:
+hetzner-clean:
 	hcloud ssh-key delete "$(REMOTESERVER)" || true
 	hcloud context delete "$(REMOTESERVER)" || true
 	rm -f "$(REMOTEKEY)"
