@@ -13,7 +13,7 @@ Environment=REDIS_HOST=redis
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=curl -fsS http://localhost/status.php | grep -q '"installed":true'
 HealthLogDestination=events_logger
-Image=docker.io/library/nextcloud:33.0.3
+Image=docker.io/library/nextcloud:34.0.1
 # CORS for external
 Label=caddy_0=(cors_external)
 Label=caddy_0.handle_path="/{args[0]}/*"
