@@ -11,15 +11,19 @@ passwd:
 
 storage:
   filesystems:
-    - device: /dev/disk/by-label/vserver-data
+    - device: /dev/disk/by-label/data
       format: ext4
       path: /var/mnt/data
       with_mount_unit: true
+  directories:
+    - path: /var/mnt/data
+      mode: 0770
+      user:
+        name: core
+      group:
+        name: core
   trees:
     - local: filesystem
-  files:
-    - path: /var/lib/systemd/linger/core
-      mode: 0644
   links:
     - path: /etc/localtime
       target: /usr/share/zoneinfo/Europe/Berlin

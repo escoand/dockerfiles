@@ -6,3 +6,6 @@ After=network-online.target
 Type=oneshot
 EnvironmentFile=/var/mnt/data/%N.env
 ExecStart=/usr/local/bin/quadlet-sync.sh
+
+[Install]
+WantedBy=network-online.target

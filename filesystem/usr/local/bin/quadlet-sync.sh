@@ -2,24 +2,25 @@
 
 set -eu
 
+start_units=$(mktemp)
 restart_units=$(mktemp)
 stop_units=$(mktemp)
 
 # shellcheck disable=SC2064
-trap "rm -f '$restart_units' '$stop_units'" EXIT INT TERM HUP
+trap "rm -f '$start_units' '$restart_units' '$stop_units'" EXIT INT TERM HUP
 
 map_path_to_unit() {
 	echo "$1" | sed -n '
 		s#.*/##g
 		s#@\.#*.#
-		s#\.container$##p
-		s#\.kube$##p
-		s#\.pod$#-pod#p
-		s#\.network$#-network#p
-		s#\.volume$#-volume#p
-		s#\.build$#-build#p
-		s#\.image$#-image#p
 		s#\.artifact$#-artifact#p
+		s#\.build$#-build#p
+		s#\.container$##p
+		s#\.image$#-image#p
+		s#\.kube$##p
+		s#\.network$#-network#p
+		s#\.pod$#-pod#p
+		s#\.volume$#-volume#p
 	'
 }
 
@@ -46,6 +47,9 @@ git -C "$LOCAL" diff --name-status --find-renames "$before_rev" "$after_rev" -- 
 		new_unit=$(map_path_to_unit "$new_path")
 
 		case "$status" in
+		A)
+			echo "$old_unit" >>"$start_units"
+			;;
 		D)
 			echo "$old_unit" >>"$stop_units"
 			;;
@@ -60,7 +64,10 @@ git -C "$LOCAL" diff --name-status --find-renames "$before_rev" "$after_rev" -- 
 	done
 
 # stop units
-xargs -r systemctl --user stop <"$stop_units" || true
+xargs -rt systemctl --user stop <"$stop_units" || true
+
+# start units
+xargs -rt systemctl --user start <"$start_units" || true
 
 # restart units
-xargs -r systemctl --user try-restart <"$restart_units" || true
+xargs -rt systemctl --user try-restart <"$restart_units" || true

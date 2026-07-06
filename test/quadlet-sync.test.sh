@@ -43,7 +43,7 @@ testIntial() {
 
 	grep -Fq "Cloning into" "$LOG"
 	assertEquals $LINENO $? 0
-	grep -Fqx "@@ MOCK @@ systemctl --user try-restart test1 test2" "$LOG"
+	grep -Fqx "@@ MOCK @@ systemctl --user start test1 test2" "$LOG"
 	assertEquals $LINENO $? 0
 }
 

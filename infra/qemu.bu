@@ -1,0 +1,45 @@
+variant: fcos
+version: 1.7.0
+
+ignition:
+  config:
+    merge:
+      - local: build/config.ign
+
+passwd:
+  users:
+    - name: core
+      password_hash: "$6$/bsPz.igJ3EslNvt$v62vEJkEaINcdUAbXp3PFB4RmPHX2jDwL1PLegTiJAC8G3Kl7tIOcsJMh.nEyZPHTGk1vrGMVfRo3zKreUUsb."
+      ssh_authorized_keys:
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINXVNVaVLWnPfyWK1oehq7/K9ppXKgPsRB5lZWp+fJI6 desktop
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJSs56hQp1flgiNUvdjAE2p6xQyxKaTB4n7hhgEVOOqB+rkGsY6rWP6YQ3TMYaKHdH8nGpJT+7Z/uLXlGIkrMCmx/9cM9O6blaGW9x4jVRMABvLcS0AjrmFKhp4b0VlE0Wd3fF9NdgH/HquBVtH2pwDFbOlucondvHfxMbU4sxsVjc0gvrRJ3XGS37fxKPNXt49sxD13OEPbTBLRMhOtaAyV8/wSWGUuwKex84Va87zMgtBJfa2GLs7/s/sUTZMccxMfvjSmYec3jCNgvVn6nY+H7pFgNVeobB5k5TKP1VODykw5TxN6z7T/g0B7E+n4kuPXx2m4b3OFq+QmJ6LYyn work
+
+storage:
+  filesystems:
+    - device: /dev/vdb
+      format: ext4
+      label: data
+  files:
+    - path: /etc/containers/registries.conf.d/qemu.conf
+      contents:
+        inline: |-
+          [[registry]]
+          prefix = "docker.io"
+          location = "10.0.2.2:5000"
+          insecure = true
+          [[registry]]
+          prefix = "ghcr.io"
+          location = "10.0.2.2:5000"
+          insecure = true
+          [[registry]]
+          prefix = "quay.io"
+          location = "10.0.2.2:5000"
+          insecure = true
+          [[registry]]
+          prefix = "dock.mau.dev"
+          location = "10.0.2.2:5000"
+          insecure = true
+          [[registry]]
+          prefix = "reg.mini.dev"
+          location = "10.0.2.2:5000"
+          insecure = true
