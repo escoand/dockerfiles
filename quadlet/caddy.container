@@ -4,6 +4,7 @@ Requires=caddy.socket
 Requires=podman.socket
 
 [Container]
+AddCapability=NET_ADMIN
 ContainerName=caddy
 Environment=CADDY_DOCKER_NO_SCOPE=true
 EnvironmentFile=/var/mnt/data/%N.env
