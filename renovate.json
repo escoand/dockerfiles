@@ -6,6 +6,7 @@
     "group:allNonMajor",
     ":separateMajorReleases"
   ],
+  "baseBranches": ["master", "coreos"],
   "customManagers": [
     {
       "customType": "regex",
