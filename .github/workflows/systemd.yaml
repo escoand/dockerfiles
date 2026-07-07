@@ -20,7 +20,8 @@ jobs:
         run: |
           set -e
           mkdir -p \
-            /etc/containers/systemd/
+            /etc/containers/systemd/ \
+            /usr/local/bin/
           cp \
             quadlet/* \
             /etc/containers/systemd/
