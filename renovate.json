@@ -11,22 +11,14 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "//.*\\.container$/"
+        "**/*.container"
       ],
       "matchStrings": [
-        "Image=(?<registry>\\S+/)(?<depName>\\S+):(?<currentValue>\\S+)"
+        "Image=(docker\.io/(library/)?)?(?<registry>\\S*/)(?<depName>\\S+):(?<currentValue>\\S+)"
       ],
       "packageNameTemplate": "{{{registry}}}{{{depName}}}",
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "packageNameTemplate": "{{{replace '^.*/' '' packageName}}}"
     }
   ]
 }
