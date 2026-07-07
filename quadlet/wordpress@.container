@@ -9,7 +9,7 @@ Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');define('WP_C
 Environment=WORDPRESS_DB_HOST=mariadb
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=docker.io/library/wordpress:6.9.4-apache
+Image=docker.io/library/wordpress:7.0.0-apache
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman
