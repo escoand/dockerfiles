@@ -8,7 +8,7 @@ jobs:
   verify-units:
     runs-on: ubuntu-latest
     container:
-      image: registry.fedoraproject.org/fedora-coreos:stable
+      image: quay.io/fedora/fedora-coreos:stable
     steps:
       - uses: actions/checkout@v7
 
