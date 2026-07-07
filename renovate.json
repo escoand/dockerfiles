@@ -6,19 +6,5 @@
     "group:allNonMajor",
     ":separateMajorReleases"
   ],
-  "baseBranches": ["master", "coreos"],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "**/*.container"
-      ],
-      "matchStrings": [
-        "Image=(?<registry>\\S+/)(?<depName>\\S+):(?<currentValue>\\S+)"
-      ],
-      "packageNameTemplate": "{{{registry}}}{{{depName}}}",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    }
-  ]
+  "baseBranches": ["master", "coreos"]
 }
