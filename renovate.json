@@ -14,7 +14,7 @@
         "**/*.container"
       ],
       "matchStrings": [
-        "Image=(docker\.io/(library/)?)?(?<registry>\\S*/)(?<depName>\\S+):(?<currentValue>\\S+)"
+        "Image=(docker\\.io/(library/)?)?(?<registry>\\S*/)(?<depName>\\S+):(?<currentValue>\\S+)"
       ],
       "packageNameTemplate": "{{{registry}}}{{{depName}}}",
       "datasourceTemplate": "docker",
