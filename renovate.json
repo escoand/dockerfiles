@@ -26,9 +26,7 @@
       "matchDatasources": [
         "docker"
       ],
-      "matchPackageNames": [
-        "{{{replace '^.*/' '' packageName}}}"
-      ]
+      "packageNameTemplate": "{{{replace '^.*/' '' packageName}}}"
     }
   ]
 }
