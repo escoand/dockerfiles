@@ -85,8 +85,7 @@ done |
                 [ $REMAINING -lt 0 ] && break
             done
         } |
-        send_ntfy
-
             # send
-            send_matrix
+            send_ntfy
+
     done
