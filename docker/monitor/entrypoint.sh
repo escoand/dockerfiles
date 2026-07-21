@@ -3,15 +3,15 @@
 set -eu
 
 WAIT=60
-MATRIX_ACCESS_TOKEN=$(
-    jq -n '{"type":"m.login.password","user":env.MATRIX_USER,"password":env.MATRIX_PASSWORD}' |
+if [ -n "$MATRIX_HOST" ] && [ -n "$MATRIX_USER" ] && [ -n "$MATRIX_PASSWORD" ]; then
+    MATRIX_ACCESS_TOKEN=$(
+        jq -n '{"type":"m.login.password","user":env.MATRIX_USER,"password":env.MATRIX_PASSWORD}' |
         curl -fsS \
             --data-binary @- \
-            "${MATRIX_HOST?}/_matrix/client/r0/login" |
+            "$MATRIX_HOST/_matrix/client/r0/login" |
         jq -r '.access_token'
-)
-: "${MATRIX_ROOM_ID?}"
-TMP=$(mktemp)
+    )
+fi
 
 send_mail() {
     {
@@ -32,12 +32,18 @@ send_mail() {
 }
 
 send_matrix() {
+    TMP=$(mktemp)
     UUID=$(uuidgen)
     jq -cRs '{msgtype:"m.text",body:.}' >"$TMP"
     curl -fsS -XPUT \
         --data-binary "@$TMP" \
         -H "Authorization: Bearer $MATRIX_ACCESS_TOKEN" \
         "$MATRIX_HOST/_matrix/client/v3/rooms/$MATRIX_ROOM_ID/send/m.room.message/$UUID"
+    rm -f "$TMP"
+}
+
+send_ntfy() {
+    curl -fsS -XPOST --data-binary @- "$NTFY_URL"
 }
 
 # watch events
@@ -79,6 +85,7 @@ done |
                 [ $REMAINING -lt 0 ] && break
             done
         } |
+        send_ntfy
 
             # send
             send_matrix
