@@ -6,7 +6,7 @@ AutoUpdate=registry
 ContainerName=mariadb
 Environment=MARIADB_AUTO_UPGRADE=TRUE
 EnvironmentFile=/var/mnt/data/%N.env
-Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
+#Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
 #HealthCmd=["healthcheck.sh","--su-mysql","--connect"]
 HealthLogDestination=events_logger
 Image=reg.mini.dev/mariadb:v12.3
