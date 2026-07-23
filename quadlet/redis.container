@@ -2,9 +2,10 @@
 Description=Redis
 
 [Container]
+AutoUpdate=registry
 ContainerName=redis
 Exec=docker-entrypoint.sh --appendonly no --protected-mode no --save ""
-Image=reg.mini.dev/redis:8.8.0
+Image=reg.mini.dev/redis:8.8
 HealthCmd=redis-cli --raw incr ping
 HealthLogDestination=events_logger
 Network=backend.network
