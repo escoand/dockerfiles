@@ -6,7 +6,7 @@ Description=mautrix-gmessages
 ContainerName=mautrix-gmessages
 HealthCmd=["curl", "-fsS", "http://localhost:29336/_matrix/mau/live"]
 HealthLogDestination=events_logger
-Image=dock.mau.dev/mautrix/gmessages:v0.2605.0
+Image=dock.mau.dev/mautrix/gmessages:v26.05
 # Network ist handled by pod
 #Network=backend.network
 Pod=matrix.pod
