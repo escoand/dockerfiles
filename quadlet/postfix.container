@@ -10,7 +10,7 @@ EnvironmentFile=/var/mnt/data/%N.env
 Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
 Volume=opendkim:/etc/opendkim/keys
-Volume=/var/mnt/data/postfix:/etc/postfix
+Volume=/var/mnt/data/postfix:/etc/postfix:z
 
 [Install]
 WantedBy=default.target
