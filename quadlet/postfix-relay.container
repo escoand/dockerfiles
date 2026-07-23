@@ -1,0 +1,17 @@
+[Unit]
+Description=Postfix Mail Relay
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+AddCapability=NET_BIND_SERVICE
+ContainerName=postfix-relay
+Environment=HOSTNAME=%H
+EnvironmentFile=/var/mnt/data/%N.env
+Exec=/usr/sbin/postfix start-fg
+Image=docker.io/boky/postfix:v5.1.0-alpine
+PublishPort=25:25
+Volume=/var/mnt/data/postfix:/etc/opendkim/keys
+
+[Install]
+WantedBy=default.target

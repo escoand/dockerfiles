@@ -17,6 +17,7 @@ jobs:
       - name: Build Dockerfiles
         run: |
           for df in docker/**/Dockerfile; do
+            echo "$df" | grep -qw hugo && continue
             dir=$(dirname "$df")
             tag=$(basename "$dir" | tr '[:upper:]' '[:lower:]')
             echo "Building $df"

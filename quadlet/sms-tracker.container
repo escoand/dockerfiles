@@ -3,15 +3,13 @@ Description=SMS Tracker
 
 [Container]
 ContainerName=sms-tracker
+EnvironmentFile=/var/mnt/data/%N.env
 Image=localhost/sms-tracker
 Label=caddy={$TRACKER_DOMAIN}
 Label=caddy.@nonhook.not="path /api/receive"
 Label=caddy.basic_auth=@nonhook
 Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 8000}}"
-Secret=TRACKER_API_AUTHENTICATION,type=env,target=API_AUTHENTICATION
-Secret=TRACKER_API_ENCRYPTION,type=env,target=API_ENCRYPTION
-Secret=TRACKER_API_MESSAGE,type=env,target=API_MESSAGE
 Network=podman
 PodmanArgs=--cpus=1 --memory=128m
 Pull=never

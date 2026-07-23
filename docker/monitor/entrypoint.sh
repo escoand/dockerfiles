@@ -13,6 +13,16 @@ if [ -n "$MATRIX_HOST" ] && [ -n "$MATRIX_USER" ] && [ -n "$MATRIX_PASSWORD" ]; 
     )
 fi
 
+api_request() {
+    curl -fNsS \
+        --unix-socket /var/run/docker.sock \
+        "http://localhost/$1"
+}
+
+api_logs() {
+    api_request "containers/$1/logs?stdout=1&stderr=1&tail=10"
+}
+
 send_mail() {
     {
         echo "Subject: Docker events"
@@ -40,6 +50,10 @@ send_matrix() {
         -H "Authorization: Bearer $MATRIX_ACCESS_TOKEN" \
         "$MATRIX_HOST/_matrix/client/v3/rooms/$MATRIX_ROOM_ID/send/m.room.message/$UUID"
     rm -f "$TMP"
+}
+
+send_ntfy() {
+    curl -fsS -XPOST --data-binary @- "$NTFY_URL"
 }
 
 send_ntfy() {

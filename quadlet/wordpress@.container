@@ -1,0 +1,24 @@
+[Unit]
+Description=Wordpress %i
+After=mariadb.service
+Requires=mariadb.service
+
+[Container]
+ContainerName=wordpress-%i
+Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');define('WP_CACHE',true);"
+Environment=WORDPRESS_DB_HOST=mariadb
+EnvironmentFile=/var/mnt/data/%N.env
+HealthCmd=["curl", "-fsS", "http://localhost"]
+Image=docker.io/library/wordpress:7.0.2-apache
+Label=caddy={$DOMAIN_%i}
+Label=caddy.reverse_proxy={{upstreams}}
+Network=podman
+Network=backend.network
+PodmanArgs=--cpus=1 --memory=512m
+Volume=wordpress_%i:/var/www/html/wp-content:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

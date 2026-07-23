@@ -1,0 +1,12 @@
+[Unit]
+Description=Build Hugo image %i
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=podman build \
+    --tag localhost/hugo-%i \
+    --build-arg-file /var/mnt/data/%N.env \
+    --secret id=git_ssh_key,src=/var/mnt/data/id_ed25519 \
+    %h/git/infra/docker/hugo
+RemainAfterExit=yes

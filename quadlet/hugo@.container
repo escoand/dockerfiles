@@ -4,8 +4,9 @@ Requires=hugo-build@%i.service
 After=hugo-build@%i.service
 
 [Container]
+AddCapability=NET_BIND_SERVICE
 ContainerName=hugo-%i
-HealthCmd=["curl", "-fsS", "http://localhost"]
+#HealthCmd=["curl", "-fsS", "http://localhost"]
 Image=localhost/hugo-%i
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
