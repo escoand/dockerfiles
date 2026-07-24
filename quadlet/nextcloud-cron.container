@@ -4,9 +4,10 @@ After=mariadb.service redis.service
 Requires=mariadb.service redis.service
 
 [Container]
+AutoUpdate=registry
 ContainerName=nextcloud-cron
 Entrypoint=/cron.sh
-Image=docker.io/library/nextcloud:34.0.1
+Image=docker.io/nextcloud:34
 Pod=nextcloud.pod
 PodmanArgs=--cpus=1 --memory=128m
 Network=backend.network
