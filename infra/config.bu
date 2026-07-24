@@ -32,3 +32,6 @@ storage:
       target: /etc/systemd/system/fail2ban-fw.socket
     - path: /etc/systemd/user/default.target.wants/quadlet-sync.timer
       target: /etc/systemd/user/quadlet-sync.timer
+    # podman auto update
+    - path: /etc/systemd/user/timers.target.wants/podman-auto-update.timer
+      target: /usr/lib/systemd/user/podman-auto-update.timer
