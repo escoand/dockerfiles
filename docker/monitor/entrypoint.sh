@@ -56,10 +56,6 @@ send_ntfy() {
     curl -fsS -XPOST --data-binary @- "$NTFY_URL"
 }
 
-send_ntfy() {
-    curl -fsS -XPOST --data-binary @- "$NTFY_URL"
-}
-
 # watch events
 while true; do
     curl -fNsS \
