@@ -19,15 +19,9 @@ jobs:
       - name: Prepare
         run: |
           set -e
-          mkdir -p \
-            /etc/containers/systemd/
-          cp \
-            quadlet/* \
-            /etc/containers/systemd/
-          cp \
-            filesystem/etc/systemd/*/* \
-            /etc/systemd/system/
-          chmod +x /etc/rc.d/rc.local
+          mkdir -p /etc/containers/systemd/
+          cp quadlet/* /etc/containers/systemd/
+          cp filesystem/etc/systemd/*/* /etc/systemd/system/
           sed -i "s#/usr/local/bin#$PWD/filesystem&#" filesystem/etc/systemd/*/*
 
       - name: Verify units
