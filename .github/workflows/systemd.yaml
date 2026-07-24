@@ -21,18 +21,14 @@ jobs:
           set -e
           mkdir -p \
             /etc/containers/systemd/
-          mkdir \
-            /usr/local/bin/
           cp \
             quadlet/* \
             /etc/containers/systemd/
           cp \
             filesystem/etc/systemd/*/* \
             /etc/systemd/system/
-          cp \
-            filesystem/usr/local/bin/* \
-            /usr/local/bin/
           chmod +x /etc/rc.d/rc.local
+          sed -i "s#/usr/local/bin#$PWD/filesystem&#" filesystem/etc/systemd/*/*
 
       - name: Verify units
         run: |
