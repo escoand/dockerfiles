@@ -2,10 +2,11 @@
 Description=Cockpit
 
 [Container]
+AutoUpdate=registry
 ContainerName=cockpit
 #Environment=COCKPIT_SSH_KEY_PATH=/.ssh/id_rsa
 Exec=/container/label-run --no-tls
-Image=quay.io/cockpit/ws:364
+Image=quay.io/cockpit/ws
 Label=caddy={$COCKPIT_DOMAIN}
 Label=caddy.reverse_proxy="{{upstreams 9090}}"
 Network=podman

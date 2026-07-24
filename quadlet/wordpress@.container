@@ -4,12 +4,14 @@ After=mariadb.service
 Requires=mariadb.service
 
 [Container]
+AutoUpdate=registry
 ContainerName=wordpress-%i
 Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');define('WP_CACHE',true);"
 Environment=WORDPRESS_DB_HOST=mariadb
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=["curl", "-fsS", "http://localhost"]
-Image=docker.io/library/wordpress:7.0.2-apache
+HealthLogDestination=events_logger
+Image=docker.io/wordpress:7.0-apache
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Network=podman

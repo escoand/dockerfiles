@@ -7,7 +7,7 @@ ContainerName=mariadb
 Environment=MARIADB_AUTO_UPGRADE=TRUE
 EnvironmentFile=/var/mnt/data/%N.env
 #Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
-#HealthCmd=["healthcheck.sh","--su-mysql","--connect"]
+HealthCmd=sh -c 'mariadb-admin ping -u root -p"${MARIADB_ROOT_PASSWORD}"'
 HealthLogDestination=events_logger
 Image=reg.mini.dev/mariadb:12.3
 Network=backend.network

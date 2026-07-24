@@ -2,6 +2,7 @@
 Description=tuwunel
 
 [Container]
+AutoUpdate=registry
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
 EnvironmentFile=/var/mnt/data/%N.env

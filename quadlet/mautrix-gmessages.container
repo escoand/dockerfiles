@@ -3,10 +3,11 @@ Before=tuwunel.service
 Description=mautrix-gmessages
 
 [Container]
+AutoUpdate=registry
 ContainerName=mautrix-gmessages
 HealthCmd=["curl", "-fsS", "http://localhost:29336/_matrix/mau/live"]
 HealthLogDestination=events_logger
-Image=dock.mau.dev/mautrix/gmessages:v26.05
+Image=dock.mau.dev/mautrix/gmessages
 # Network ist handled by pod
 #Network=backend.network
 Pod=matrix.pod
