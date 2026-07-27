@@ -61,6 +61,7 @@ Volume=nextcloud_app:/var/www/html:z
 Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z
 Volume=nextcloud_data:/var/www/html/data:z
+Volume=/dev/log:/dev/log
 Volume=/etc/localtime:/etc/localtime:ro
 
 [Service]
