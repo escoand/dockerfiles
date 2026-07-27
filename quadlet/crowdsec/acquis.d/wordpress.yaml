@@ -1,0 +1,5 @@
+source: journalctl
+journalctl_filter:
+  - "_SYSTEMD_USER_SLICE=app-wordpress.slice"
+labels:
+  type: syslog
