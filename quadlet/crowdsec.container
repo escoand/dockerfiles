@@ -5,7 +5,7 @@ Description=CrowdSec
 AutoUpdate=registry
 ContainerName=crowdsec
 GroupAdd=keep-groups
-Environment=COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd crowdsecurity/caddy crowdsecurity/wordpress
+Environment=COLLECTIONS=crowdsecurity/linux crowdsecurity/apache2 crowdsecurity/caddy crowdsecurity/nextcloud crowdsecurity/sshd crowdsecurity/wordpress
 HealthCmd=["cscli","lapi","status"]
 HealthLogDestination=events_logger
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
