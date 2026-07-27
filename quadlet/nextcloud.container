@@ -53,6 +53,7 @@ Label=caddy_2.reverse_proxy.header_up_0="X-Real-IP {remote_host}"
 # redirect
 Label=caddy_3={$REDIR_DOMAIN}
 Label=caddy_3.redir={$REDIR_TARGET}
+LogOpt=SYSLOG_IDENTIFIER=apache2
 Network=podman
 Network=backend.network
 Pod=nextcloud.pod
