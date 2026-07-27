@@ -23,10 +23,9 @@ Label=caddy_0.handle_path.handle.header_0="Access-Control-Allow-Methods *"
 Label=caddy_0.handle_path.handle.header_1="Access-Control-Allow-Origin *"
 Label=caddy_0.handle_path.handle.respond=204
 Label=caddy_0.handle_path.reverse_proxy="{args[0]}"
-Label=caddy_0.handle_path.reverse_proxy.header_up_0="Host {upstream_hostport}"
-Label=caddy_0.handle_path.reverse_proxy.header_up_1="-X-Forwarded-For"
-Label=caddy_0.handle_path.reverse_proxy.header_up_2="-X-Forwarded-Host"
-Label=caddy_0.handle_path.reverse_proxy.header_up_3="-X-Forwarded-Proto"
+Label=caddy_0.handle_path.reverse_proxy.header_up_0="-X-Forwarded-For"
+Label=caddy_0.handle_path.reverse_proxy.header_up_1="-X-Forwarded-Host"
+Label=caddy_0.handle_path.reverse_proxy.header_up_2="-X-Forwarded-Proto"
 Label=caddy_0.handle_path.reverse_proxy.header_down_0="Access-Control-Allow-Methods *"
 Label=caddy_0.handle_path.reverse_proxy.header_down_1="Access-Control-Allow-Origin *"
 # CORS for internal
