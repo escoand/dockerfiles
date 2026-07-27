@@ -3,4 +3,4 @@ journalctl_filter:
   - "_SYSTEMD_USER_UNIT=nextcloud.service"
   - "SYSLOG_IDENTIFIER=Nextcloud"
 labels:
-  type: nextcloud
+  type: syslog
