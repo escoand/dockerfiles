@@ -61,57 +61,52 @@ ban() {
 
 unban() {
     if [ "$CMD" = ipset ]; then
-    ipset -exist -quiet del $NAME "$1"
+        ipset -exist -quiet del $NAME "$1"
     elif [ "$CMD" = nft ]; then
         nft delete element inet $NAME $NAME "{ $1 }"
     fi >&2
 }
 
-dispatch() {
-    action=$1
-    ip=${2-}
+{
+    if read -r action ip; then
+        [ -n "$action" ] || {
+            echo FAIL
+            return 0
+        }
 
-    [ -n "$action" ] || {
-        printf 'FAIL\n'
-        return 0
-    }
+        echo "$action${ip:+ $ip}" >&2
 
-    echo "$action${ip:+ $ip}" >&2
-
-    case "$action" in
+        case "$action" in
         START)
             if check; then
-                printf 'OK\n'
+                echo OK
             else
-                start && printf 'OK\n' || printf 'FAIL\n'
+                start && echo OK || echo FAIL
             fi
             ;;
         STOP)
             if check; then
-                stop && printf 'OK\n' || printf 'FAIL\n'
+                stop && echo OK || echo FAIL
             else
-                printf 'OK\n'
+                echo OK
             fi
             ;;
         CHECK)
-            check && printf 'OK\n' || printf 'FAIL\n'
+            check && echo OK || echo FAIL
             ;;
         BAN)
-            ban "$ip" && printf 'OK\n' || printf 'FAIL\n'
+            ban "$ip" && echo OK || echo FAIL
             ;;
         UNBAN)
-            unban "$ip" && printf 'OK\n' || printf 'FAIL\n'
+            unban "$ip" && echo OK || echo FAIL
             ;;
-        *)
-            printf 'FAIL\n'
-            ;;
-    esac
-}
 
-{
-    if IFS= read -r action param; then
-        dispatch "${action}" "${param}"
+        *)
+            echo FAIL
+            ;;
+        esac
     else
-        printf 'FAIL\n'
-    fi 2>&1 1>&3 | logger -t fail2ban-fw
+        echo FAIL
+    fi 2>&1 1>&3 |
+        logger -t fail2ban-fw
 } 3>&1
