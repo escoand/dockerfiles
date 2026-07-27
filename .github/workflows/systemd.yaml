@@ -40,7 +40,7 @@ jobs:
               *.network)   unit=$dir/${filename%.network}-network.service ;;
               *.pod)       unit=$dir/${filename%.pod}-pod.service ;;
               *.volume)    unit=$dir/${filename%.volume}-volume.service ;;
-              *)           unit=$dir/$filename ;;
+              *)           continue ;;
             esac
             echo "# verify $file"
             systemd-analyze --generators=true verify "$unit" ||
