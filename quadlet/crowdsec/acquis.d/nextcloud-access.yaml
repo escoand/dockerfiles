@@ -1,6 +1,6 @@
 source: journalctl
 journalctl_filter:
   - "_SYSTEMD_USER_UNIT=nextcloud.service"
-  - "PRIORITY=6"
+  - "SYSLOG_IDENTIFIER=nextcloud"
 labels:
   type: apache2
