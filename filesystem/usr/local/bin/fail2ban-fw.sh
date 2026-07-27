@@ -7,8 +7,6 @@ FAMILY=ipv4
 CHAIN=INPUT_direct
 NAME=fail2ban
 BLOCKTYPE=DROP
-# internal
-skip=FALSE
 
 if command -v ipset >/dev/null; then
     CMD=ipset
@@ -69,51 +67,51 @@ unban() {
     fi >&2
 }
 
-urldecode() {
-    : "${*//+/ }"
-    echo -e "${_//%/\\x}"
-}
+dispatch() {
+    action=$1
+    ip=${2-}
 
-result() {
-    code=$1
-    shift
-    echo "  > result $code: $*" >&2
-    printf 'HTTP/1.1 %i %s\r\nConnection: close\r\n\r\n' "$code" "$*"
+    [ -n "$action" ] || {
+        printf 'FAIL\n'
+        return 0
+    }
+
+    echo "$action${ip:+ $ip}" >&2
+
+    case "$action" in
+        START)
+            if check; then
+                printf 'OK\n'
+            else
+                start && printf 'OK\n' || printf 'FAIL\n'
+            fi
+            ;;
+        STOP)
+            if check; then
+                stop && printf 'OK\n' || printf 'FAIL\n'
+            else
+                printf 'OK\n'
+            fi
+            ;;
+        CHECK)
+            check && printf 'OK\n' || printf 'FAIL\n'
+            ;;
+        BAN)
+            ban "$ip" && printf 'OK\n' || printf 'FAIL\n'
+            ;;
+        UNBAN)
+            unban "$ip" && printf 'OK\n' || printf 'FAIL\n'
+            ;;
+        *)
+            printf 'FAIL\n'
+            ;;
+    esac
 }
 
 {
-    while read -r method uri _; do
-        ip=$(urldecode "${uri#/}")
-        [ "$skip" != TRUE ] && echo "$method $ip" >&2
-        # end of headers
-        if [ -z "$method" ] || [ "$method" = $'\r' ]; then
-            break
-        # skip headers
-        elif [ "$skip" = TRUE ]; then
-            continue
-        # start
-        elif [ "$method" = START ] && check; then
-            result 200 OK
-        elif [ "$method" = START ]; then
-            start && result 200 OK || result 500 FAIL
-        # stop
-        elif [ "$method" = STOP ] && check; then
-            stop && result 200 OK || result 500 FAIL
-        elif [ "$method" = STOP ]; then
-            result 200 OK
-        # check
-        elif [ "$method" = CHECK ]; then
-            check && result 200 OK || result 500 FAIL
-        # ban
-        elif [ "$method" = BAN ]; then
-            ban "$ip" && result 200 OK || result 500 FAIL
-        # unban
-        elif [ "$method" = UNBAN ]; then
-            unban "$ip" && result 200 OK || result 500 FAIL
-        # invalid
-        else
-            result 405 Method Not Allowed
-        fi
-        skip=TRUE
-    done 2>&1 1>&3 | logger -t fail2ban-fw
+    if IFS= read -r action param; then
+        dispatch "${action}" "${param}"
+    else
+        printf 'FAIL\n'
+    fi 2>&1 1>&3 | logger -t fail2ban-fw
 } 3>&1

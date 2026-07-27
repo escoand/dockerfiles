@@ -9,9 +9,11 @@ HealthLogDestination=events_logger
 Image=localhost/fail2ban
 PodmanArgs=--cpus=1 --memory=128m
 SecurityLabelDisable=true
+Volume=/etc/machine-id:/etc/machine-id:ro
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/run/fail2ban-fw:/run/fail2ban-fw:ro
 Volume=/run/log/journal:/run/log/journal:ro
+Volume=/var/log/journal:/var/log/journal:ro
 Volume=fail2ban:/var/lib/fail2ban
 
 [Service]
