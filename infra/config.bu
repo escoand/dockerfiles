@@ -28,8 +28,6 @@ storage:
     - path: /etc/localtime
       target: /usr/share/zoneinfo/Europe/Berlin
     # enable services
-    - path: /etc/systemd/system/sockets.target.wants/fail2ban-fw.socket
-      target: /etc/systemd/system/fail2ban-fw.socket
     - path: /etc/systemd/user/default.target.wants/quadlet-sync.timer
       target: /etc/systemd/user/quadlet-sync.timer
     # podman auto update

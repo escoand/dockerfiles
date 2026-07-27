@@ -26,7 +26,7 @@ jobs:
 
       - name: Check image sizes
         run: |
-          for tag in fail2ban monitor; do
+          for tag in monitor; do
             size=$(docker image inspect "ci-$tag" --format='{{.Size}}')
             echo "ci-$tag: $((size / 1024 / 1024))MB"
             [ "$size" -lt 209715200 ] || { echo "Image too large"; exit 1; }

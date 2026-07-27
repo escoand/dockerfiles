@@ -20,7 +20,7 @@ jobs:
         run: |
           set -e
           mkdir -p /etc/containers/systemd/
-          cp quadlet/* /etc/containers/systemd/
+          cp -r quadlet/* /etc/containers/systemd/
           cp filesystem/etc/systemd/*/* /etc/systemd/system/
           sed -i "s#/usr/local/bin#$PWD/filesystem&#" filesystem/etc/systemd/*/*
 

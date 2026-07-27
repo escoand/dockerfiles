@@ -26,12 +26,6 @@ jobs:
 
       - uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ci-fail2ban
-          exit-code: '1'
-          severity: 'CRITICAL'
-
-      - uses: aquasecurity/trivy-action@v0.36.0
-        with:
           image-ref: ci-monitor
           exit-code: '1'
           severity: 'CRITICAL'
