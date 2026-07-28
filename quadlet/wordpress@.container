@@ -9,7 +9,7 @@ ContainerName=wordpress-%i
 Environment=WORDPRESS_CONFIG_EXTRA="@ini_set('memory_limit','256M');define('WP_CACHE',true);"
 Environment=WORDPRESS_DB_HOST=mariadb
 EnvironmentFile=/var/mnt/data/%N.env
-HealthCmd=["curl", "-fsS", "http://localhost"]
+HealthCmd=curl -fsS http://localhost
 HealthLogDestination=events_logger
 Image=docker.io/wordpress:7.0-apache
 Label=caddy={$DOMAIN_%i}

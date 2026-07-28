@@ -7,7 +7,7 @@ AutoUpdate=registry
 ContainerName=mautrix-whatsapp
 Environment=UID=991
 Environment=GID=991
-HealthCmd=["curl", "-fsS", "http://localhost:29318/_matrix/mau/live"]
+HealthCmd=curl -fsS http://localhost:29318/_matrix/mau/live
 HealthLogDestination=events_logger
 Image=dock.mau.dev/mautrix/whatsapp
 # Network ist handled by pod
