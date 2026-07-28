@@ -4,6 +4,7 @@ Description=Dozzle
 [Container]
 AutoUpdate=registry
 ContainerName=dozzle
+#Environment=DOZZLE_AUTH_PROVIDER=simle
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_ENABLE_SHELL=true
 #Environment=DOZZLE_REMOTE_HOST=tcp://journalctl-proxy:2375
@@ -18,6 +19,7 @@ Network=podman
 Network=backend.network
 PodmanArgs=--cpus=0.5 --memory=256m --privileged
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
+Volume=dozzle:/data
 
 [Service]
 Restart=always
