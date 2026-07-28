@@ -1,4 +1,5 @@
 [Pod]
+Label=dev.dozzle.group=nextcloud
 Network=backend.network
 Network=podman
 

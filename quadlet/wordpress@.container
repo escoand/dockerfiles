@@ -2,6 +2,7 @@
 Description=Wordpress %i
 After=mariadb.service
 Requires=mariadb.service
+BindsTo=mariadb.service
 
 [Container]
 AutoUpdate=registry

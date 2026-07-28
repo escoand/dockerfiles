@@ -16,7 +16,6 @@ Pull=never
 Volume=sms-tracker:/app/data:z
 
 [Service]
-ExecStartPre=podman build --tag localhost/sms-tracker https://github.com/escoand/sms-live-tracker.git
 Restart=always
 
 [Install]
