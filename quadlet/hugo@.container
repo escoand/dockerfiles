@@ -9,6 +9,7 @@ ContainerName=hugo-%i
 Image=localhost/hugo-%i
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
+Label=dev.dozzle.group=sites
 Network=podman
 PodmanArgs=--cpus=1 --memory=128m
 

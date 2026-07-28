@@ -15,6 +15,7 @@ HealthLogDestination=events_logger
 Image=docker.io/wordpress:7.0-apache
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
+Label=dev.dozzle.group=sites
 Network=podman
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=512m

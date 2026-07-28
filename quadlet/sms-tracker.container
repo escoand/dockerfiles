@@ -2,6 +2,7 @@
 Description=SMS Tracker
 
 [Container]
+AutoUpdate=local
 ContainerName=sms-tracker
 EnvironmentFile=/var/mnt/data/%N.env
 Image=localhost/sms-tracker
@@ -10,6 +11,7 @@ Label=caddy.@nonhook.not="path /api/receive"
 Label=caddy.basic_auth=@nonhook
 Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 8000}}"
+Label=dev.dozzle.group=sites
 Network=podman
 PodmanArgs=--cpus=1 --memory=128m
 Pull=never
