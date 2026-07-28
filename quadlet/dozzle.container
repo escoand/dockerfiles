@@ -4,7 +4,7 @@ Description=Dozzle
 [Container]
 AutoUpdate=registry
 ContainerName=dozzle
-#Environment=DOZZLE_AUTH_PROVIDER=simle
+Environment=DOZZLE_AUTH_PROVIDER=simle
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_ENABLE_SHELL=true
 #Environment=DOZZLE_REMOTE_HOST=tcp://journalctl-proxy:2375
@@ -13,7 +13,6 @@ HealthCmd=["/dozzle","healthcheck"]
 HealthLogDestination=events_logger
 Image=docker.io/amir20/dozzle:v10
 Label=caddy={$CONSOLE_DOMAIN}
-Label=caddy.basic_auth.{$CONSOLE_USER}={$CONSOLE_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
 Network=podman
 Network=backend.network
