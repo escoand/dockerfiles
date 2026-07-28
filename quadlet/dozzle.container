@@ -4,7 +4,7 @@ Description=Dozzle
 [Container]
 AutoUpdate=registry
 ContainerName=dozzle
-Environment=DOZZLE_AUTH_PROVIDER=simle
+Environment=DOZZLE_AUTH_PROVIDER=simple
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_ENABLE_SHELL=true
 #Environment=DOZZLE_REMOTE_HOST=tcp://journalctl-proxy:2375
