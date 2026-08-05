@@ -6,5 +6,5 @@
     "group:allNonMajor",
     ":separateMajorReleases"
   ],
-  "baseBranches": ["master", "coreos"]
+  "baseBranches": ["master"]
 }
