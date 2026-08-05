@@ -3,6 +3,7 @@ Description=Nextcloud cron
 After=mariadb.service redis.service
 Requires=mariadb.service redis.service
 BindsTo=mariadb.service redis.service
+PartOf=mariadb.service redis.service
 
 [Container]
 AutoUpdate=registry
