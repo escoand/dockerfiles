@@ -1,3 +1,10 @@
+[Unit]
+Description=Nextcloud Pod
+After=mariadb.service redis.service
+Requires=mariadb.service redis.service
+BindsTo=mariadb.service redis.service
+PartOf=mariadb.service redis.service
+
 [Pod]
 Label=dev.dozzle.group=nextcloud
 Network=backend.network
