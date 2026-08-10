@@ -8,6 +8,7 @@ Exec=docker-entrypoint.sh --appendonly no --protected-mode no --save ""
 Image=reg.mini.dev/redis:v8.10
 HealthCmd=redis-cli --raw incr ping
 HealthLogDestination=events_logger
+Label=dev.dozzle.group=nextcloud
 Network=backend.network
 PodmanArgs=--cpus=1 --memory=128m
 
