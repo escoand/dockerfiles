@@ -6,7 +6,7 @@ AutoUpdate=local
 ContainerName=sms-tracker
 EnvironmentFile=/var/mnt/data/%N.env
 Image=localhost/sms-tracker
-Label=caddy={$TRACKER_DOMAIN}
+Label=caddy={$DOMAIN_%N}
 Label=caddy.@nonhook.not="path /api/receive"
 Label=caddy.basic_auth=@nonhook
 Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}

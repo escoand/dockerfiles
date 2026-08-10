@@ -43,7 +43,7 @@ Label=caddy_1.handle.handle.respond=204
 Label=caddy_1.handle.header_0="Access-Control-Allow-Credentials true"
 Label=caddy_1.handle.header_1="Access-Control-Allow-Origin *"
 # generic
-Label=caddy_2={$NEXTCLOUD_DOMAIN}
+Label=caddy_2={$DOMAIN_%N}
 Label=caddy_2.@preflight="method OPTIONS"
 Label=caddy_2.import_0="cors_external https://ics.tools"
 Label=caddy_2.import_1="cors_external https://www.schule.sachsen.de"
@@ -53,7 +53,7 @@ Label=caddy_2.import_4="cors_internal /public.php/dav/files/*             PROPFI
 Label=caddy_2.reverse_proxy={{upstreams}}
 Label=caddy_2.reverse_proxy.header_up_0="X-Real-IP {remote_host}"
 # redirect
-Label=caddy_3={$REDIR_DOMAIN}
+Label=caddy_3={$DOMAIN_%N_REDIR}
 Label=caddy_3.redir={$REDIR_TARGET}
 Label=dev.dozzle.group=nextcloud
 Network=podman
