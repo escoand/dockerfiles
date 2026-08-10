@@ -1,0 +1,20 @@
+[Unit]
+Description=phpMyAdmin
+After=mariadb.service
+Requires=mariadb.service
+
+[Container]
+AutoUpdate=registry
+ContainerName=phpmyadmin
+Environment=PMA_HOST=mariadb
+Image=reg.mini.dev/phpmyadmin:v5
+Label=caddy=${DOMAIN_%N}
+Label=caddy.reverse_proxy="{{upstreams}}"
+Network=podman
+Network=backend.network
+Pod=nextcloud.pod
+PodmanArgs=--cpus=1 --memory=128m
+
+[Service]
+# Manual startup only - never auto-start or auto-restart
+Restart=no
