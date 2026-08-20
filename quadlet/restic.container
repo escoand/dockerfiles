@@ -4,12 +4,7 @@ Description=Restic
 [Container]
 AutoUpdate=registry
 ContainerName=restic
-# backup job runs periodically within container
-Environment=BACKUP_CRON="00 00 03 * * *"
-Environment=RESTIC_FORGET_ARGS="--keep-last 1 --prune"
-Environment=RESTIC_PROGRESS_FPS=0.1
 EnvironmentFile=/var/mnt/data/%N.env
-HostName=%H
 Image=docker.io/mazzolino/restic:1.8
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=%h/.ssh:/run/secrets/.ssh:ro
