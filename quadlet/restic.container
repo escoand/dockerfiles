@@ -7,7 +7,7 @@ ContainerName=restic
 EnvironmentFile=/var/mnt/data/%N.env
 Image=docker.io/mazzolino/restic:1.8
 Volume=/etc/localtime:/etc/localtime:ro
-Volume=%h/.ssh:/run/secrets/.ssh:ro
+Volume=%h/.ssh:/run/secrets/.ssh:ro,z
 Volume=%h/.local/share/containers/storage/volumes:/data:z
 
 [Service]
