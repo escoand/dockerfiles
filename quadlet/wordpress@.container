@@ -13,7 +13,7 @@ Environment=WORDPRESS_DB_HOST=mariadb
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=curl -fsS http://localhost
 HealthLogDestination=events_logger
-Image=docker.io/wordpress:7.0-apache
+Image=docker.io/wordpress:7.1-apache
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Label=dev.dozzle.group=sites
