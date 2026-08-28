@@ -8,7 +8,7 @@ AutoUpdate=registry
 ContainerName=phpmyadmin
 Environment=PMA_HOST=mariadb
 Image=reg.mini.dev/phpmyadmin:v5
-Label=caddy=${DOMAIN_%N}
+Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams}}"
 Network=podman
 Network=backend.network
