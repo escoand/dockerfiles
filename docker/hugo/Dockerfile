@@ -9,6 +9,7 @@ USER root
 # hadolint ignore=DL3018
 RUN apk add --no-cache git openssh
 
+ARG CACHEBUST=0
 RUN --mount=type=secret,id=git_ssh_key \
     mkdir -p /root/.ssh && \
     ssh-keyscan github.com >> /root/.ssh/known_hosts && \
