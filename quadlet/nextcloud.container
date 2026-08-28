@@ -19,7 +19,7 @@ HealthLogDestination=events_logger
 Image=docker.io/nextcloud:34
 # CORS for external
 Label=caddy_0=(cors_external)
-Label=caddy_0.handle_path="/{args[0]}/*"
+Label=caddy_0.handle_path="/proxy/{args[0]}/*"
 Label=caddy_0.handle_path.handle=@preflight
 Label=caddy_0.handle_path.handle.header_0="Access-Control-Allow-Methods *"
 Label=caddy_0.handle_path.handle.header_1="Access-Control-Allow-Origin *"
