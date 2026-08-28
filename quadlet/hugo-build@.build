@@ -1,0 +1,6 @@
+[Build]
+ContainerName=hugo-%i
+From=
+BuildArgFile=/var/mnt/data/%N.env
+Secret=id=git_ssh_key,src=/var/mnt/data/id_ed25519
+ContentDir=%h/git/infra/docker/hugo
