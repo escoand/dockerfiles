@@ -1,6 +1,6 @@
 [Build]
 ContainerName=hugo-%i
-BuildArg=CACHEBUST=%i
+BuildArg=CACHEBUST=%b
 BuildArgFile=/var/mnt/data/%N.env
 Secret=id=git_ssh_key,src=/var/mnt/data/id_ed25519
-SetWorkingDirectory=https://github.com/escoand/dockerfiles.git#master:docker/hugo
+ContentDir=https://github.com/escoand/infra.git/docker/hugo
