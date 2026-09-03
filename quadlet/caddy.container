@@ -20,7 +20,6 @@ Label=caddy_1.default_bind_0=fd/4
 Label=caddy_1.default_bind_0.protocols="h1 h2"
 Label=caddy_1.default_bind_1=fdgram/5
 Label=caddy_1.default_bind_1.protocols=h3
-Lable=dev.dozzle.icon=caddy
 Network=podman
 PodmanArgs=--cpus=1 --memory=128m --privileged
 Volume=caddy:/data
