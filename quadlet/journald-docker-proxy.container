@@ -15,7 +15,7 @@ Tmpfs=/run:size=64M
 Tmpfs=/run/lock:size=4M
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=%t/bus:/run/user/1000/bus
-Volume=/run/log/journal:/run/log/journal:ro
+Volume=/var/log/journal:/run/log/journal:ro
 
 [Service]
 Restart=always
