@@ -6,7 +6,7 @@ AutoUpdate=registry
 ContainerName=tuwunel
 Environment=TUWUNEL_ADDRESS=0.0.0.0
 EnvironmentFile=/var/mnt/data/%N.env
-#HealthCmd=curl -fsS http://localhost:8008/_tuwunel/server_version
+HealthCmd=["tuwunel","--health-check"]
 Image=docker.io/jevolk/tuwunel:v1.9.0
 Label=caddy_0={$DOMAIN_%N}
 Label=caddy_0.respond_0='/.well-known/matrix/server {"m.server":"chat.{$WORDPRESS1_DOMAIN}:443"}'
