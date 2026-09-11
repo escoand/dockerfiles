@@ -5,6 +5,7 @@ Description=SMS Tracker
 AutoUpdate=local
 ContainerName=sms-tracker
 EnvironmentFile=/var/mnt/data/%N.env
+HealthCmd=["deno","eval","try { await fetch('http://localhost:8000/health'); } catch { Deno.exit(1); }"]
 Image=localhost/sms-tracker
 Label=caddy={$DOMAIN_%N}
 Label=caddy.@nonhook.not="path /api/receive"
