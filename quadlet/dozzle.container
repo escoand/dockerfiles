@@ -11,7 +11,7 @@ Environment=DOZZLE_REMOTE_HOST=tcp://journald-docker-proxy:2375
 Environment=DOZZLE_NO_ANALYTICS=true
 HealthCmd=/dozzle healthcheck
 HealthLogDestination=events_logger
-Image=docker.io/amir20/dozzle:v10
+Image=docker.io/amir20/dozzle:v11
 Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
 Network=podman
