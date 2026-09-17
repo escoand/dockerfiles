@@ -9,7 +9,7 @@ PartOf=mariadb.service redis.service
 AutoUpdate=registry
 ContainerName=nextcloud-cron
 Entrypoint=/cron.sh
-Image=docker.io/nextcloud:34
+Image=docker.io/nextcloud:35
 Label=dev.dozzle.group=nextcloud
 Pod=nextcloud.pod
 PodmanArgs=--cpus=1 --memory=128m
