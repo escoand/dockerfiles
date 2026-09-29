@@ -7,7 +7,15 @@ Wants=network-online.target
 AutoUpdate=registry
 AddCapability=NET_BIND_SERVICE
 ContainerName=postfix
-EnvironmentFile=/var/mnt/data/%N.env
+Environment=POSTFIX_mydestination=
+Environment=POSTFIX_relay_domains=
+Environment=POSTFIX_smtpd_client_restrictions=permit
+Environment=POSTFIX_smtpd_helo_required=yes
+Environment=POSTFIX_smtpd_helo_restrictions=reject_invalid_helo_hostname,permit
+Environment=POSTFIX_smtpd_sender_restrictions=permit
+Environment=POSTFIX_smtpd_relay_restrictions=reject_unauth_destination
+Environment=POSTFIX_smtpd_recipient_restrictions=reject_non_fqdn_recipient,reject_unknown_recipient_domain,check_recipient_access lmdb:/etc/postfix/recipient_access,reject
+Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
 Volume=opendkim:/etc/opendkim/keys
