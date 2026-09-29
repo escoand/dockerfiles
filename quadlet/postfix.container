@@ -7,6 +7,7 @@ Wants=network-online.target
 AutoUpdate=registry
 AddCapability=NET_BIND_SERVICE
 ContainerName=postfix
+Environment=ALLOW_EMPTY_SENDER_DOMAINS=true
 Environment=POSTFIX_mydestination=
 Environment=POSTFIX_relay_domains=
 Environment=POSTFIX_smtpd_client_restrictions=permit
