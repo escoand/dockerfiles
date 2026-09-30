@@ -11,6 +11,7 @@ EnvironmentFile=/var/mnt/data/%N.env
 Environment=ALLOW_EMPTY_SENDER_DOMAINS=true
 Environment=POSTFIX_mydestination=
 Environment=POSTFIX_relay_domains=
+Environment=POSTFIX_smtpd_client_restrictions=permit
 Environment=POSTFIX_smtpd_helo_required=yes
 Environment=POSTFIX_smtpd_helo_restrictions=reject_invalid_helo_hostname
 Environment=POSTFIX_smtpd_relay_restrictions=reject_unauth_destination
