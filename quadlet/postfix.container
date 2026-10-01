@@ -28,7 +28,7 @@ Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
 # fails: chmod /scripts/*
 #ReadOnly=true
-NoNewPrivileges=true
+#NoNewPrivileges=true
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
 
 [Install]
