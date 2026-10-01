@@ -28,7 +28,6 @@ Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
 ReadOnly=true
 Tmpfs=/etc/opendkim
-Tmpfs=/etc/postfix
 Tmpfs=/etc/rspamd
 Tmpfs=/var/lib/postfix
 Tmpfs=/var/lib/rspamd
