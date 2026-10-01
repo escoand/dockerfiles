@@ -5,6 +5,7 @@ Wants=network-online.target
 
 [Container]
 AddCapability=NET_BIND_SERVICE
+AddCapability=SETGID
 AddCapability=SETUID
 AutoUpdate=registry
 ContainerName=postfix
