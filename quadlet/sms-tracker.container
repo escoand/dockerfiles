@@ -19,7 +19,7 @@ NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m
 Pull=never
 ReadOnly=true
-Volume=sms-tracker:/app/data:z
+Volume=sms-tracker:/app/data:Z
 
 [Service]
 Restart=always
