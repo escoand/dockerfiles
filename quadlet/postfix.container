@@ -26,16 +26,10 @@ Environment=POSTFIX_smtpd_sender_restrictions=permit
 Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
-ReadOnly=true
-Tmpfs=/etc/opendkim
-Tmpfs=/etc/rspamd
-Tmpfs=/scripts
-Tmpfs=/var/lib/postfix
-Tmpfs=/var/lib/rspamd
-Tmpfs=/var/run
+# fails: chmod /scripts/*
+#ReadOnly=true
 NoNewPrivileges=true
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
-Volume=postfix:/var/spool/postfix:Z
 
 [Install]
 WantedBy=default.target
