@@ -4,6 +4,7 @@ Description=Dozzle
 [Container]
 AutoUpdate=registry
 ContainerName=dozzle
+DropCapability=All
 Environment=DOZZLE_AUTH_PROVIDER=simple
 Environment=DOZZLE_ENABLE_ACTIONS=true
 Environment=DOZZLE_ENABLE_SHELL=true
@@ -17,9 +18,11 @@ Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
 Network=podman
 Network=backend.network
+NoNewPrivileges=true
 PodmanArgs=--cpus=0.5 --memory=256m --privileged
+ReadOnly=true
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
-Volume=dozzle:/data
+Volume=dozzle:/data:Z
 
 [Service]
 Restart=always
