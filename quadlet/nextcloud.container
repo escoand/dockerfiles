@@ -8,6 +8,7 @@ PartOf=mariadb.service redis.service
 [Container]
 AutoUpdate=registry
 ContainerName=nextcloud
+#DropCapability=All
 Environment=MYSQL_HOST=mariadb
 Environment=NEXTCLOUD_INIT_HTACCESS=TRUE
 Environment=NEXTCLOUD_TRUSTED_PROXIES=10.88.0.0/24
@@ -57,13 +58,14 @@ Label=caddy_3.redir={$REDIR_TARGET}
 Label=dev.dozzle.group=nextcloud
 Network=podman
 Network=backend.network
+NoNewPrivileges=true
 Pod=nextcloud.pod
 PodmanArgs=--cpus=2 --memory=512m
-Volume=nextcloud_app:/var/www/html:z
-Volume=nextcloud_apps:/var/www/html/custom_apps:z
-Volume=nextcloud_config:/var/www/html/config:z
-Volume=nextcloud_data:/var/www/html/data:z
-Volume=/dev/log:/dev/log
+ReadOnly=true
+Volume=nextcloud_app:/var/www/html:Z
+Volume=nextcloud_apps:/var/www/html/custom_apps:Z
+Volume=nextcloud_config:/var/www/html/config:Z
+Volume=nextcloud_data:/var/www/html/data:Z
 Volume=/etc/localtime:/etc/localtime:ro
 
 [Service]
