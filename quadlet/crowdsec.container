@@ -10,8 +10,6 @@ GroupAdd=keep-groups
 HealthCmd=["cscli","lapi","status"]
 HealthLogDestination=events_logger
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
-Label=caddy={$DOMAIN_phpmyadmin}
-Label=caddy.reverse_proxy="{{upstreams 12345}}"
 Network=podman
 NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=256m
