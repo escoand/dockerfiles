@@ -7,8 +7,10 @@ Wants=network-online.target
 AutoUpdate=registry
 AddCapability=NET_BIND_SERVICE
 ContainerName=postfix
+DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
 Environment=ALLOW_EMPTY_SENDER_DOMAINS=true
+Environment=ANONYMIZE_EMAILS=true
 Environment=POSTFIX_mydestination=
 Environment=POSTFIX_relay_domains=
 Environment=POSTFIX_smtpd_client_restrictions=permit
@@ -21,8 +23,11 @@ Environment=POSTFIX_smtpd_sender_restrictions=permit
 # After editing /var/mnt/data/postfix/virtual, run: postmap lmdb:/etc/postfix/virtual
 Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
+NoNewPrivileges=true
 PublishPort=25:25
-Volume=/var/mnt/data/postfix:/etc/postfix:z
+ReadOnly=true
+Volume=/var/mnt/data/postfix:/etc/postfix:Z
+Volume=postfix:/var/spool/postfix:Z
 
 [Install]
 WantedBy=default.target
