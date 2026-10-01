@@ -4,21 +4,24 @@ Description=CrowdSec
 [Container]
 AutoUpdate=registry
 ContainerName=crowdsec
+DropCapability=All
 GroupAdd=keep-groups
 Environment=COLLECTIONS=crowdsecurity/apache2 crowdsecurity/caddy crowdsecurity/linux crowdsecurity/mysql crowdsecurity/nextcloud crowdsecurity/postfix crowdsecurity/sshd crowdsecurity/wordpress
 HealthCmd=["cscli","lapi","status"]
 HealthLogDestination=events_logger
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
+NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=256m
 PublishPort=127.0.0.1:12345:8080
+ReadOnly=true
 SecurityLabelDisable=true
 Volume=/etc/localtime:/etc/localtime:ro
 Volume=/etc/machine-id:/etc/machine-id:ro
 Volume=/run/log/journal:/run/log/journal:ro
 Volume=/var/log/journal:/var/log/journal:ro
 Volume=%h/.config/containers/systemd/crowdsec/acquis.d:/etc/crowdsec/acquis.d:z
-Volume=crowdsec_config:/etc/crowdsec
-Volume=crowdsec_data:/var/lib/crowdsec/data
+Volume=crowdsec_config:/etc/crowdsec:Z
+Volume=crowdsec_data:/var/lib/crowdsec/data:Z
 
 [Service]
 Restart=always
