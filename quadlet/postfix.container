@@ -9,7 +9,7 @@ AddCapability=SETGID
 AddCapability=SETUID
 AutoUpdate=registry
 ContainerName=postfix
-DropCapability=All
+#DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
 Environment=ALLOW_EMPTY_SENDER_DOMAINS=true
 Environment=ANONYMIZE_EMAILS=true
