@@ -6,6 +6,8 @@ BindsTo=mariadb.service redis.service
 PartOf=mariadb.service redis.service
 
 [Container]
+AddCapability=SETGID
+AddCapability=SETUID
 AutoUpdate=registry
 ContainerName=nextcloud-cron
 DropCapability=All
