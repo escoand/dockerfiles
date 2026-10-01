@@ -26,7 +26,7 @@ NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m --privileged
 ReadOnly=true
 Tmpfs=/config/caddy
-Volume=caddy:/data:Z
+Volume=caddy:/data/caddy:Z
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 
 [Service]
