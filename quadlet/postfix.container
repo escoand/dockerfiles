@@ -29,6 +29,7 @@ PublishPort=25:25
 ReadOnly=true
 Tmpfs=/etc/opendkim
 Tmpfs=/etc/rspamd
+Tmpfs=/scripts
 Tmpfs=/var/lib/postfix
 Tmpfs=/var/lib/rspamd
 Tmpfs=/var/run
