@@ -4,13 +4,16 @@ Description=Redis
 [Container]
 AutoUpdate=registry
 ContainerName=redis
+DropCapability=All
 Exec=docker-entrypoint.sh --appendonly no --protected-mode no --save ""
 Image=reg.mini.dev/redis:v8.10
 HealthCmd=["redis-cli","--raw","incr","ping"]
 HealthLogDestination=events_logger
 Label=dev.dozzle.group=nextcloud
 Network=backend.network
+NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m
+ReadOnly=true
 
 [Service]
 Restart=always
