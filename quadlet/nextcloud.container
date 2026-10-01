@@ -62,6 +62,7 @@ NoNewPrivileges=true
 Pod=nextcloud.pod
 PodmanArgs=--cpus=2 --memory=512m
 ReadOnly=true
+Tmpfs=/usr/local/etc/php/conf.d/
 Volume=nextcloud_app:/var/www/html:Z
 Volume=nextcloud_apps:/var/www/html/custom_apps:Z
 Volume=nextcloud_config:/var/www/html/config:Z
