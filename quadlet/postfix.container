@@ -25,7 +25,6 @@ Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
 NoNewPrivileges=true
 PublishPort=25:25
-ReadOnly=true
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
 Volume=postfix:/var/spool/postfix:Z
 
