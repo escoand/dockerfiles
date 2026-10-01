@@ -5,14 +5,16 @@ Description=CrowdSec
 AutoUpdate=registry
 ContainerName=crowdsec
 DropCapability=All
-GroupAdd=keep-groups
 Environment=COLLECTIONS=crowdsecurity/apache2 crowdsecurity/caddy crowdsecurity/linux crowdsecurity/mysql crowdsecurity/nextcloud crowdsecurity/postfix crowdsecurity/sshd crowdsecurity/wordpress
+GroupAdd=keep-groups
 HealthCmd=["cscli","lapi","status"]
 HealthLogDestination=events_logger
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
+Label=caddy={$DOMAIN_phpmyadmin}
+Label=caddy.reverse_proxy="{{upstreams 12345}}"
+Network=podman
 NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=256m
-PublishPort=127.0.0.1:12345:8080
 ReadOnly=true
 SecurityLabelDisable=true
 Volume=/etc/localtime:/etc/localtime:ro
