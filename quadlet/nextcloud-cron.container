@@ -8,12 +8,15 @@ PartOf=mariadb.service redis.service
 [Container]
 AutoUpdate=registry
 ContainerName=nextcloud-cron
+DropCapability=All
 Entrypoint=/cron.sh
 Image=docker.io/nextcloud:35
 Label=dev.dozzle.group=nextcloud
 Pod=nextcloud.pod
 PodmanArgs=--cpus=1 --memory=128m
 Network=backend.network
+NoNewPrivileges=true
+ReadOnly=true
 Volume=nextcloud_app:/var/www/html:z
 Volume=nextcloud_apps:/var/www/html/custom_apps:z
 Volume=nextcloud_config:/var/www/html/config:z
