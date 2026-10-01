@@ -23,7 +23,6 @@ Environment=POSTFIX_smtpd_sender_restrictions=permit
 # After editing /var/mnt/data/postfix/virtual, run: postmap lmdb:/etc/postfix/virtual
 Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
-NoNewPrivileges=true
 PublishPort=25:25
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
 Volume=postfix:/var/spool/postfix:Z
