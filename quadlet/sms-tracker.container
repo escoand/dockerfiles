@@ -4,6 +4,7 @@ Description=SMS Tracker
 [Container]
 AutoUpdate=local
 ContainerName=sms-tracker
+DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=["deno","eval","try { await fetch('http://localhost:8000'); } catch { Deno.exit(1); }"]
 Image=localhost/sms-tracker
@@ -14,8 +15,10 @@ Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 8000}}"
 Label=dev.dozzle.group=sites
 Network=podman
+NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m
 Pull=never
+ReadOnly=true
 Volume=sms-tracker:/app/data:z
 
 [Service]
