@@ -4,7 +4,7 @@ Description=mariadb
 [Container]
 AutoUpdate=registry
 ContainerName=mariadb
-DropCapability=All
+#DropCapability=All
 Environment=MARIADB_AUTO_UPGRADE=TRUE
 EnvironmentFile=/var/mnt/data/%N.env
 #Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
@@ -12,10 +12,10 @@ HealthCmd=mariadb-admin ping -u root -p"$MARIADB_ROOT_PASSWORD"
 HealthLogDestination=events_logger
 Image=reg.mini.dev/mariadb:12.3
 Network=backend.network
-NoNewPrivileges=true
+#NoNewPrivileges=true
 PodmanArgs=--cpus=2 --memory=2g
-ReadOnly=true
-Tmpfs=/var/tmp:rw,mode=1777
+#ReadOnly=true
+#Tmpfs=/var/tmp:rw,mode=1777
 Volume=mariadb:/var/lib/mysql:Z
 
 [Service]
