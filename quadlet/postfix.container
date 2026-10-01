@@ -4,8 +4,9 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
+AddCapability=NET_BIND_SERVICE
+AddCapability=SETUID
 AutoUpdate=registry
-AddCapability=NET_BIND_SERVICE SETUID
 ContainerName=postfix
 DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
@@ -24,6 +25,13 @@ Environment=POSTFIX_smtpd_sender_restrictions=permit
 Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:v5.1.0-alpine
 PublishPort=25:25
+ReadOnly=true
+Tmpfs=/etc/opendkim
+Tmpfs=/etc/postfix
+Tmpfs=/etc/rspamd
+Tmpfs=/var/lib/postfix
+Tmpfs=/var/lib/rspamd
+Tmpfs=/var/run
 NoNewPrivileges=true
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
 Volume=postfix:/var/spool/postfix:Z
