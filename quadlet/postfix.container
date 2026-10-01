@@ -30,7 +30,6 @@ PublishPort=25:25
 #ReadOnly=true
 NoNewPrivileges=true
 Volume=/var/mnt/data/postfix:/etc/postfix:Z
-Volume=postfix:/var/spool/postfix:Z
 
 [Install]
 WantedBy=default.target
