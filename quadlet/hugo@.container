@@ -16,6 +16,8 @@ Network=podman
 NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m
 ReadOnly=true
+Tmpfs=/config/caddy
+Tmpfs=/data/caddy
 
 [Service]
 Restart=always
