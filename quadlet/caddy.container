@@ -3,6 +3,7 @@ Description=Caddy
 Requires=podman.socket
 
 [Container]
+AddCapability=NET_BIND_SERVICE
 AutoUpdate=registry
 ContainerName=caddy
 DropCapability=All
