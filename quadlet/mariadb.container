@@ -14,7 +14,7 @@ HealthOnFailure=kill
 Image=reg.mini.dev/mariadb:12.3
 Network=backend.network
 #NoNewPrivileges=true
-#Notify=true
+Notify=healthy
 PodmanArgs=--cpus=2 --memory=2g
 #ReadOnly=true
 #Tmpfs=/var/tmp:rw,mode=1777
