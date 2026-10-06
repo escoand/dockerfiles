@@ -9,6 +9,7 @@ Environment=COLLECTIONS=crowdsecurity/apache2 crowdsecurity/caddy crowdsecurity/
 GroupAdd=keep-groups
 HealthCmd=["cscli","lapi","status"]
 HealthLogDestination=events_logger
+HealthOnFailure=kill
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
 Network=podman
 NoNewPrivileges=true

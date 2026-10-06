@@ -2,7 +2,6 @@
 Description=Journald Docker proxy build
 
 [Build]
-ImageTag=localhost/journald-docker-proxy
 SetWorkingDirectory=https://github.com/escoand/dockerfiles.git#master:docker/journald-docker-proxy
 
 [Install]

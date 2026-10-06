@@ -10,9 +10,11 @@ EnvironmentFile=/var/mnt/data/%N.env
 #Exec=docker-entrypoint.sh --binlog-format=ROW --transaction-isolation=READ-COMMITTED
 HealthCmd=mariadb-admin ping -u root -p"$MARIADB_ROOT_PASSWORD"
 HealthLogDestination=events_logger
+HealthOnFailure=kill
 Image=reg.mini.dev/mariadb:12.3
 Network=backend.network
 #NoNewPrivileges=true
+Notify=true
 PodmanArgs=--cpus=2 --memory=2g
 #ReadOnly=true
 #Tmpfs=/var/tmp:rw,mode=1777

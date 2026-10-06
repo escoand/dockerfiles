@@ -13,6 +13,7 @@ Environment=DOZZLE_NO_ANALYTICS=true
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=["/dozzle","healthcheck"]
 HealthLogDestination=events_logger
+HealthOnFailure=kill
 Image=docker.io/amir20/dozzle:v11
 Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"

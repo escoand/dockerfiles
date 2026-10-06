@@ -6,7 +6,7 @@ AutoUpdate=local
 ContainerName=journald-docker-proxy
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 GroupAdd=keep-groups
-Image=localhost/journald-docker-proxy
+Image=journald-docker-proxy.build
 PodmanArgs=--cpus=0.5 --memory=128m
 SecurityLabelDisable=true
 Network=backend.network

@@ -23,6 +23,7 @@ Label=caddy_1.default_bind_1=fdgram/5
 Label=caddy_1.default_bind_1.protocols=h3
 Network=podman
 NoNewPrivileges=true
+Notify=true
 PodmanArgs=--cpus=1 --memory=128m --privileged
 ReadOnly=true
 Tmpfs=/config/caddy

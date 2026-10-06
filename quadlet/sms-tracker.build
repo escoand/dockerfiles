@@ -2,7 +2,6 @@
 Description=SMS Tracker Build
 
 [Build]
-ImageTag=localhost/sms-tracker
 SetWorkingDirectory=https://github.com/escoand/sms-live-tracker.git
 
 [Install]
