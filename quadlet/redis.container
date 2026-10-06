@@ -13,7 +13,7 @@ HealthOnFailure=kill
 Label=dev.dozzle.group=nextcloud
 Network=backend.network
 NoNewPrivileges=true
-Notify=healthy
+Notify=true
 PodmanArgs=--cpus=1 --memory=128m
 ReadOnly=true
 
