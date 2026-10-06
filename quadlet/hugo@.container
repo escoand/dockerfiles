@@ -7,7 +7,7 @@ After=hugo-build@%i.service
 AddCapability=NET_BIND_SERVICE
 ContainerName=hugo-%i
 DropCapability=All
-Image=localhost/hugo-%i
+Image=hugo@.build
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Label=dev.dozzle.icon=hugo
