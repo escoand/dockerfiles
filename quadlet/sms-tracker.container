@@ -7,7 +7,7 @@ ContainerName=sms-tracker
 DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
 HealthCmd=["deno","eval","try { await fetch('http://localhost:8000'); } catch { Deno.exit(1); }"]
-Image=localhost/sms-tracker
+Image=sms-tracker.build
 Label=caddy={$DOMAIN_%N}
 Label=caddy.@nonhook.not="path /api/receive"
 Label=caddy.basic_auth=@nonhook
