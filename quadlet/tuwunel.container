@@ -18,6 +18,7 @@ Label=dev.dozzle.group=matrix
 # Network ist handled by pod
 #Network=backend.network
 #Network=podman
+Notify=healthy
 Pod=matrix.pod
 PodmanArgs=--cpus=1 --memory=256m
 Volume=tuwunel:/var/lib/tuwunel

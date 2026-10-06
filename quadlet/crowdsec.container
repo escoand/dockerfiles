@@ -13,6 +13,7 @@ HealthOnFailure=kill
 Image=docker.io/crowdsecurity/crowdsec:latest-debian
 Network=podman
 NoNewPrivileges=true
+Notify=healthy
 PodmanArgs=--cpus=1 --memory=256m
 PublishPort=127.0.0.1:12345:8080
 ReadOnly=true

@@ -12,6 +12,7 @@ Image=dock.mau.dev/mautrix/gmessages
 Label=dev.dozzle.group=matrix
 # Network ist handled by pod
 #Network=backend.network
+Notify=healthy
 Pod=matrix.pod
 PodmanArgs=--cpus=1 --memory=128m
 Volume=mautrix-gmessages:/data:z

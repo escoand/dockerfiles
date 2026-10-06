@@ -20,6 +20,7 @@ Label=caddy.reverse_proxy="{{upstreams 8080}}"
 Network=podman
 Network=backend.network
 NoNewPrivileges=true
+Notify=healthy
 PodmanArgs=--cpus=0.5 --memory=256m --privileged
 ReadOnly=true
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro

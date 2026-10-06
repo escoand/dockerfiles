@@ -20,7 +20,7 @@ Label=caddy.reverse_proxy={{upstreams}}
 Label=dev.dozzle.group=sites
 Network=podman
 Network=backend.network
-Notify=true
+Notify=healthy
 PodmanArgs=--cpus=1 --memory=512m
 Volume=wordpress_%i:/var/www/html/wp-content:z
 

@@ -60,6 +60,7 @@ Label=dev.dozzle.group=nextcloud
 Network=podman
 Network=backend.network
 NoNewPrivileges=true
+Notify=healthy
 Pod=nextcloud.pod
 PodmanArgs=--cpus=2 --memory=512m
 ReadOnly=true
