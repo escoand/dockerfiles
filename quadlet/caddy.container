@@ -13,7 +13,7 @@ EnvironmentFile=/var/mnt/data/%N.env
 Image=docker.io/lucaslorentz/caddy-docker-proxy:2.13
 Network=podman
 NoNewPrivileges=true
-Notify=healthy
+Notify=true
 PodmanArgs=--cpus=1 --memory=128m --privileged
 PublishPort=80:80
 PublishPort=443:443

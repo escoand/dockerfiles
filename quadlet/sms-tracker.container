@@ -18,6 +18,7 @@ Label=caddy.reverse_proxy="{{upstreams 8000}}"
 Label=dev.dozzle.group=sites
 Network=podman
 NoNewPrivileges=true
+Notify=healthy
 PodmanArgs=--cpus=1 --memory=128m
 Pull=never
 ReadOnly=true
