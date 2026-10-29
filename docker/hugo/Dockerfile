@@ -1,4 +1,4 @@
-FROM ghcr.io/gohugoio/hugo:v0.168.0 AS builder
+FROM ghcr.io/gohugoio/hugo:v0.169.0 AS builder
 
 ARG REPO_URL
 ARG REPO_BRANCH
