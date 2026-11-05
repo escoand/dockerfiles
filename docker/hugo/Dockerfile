@@ -16,6 +16,6 @@ RUN --mount=type=secret,id=git_ssh_key \
     git clone --branch "${REPO_BRANCH}" --depth 1 --recursive "${REPO_URL}" /src && \
     hugo --minify --source /src
 
-FROM reg.mini.dev/caddy:v2.11.7
+FROM docker.io/caddy:2.11.8-alpine
 
 COPY --from=builder /src/public /usr/share/caddy
