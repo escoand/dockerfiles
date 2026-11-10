@@ -15,7 +15,6 @@ Environment=ALLOW_EMPTY_SENDER_DOMAINS=true
 Environment=ANONYMIZE_EMAILS=true
 Environment=POSTFIX_delay_warning_time=24h
 Environment=POSTFIX_maximal_queue_lifetime=3d
-Environment=POSTFIX_mydestination=
 Environment=POSTFIX_relay_domains=
 Environment=POSTFIX_smtpd_client_restrictions=permit
 Environment=POSTFIX_smtpd_helo_required=yes
