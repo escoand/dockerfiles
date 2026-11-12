@@ -23,7 +23,7 @@ Environment=POSTFIX_smtpd_recipient_restrictions=reject_non_fqdn_recipient,rejec
 Environment=POSTFIX_smtpd_reject_unlisted_recipient=yes
 Environment=POSTFIX_smtpd_relay_restrictions=reject_unauth_destination
 Environment=POSTFIX_smtpd_sender_restrictions=reject_non_fqdn_sender
-# After editing /var/mnt/data/postfix/virtual, run: postmap lmdb:/etc/postfix/virtual
+# After editing /etc/postfix/virtual, run: postmap lmdb:/etc/postfix/virtual
 Environment=POSTFIX_virtual_alias_maps=lmdb:/etc/postfix/virtual
 Image=docker.io/boky/postfix:5.2.1-alpine
 PublishPort=25:25
@@ -36,3 +36,16 @@ Volume=postfix_dkim:/etc/opendkim/keys:Z
 
 [Install]
 WantedBy=default.target
+
+# DNS for mailing
+#   A    @               <IPv4>
+#   A    mail            <IPv4>
+#   AAAA @               <IPv6>
+#   AAAA mail            <IPv6>
+#   MX   @               10 mail.<DOMAIN>.
+#   TXT  @               "v=spf1 ip4:<IPv4> ip6:<IPv6> -all"
+#   TXT  _dmarc          "v=DMARC1; p=none; rua=mailto:dmarc@<DOMAIN>; adkim=r; aspf=r"
+#   TXT  mail._domainkey "v=DKIM1; h=sha256; s=email; p=<PUBLIC_KEY>;"
+# Reverse DNS
+#   PTR  <IPv4>          mail.<DOMAIN>
+#   PTR  <IPv6>          mail.<DOMAIN>
