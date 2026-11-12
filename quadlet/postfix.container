@@ -31,7 +31,8 @@ PublishPort=25:25
 #ReadOnly=true
 NoNewPrivileges=true
 Volume=/etc/localtime:/etc/localtime:ro
-Volume=/var/mnt/data/postfix:/etc/postfix:Z
+Volume=postfix_config:/etc/postfix:Z
+Volume=postfix_dkim:/etc/opendkim/keys:Z
 
 [Install]
 WantedBy=default.target
