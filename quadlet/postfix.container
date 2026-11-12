@@ -43,7 +43,7 @@ WantedBy=default.target
 #   AAAA @               <IPv6>
 #   AAAA mail            <IPv6>
 #   MX   @               10 mail.<DOMAIN>.
-#   TXT  @               "v=spf1 ip4:<IPv4> ip6:<IPv6> -all"
+#   TXT  @               "v=spf1 a mx ip4:<IPv4> ip6:<IPv6> -all"
 #   TXT  _dmarc          "v=DMARC1; p=none; rua=mailto:dmarc@<DOMAIN>; adkim=r; aspf=r"
 #   TXT  mail._domainkey "v=DKIM1; h=sha256; s=email; p=<PUBLIC_KEY>;"
 # Reverse DNS
