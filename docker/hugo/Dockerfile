@@ -1,4 +1,4 @@
-FROM ghcr.io/gohugoio/hugo:v0.169.0 AS builder
+FROM ghcr.io/gohugoio/hugo:v0.170.0 AS builder
 
 ARG REPO_URL
 ARG REPO_BRANCH
@@ -16,6 +16,6 @@ RUN --mount=type=secret,id=git_ssh_key \
     git clone --branch "${REPO_BRANCH}" --depth 1 --recursive "${REPO_URL}" /src && \
     hugo --minify --source /src
 
-FROM docker.io/caddy:2.11.8-alpine
+FROM docker.io/caddy:2.11.9-alpine
 
 COPY --from=builder /src/public /usr/share/caddy
