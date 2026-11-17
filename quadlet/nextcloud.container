@@ -53,9 +53,6 @@ Label=caddy_2.import_2="cors_internal /apps/oauth2/api/v1/token           POST  
 Label=caddy_2.import_3="cors_internal /public.php/dav/files/*             PROPFIND Depth"
 Label=caddy_2.reverse_proxy={{upstreams}}
 Label=caddy_2.reverse_proxy.header_up_0="X-Real-IP {remote_host}"
-# redirect
-Label=caddy_3={$DOMAIN_%N_REDIR}
-Label=caddy_3.redir={$REDIR_TARGET}
 Label=dev.dozzle.group=nextcloud
 Network=podman
 Network=backend.network
