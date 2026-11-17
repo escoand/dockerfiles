@@ -1,2 +1,3 @@
 [Build]
+ImageTag=localhost/forms
 SetWorkingDirectory=git@github.com:caffsoft/hugo-contact.git
