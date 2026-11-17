@@ -1,16 +1,21 @@
 [Unit]
-Description=Forms
+Description=Forms %i
+Requires=forms.build
+After=forms.build
 
 [Container]
 AutoUpdate=local
-ContainerName=forms
+ContainerName=forms-%i
+DropCapability=All
 EnvironmentFile=/var/mnt/data/%N.env
 Image=forms.build
 Label=caddy={$DOMAIN_forms_%i}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
 Network=podman
-PodmanArgs=--cpus=1 --memory=128m
+NoNewPrivileges=true
+PodmanArgs=--cpus=0.1 --memory=16m
 Pull=never
+ReadOnly=true
 
 [Service]
 Restart=always
