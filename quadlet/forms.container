@@ -1,0 +1,19 @@
+[Unit]
+Description=Forms
+
+[Container]
+AutoUpdate=local
+ContainerName=forms
+EnvironmentFile=/var/mnt/data/%N.env
+Image=forms.build
+Label=caddy={$DOMAIN_%N}
+Label=caddy.reverse_proxy="{{upstreams 8080}}"
+Network=podman
+PodmanArgs=--cpus=1 --memory=128m
+Pull=never
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target
