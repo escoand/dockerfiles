@@ -11,6 +11,7 @@ EnvironmentFile=/var/mnt/data/%N.env
 Image=forms.build
 Label=caddy={$DOMAIN_forms_%i}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
+Label=dev.dozzle.group=sites
 Network=podman
 NoNewPrivileges=true
 PodmanArgs=--cpus=0.1 --memory=16m
