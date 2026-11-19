@@ -7,7 +7,10 @@ ARG REPO_BRANCH
 USER root
 
 # hadolint ignore=DL3018
-RUN apk add --no-cache git openssh-client-default
+RUN apk add --no-cache git openssh-client-default sassc
+
+COPY . /src
+RUN hugo --minify --source /src
 
 RUN --mount=type=secret,id=git_ssh_key \
     mkdir -p /root/.ssh && \
