@@ -1,4 +1,4 @@
-FROM docker.io/php:8.5.12-apache
+FROM docker.io/php:8.6.0-apache
 
 RUN apt update -y && \
     apt install -y libapache2-mod-auth-openidc && \
