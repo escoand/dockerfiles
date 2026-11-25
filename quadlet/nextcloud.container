@@ -67,6 +67,7 @@ Volume=nextcloud_apps:/var/www/html/custom_apps:Z
 Volume=nextcloud_config:/var/www/html/config:Z
 Volume=nextcloud_data:/var/www/html/data:Z
 Volume=/etc/localtime:/etc/localtime:ro
+Volume=/run/systemd/journal/dev-log:/dev/log:ro
 
 [Service]
 Restart=always
