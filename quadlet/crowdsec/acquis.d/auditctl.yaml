@@ -1,5 +1,0 @@
-source: journalctl
-journalctl_filter:
-  - "SYSLOG_IDENTIFIER=audit"
-labels:
-  type: auditd
