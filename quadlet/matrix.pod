@@ -1,4 +1,4 @@
 [Pod]
 Label=dev.dozzle.group=matrix
 Network=backend.network
-Network=pasta
+Network=podman

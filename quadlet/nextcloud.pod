@@ -8,7 +8,7 @@ PartOf=mariadb.service redis.service
 [Pod]
 Label=dev.dozzle.group=nextcloud
 Network=backend.network
-Network=pasta
+Network=podman
 
 [Service]
 Restart=always

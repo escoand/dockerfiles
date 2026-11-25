@@ -54,7 +54,7 @@ Label=caddy_2.import_3="cors_internal /public.php/dav/files/*             PROPFI
 Label=caddy_2.reverse_proxy={{upstreams}}
 Label=caddy_2.reverse_proxy.header_up_0="X-Real-IP {remote_host}"
 Label=dev.dozzle.group=nextcloud
-Network=pasta
+Network=podman
 Network=backend.network
 NoNewPrivileges=true
 Notify=healthy

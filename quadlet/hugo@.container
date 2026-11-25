@@ -12,7 +12,7 @@ Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Label=dev.dozzle.icon=hugo
 Label=dev.dozzle.group=sites
-Network=pasta
+Network=podman
 NoNewPrivileges=true
 PodmanArgs=--cpus=1 --memory=128m
 ReadOnly=true
