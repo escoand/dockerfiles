@@ -16,7 +16,7 @@ Label=caddy.basic_auth=@nonhook
 Label=caddy.basic_auth.{$TRACKER_USER}={$TRACKER_PASSWORD}
 Label=caddy.reverse_proxy="{{upstreams 8000}}"
 Label=dev.dozzle.group=sites
-Network=podman
+Network=pasta
 NoNewPrivileges=true
 Notify=healthy
 PodmanArgs=--cpus=1 --memory=128m

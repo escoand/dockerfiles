@@ -18,7 +18,7 @@ Image=docker.io/wordpress:7.1-apache
 Label=caddy={$DOMAIN_%i}
 Label=caddy.reverse_proxy={{upstreams}}
 Label=dev.dozzle.group=sites
-Network=podman
+Network=pasta
 Network=backend.network
 Notify=healthy
 PodmanArgs=--cpus=1 --memory=512m

@@ -10,7 +10,7 @@ Environment=PMA_HOST=mariadb
 Image=reg.mini.dev/phpmyadmin:v5
 Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams}}"
-Network=podman
+Network=pasta
 Network=backend.network
 Pod=nextcloud.pod
 PodmanArgs=--cpus=1 --memory=128m

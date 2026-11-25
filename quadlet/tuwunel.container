@@ -17,7 +17,7 @@ Label=caddy_0.reverse_proxy="{{upstreams 8008}}"
 Label=dev.dozzle.group=matrix
 # Network ist handled by pod
 #Network=backend.network
-#Network=podman
+#Network=pasta
 Notify=healthy
 Pod=matrix.pod
 PodmanArgs=--cpus=1 --memory=256m

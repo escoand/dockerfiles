@@ -17,7 +17,7 @@ HealthOnFailure=kill
 Image=docker.io/amir20/dozzle:v11
 Label=caddy={$DOMAIN_%N}
 Label=caddy.reverse_proxy="{{upstreams 8080}}"
-Network=podman
+Network=pasta
 Network=backend.network
 NoNewPrivileges=true
 Notify=healthy
